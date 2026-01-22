@@ -1,16 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JanS2A - Ultimate Koordinat Plotter AI</title>
+    <title>🚀 JanS2A - Ultimate Koordinat Plotter AI</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -18,398 +19,1805 @@
             color: #333;
             transition: all 0.3s;
         }
-        
+
         body.dark-mode {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: #e0e0e0;
         }
-        
+
         .container {
             display: flex;
             height: 100vh;
-            gap: 16px;
-            padding: 16px;
+            gap: 10px;
+            padding: 10px;
         }
-        
+
         .left-panel {
             width: 25%;
             background: white;
             border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 15px;
             overflow-y: auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            max-height: 100vh;
         }
-        
-        .left-panel.dark-mode {
+
+        body.dark-mode .left-panel {
             background: #2d2d44;
         }
-        
-        .right-panel {
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-btn.fixed-left {
+            position: fixed;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 0 8px 8px 0;
+            z-index: 9999;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .logo-section img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .canvas-wrapper {
             flex: 1;
             background: white;
             border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+            cursor: grab;
         }
-        
-        .right-panel.dark-mode {
+
+        body.dark-mode .canvas-wrapper {
             background: #2d2d44;
         }
-        
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #667eea;
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
         }
-        
-        h2 {
-            font-size: 16px;
-            margin-top: 16px;
+
+        .section {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 10px;
             margin-bottom: 12px;
-            color: #667eea;
+            border-left: 4px solid #667eea;
         }
-        
+
+        body.dark-mode .section {
+            background: #3a3a52;
+            border-left-color: #764ba2;
+        }
+
+        .section h3 {
+            color: #667eea;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        body.dark-mode .section h3 {
+            color: #a78bfa;
+        }
+
         .input-group {
-            margin-bottom: 12px;
             display: flex;
             gap: 8px;
+            margin-bottom: 8px;
             align-items: center;
         }
-        
-        input[type="number"] {
-            padding: 8px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
+
+        .input-group input {
             flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 12px;
+            background: white;
         }
-        
-        input[type="number"]:focus {
-            outline: none;
-            border-color: #667eea;
+
+        body.dark-mode .input-group input {
+            background: #4a4a6a;
+            border-color: #5a5a7a;
+            color: #e0e0e0;
         }
-        
-        button {
-            padding: 10px 16px;
-            background: #667eea;
+
+        .btn {
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        button:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-        }
-        
-        button.small {
-            padding: 6px 10px;
             font-size: 12px;
-            margin: 0;
+            font-weight: 600;
+            transition: all 0.2s;
         }
-        
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 12px;
-            font-size: 14px;
+            font-size: 11px;
         }
-        
-        th {
+
+        table th {
             background: #667eea;
             color: white;
-            padding: 10px;
-            text-align: left;
+            padding: 6px;
             font-weight: 600;
         }
-        
-        td {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
+
+        table td {
+            padding: 6px;
+            border-bottom: 1px solid #ddd;
+            background: white;
         }
-        
-        tr:hover {
-            background: #f5f5f5;
+
+        body.dark-mode table td {
+            background: #4a4a6a;
+            border-bottom-color: #5a5a7a;
+            color: #e0e0e0;
         }
-        
-        .dark-mode tr:hover {
-            background: #3a3a52;
-        }
-        
-        .stats {
-            margin-top: 16px;
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 4px;
-        }
-        
-        .dark-mode .stats {
-            background: #3a3a52;
-        }
-        
-        .stat-item {
+
+        .ai-chat-container {
             display: flex;
-            justify-content: space-between;
-            margin: 6px 0;
-            font-size: 14px;
+            flex-direction: column;
+            height: 360px;
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            border: 1px solid #667eea30;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
         }
-        
-        canvas {
+
+        body.dark-mode .ai-chat-container {
+            background: linear-gradient(135deg, #667eea05, #764ba205);
+        }
+
+        .ai-background {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            opacity: 0.08;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            border-bottom: 1px solid #667eea20;
+            position: relative;
+            z-index: 2;
+        }
+
+        .ai-header h3 {
+            margin: 0;
+            font-size: 13px;
+            color: #667eea;
+            flex: 1;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        body.dark-mode .chat-messages {
+            background: #3a3a52;
+        }
+
+        .chat-message {
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            line-height: 1.4;
+            max-width: 90%;
+            word-wrap: break-word;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-message.user {
+            background: #667eea;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .chat-message.ai {
+            background: #f0f0f0;
+            color: #333;
+            align-self: flex-start;
+        }
+
+        body.dark-mode .chat-message.ai {
+            background: #4a4a6a;
+            color: #e0e0e0;
+        }
+
+        .chat-suggestions {
+            display: flex;
+            gap: 6px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-top: 1px solid #ddd;
+            flex-wrap: wrap;
+            max-height: 60px;
+            overflow-y: auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        body.dark-mode .chat-suggestions {
+            background: #3a3a52;
+            border-top-color: #5a5a7a;
+        }
+
+        .suggestion-chip {
+            padding: 4px 10px;
+            background: #667eea;
+            color: white;
+            border-radius: 20px;
+            font-size: 10px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .suggestion-chip:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        .chat-input-group {
+            display: flex;
+            gap: 8px;
+            padding: 10px;
+            background: white;
+            border-top: 1px solid #667eea20;
+            position: relative;
+            z-index: 2;
+        }
+
+        body.dark-mode .chat-input-group {
+            background: #3a3a52;
+        }
+
+        .chat-input-group input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 11px;
+        }
+
+        body.dark-mode .chat-input-group input {
+            background: #4a4a6a;
+            border-color: #5a5a7a;
+            color: #e0e0e0;
+        }
+
+        /* ADMIN MODAL */
+        .admin-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            border: 2px solid #667eea;
-            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            overflow-y: auto;
+            align-items: center;
+            justify-content: center;
         }
-        
-        .logo {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 16px;
-            border-radius: 8px;
-            object-fit: contain;
+
+        .admin-modal.show {
+            display: flex;
         }
-        
-        .delete-btn {
-            background: #ff6b6b;
-            padding: 4px 8px;
+
+        .admin-modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            width: 90%;
+        }
+
+        body.dark-mode .admin-modal-content {
+            background: #2d2d44;
+        }
+
+        .admin-modal-content h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        body.dark-mode .admin-modal-content h2 {
+            color: #a78bfa;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            overflow-x: auto;
+        }
+
+        body.dark-mode .admin-tabs {
+            border-bottom-color: #5a5a7a;
+        }
+
+        .admin-tab {
+            padding: 10px 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #999;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .admin-tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        body.dark-mode .admin-tab.active {
+            color: #a78bfa;
+            border-bottom-color: #a78bfa;
+        }
+
+        .admin-tab-content {
+            display: none;
+        }
+
+        .admin-tab-content.active {
+            display: block;
+        }
+
+        .admin-setting {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        body.dark-mode .admin-setting {
+            border-bottom-color: #5a5a7a;
+        }
+
+        .admin-setting label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 13px;
+        }
+
+        body.dark-mode .admin-setting label {
+            color: #e0e0e0;
+        }
+
+        .admin-setting input,
+        .admin-setting select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 12px;
+            background: white;
+            color: #333;
+        }
+
+        body.dark-mode .admin-setting input,
+        body.dark-mode .admin-setting select {
+            background: #4a4a6a;
+            border-color: #5a5a7a;
+            color: #e0e0e0;
+        }
+
+        .admin-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .admin-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .preset-btn {
+            padding: 10px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        body.dark-mode .preset-btn {
+            background: #4a4a6a;
+            border-color: #5a5a7a;
+            color: #e0e0e0;
+        }
+
+        .preset-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 10px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        body.dark-mode .stats {
+            background: #4a4a6a;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 10px;
+        }
+
+        .stat-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 4px;
+        }
+
+        body.dark-mode .stat-value {
+            color: #e0e0e0;
+        }
+
+        .formula-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .formula-btn {
+            padding: 8px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.2s;
+        }
+
+        body.dark-mode .formula-btn {
+            background: #4a4a6a;
+            border-color: #5a5a7a;
+            color: #e0e0e0;
+        }
+
+        .formula-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 15px;
             font-size: 12px;
         }
-        
-        .delete-btn:hover {
-            background: #ff5252;
+
+        body.dark-mode .empty-state {
+            color: #b0b0b0;
+        }
+
+        .zoom-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 500;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .zoom-indicator.show {
+            opacity: 1;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        body.dark-mode ::-webkit-scrollbar-track {
+            background: #2d2d44;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
         }
     </style>
 </head>
 <body>
+    <button class="toggle-btn" id="toggleBtn" onclick="toggleLeftPanel()">◀</button>
+    <div class="zoom-indicator" id="zoomIndicator">🔍 Zoom: 100%</div>
+
     <div class="container">
-        <div class="left-panel">
-            <h1>Koordinat Plotter</h1>
-            
-            <div class="input-group">
-                <input type="number" id="xInput" placeholder="X" value="5">
-                <input type="number" id="yInput" placeholder="Y" value="2">
+        <div class="left-panel" id="leftPanel">
+            <div class="logo-section">
+                <img id="logoImg" src="bin/Logo.png" alt="Logo" style="max-height: 200px;">
             </div>
-            <button onclick="addPoint()">Legg til punkt</button>
-            
-            <h2>Punkter</h2>
-            <table id="pointsTable">
-                <thead>
-                    <tr>
-                        <th>X</th>
-                        <th>Y</th>
-                        <th>Koble</th>
-                        <th>Slett</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-            
-            <h2>Statistikk</h2>
-            <div class="stats">
-                <div class="stat-item">
-                    <span>Areal:</span>
-                    <span id="areaValue">0</span>
+
+            <div class="section">
+                <h3>🎨 Design & Tema</h3>
+                <div class="input-group">
+                    <button onclick="toggleDarkMode()" class="btn" style="flex: 1;">🌙 Mørkt</button>
+                    <button onclick="resetTheme()" class="btn" style="flex: 1;">↺ Standard</button>
                 </div>
-                <div class="stat-item">
-                    <span>Omkrets:</span>
-                    <span id="perimeterValue">0</span>
+            </div>
+
+            <div class="section">
+                <h3>📍 Legg til Punkt</h3>
+                <div class="input-group">
+                    <input type="number" id="pointX" placeholder="X" value="0" step="0.5">
+                    <input type="number" id="pointY" placeholder="Y" value="0" step="0.5">
+                    <button onclick="addPoint()" class="btn" style="flex: 0 0 auto;">➕</button>
                 </div>
+            </div>
+
+            <div class="section">
+                <h3>📐 Fra Formel</h3>
+                <div class="input-group">
+                    <input type="text" id="formulaInput" placeholder="f(x) = ..." value="2*x+1">
+                    <button onclick="plotFormula()" class="btn" style="flex: 0 0 auto;">✓</button>
+                </div>
+                <div class="formula-grid" id="formulaGrid"></div>
+            </div>
+
+            <div class="section">
+                <h3>🔍 ZOOM Slider & Musehjul</h3>
+                <div class="input-group">
+                    <button onclick="zoomOut()" class="btn" style="flex: 0 0 auto;">−</button>
+                    <input type="range" id="zoomSlider" min="20" max="300" value="100" oninput="zoomCanvas(this.value)" style="flex: 1;">
+                    <button onclick="zoomIn()" class="btn" style="flex: 0 0 auto;">+</button>
+                </div>
+                <div style="text-align: center; font-size: 12px; margin-top: 5px; color: #667eea; font-weight: 600;">
+                    Zoom: <span id="zoomPercent">100%</span>
+                </div>
+                <div style="text-align: center; font-size: 10px; margin-top: 5px; color: #999;">
+                    💡 Rull musehjul hvor som helst!
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>📋 Punkter</h3>
+                <table id="pointsTable">
+                    <thead>
+                        <tr>
+                            <th>X</th>
+                            <th>Y</th>
+                            <th>🔗</th>
+                            <th>🗑️</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pointsTableBody">
+                        <tr><td colspan="4" class="empty-state">Ingen punkter</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Punkt</div>
+                        <div class="stat-value" id="pointCount">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Areal</div>
+                        <div class="stat-value" id="areaValue">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Omkrets</div>
+                        <div class="stat-value" id="perimeterValue">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Skala</div>
+                        <div class="stat-value" id="scaleValue">1</div>
+                    </div>
+                </div>
+
+                <div class="input-group" style="margin-top: 10px;">
+                    <button onclick="toggleLinkMode()" class="btn" id="linkBtn" style="flex: 1;">🔗 Koble</button>
+                    <button onclick="clearLinkedPoints()" class="btn" style="flex: 1; background: #6c757d;">Slett</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>⚙️ Admin Panel</h3>
+                <button onclick="openAdminPanel()" class="btn" style="width: 100%; margin-bottom: 8px;">🔧 INNSTILLINGER</button>
+                <button onclick="clearAll()" class="btn" style="width: 100%; background: #dc3545;">🗑️ Tøm Alt</button>
             </div>
         </div>
-        
-        <div class="right-panel">
-            <canvas id="canvas"></canvas>
+
+        <div class="main-container" id="mainContainer">
+            <div class="canvas-wrapper" id="canvasWrapper">
+                <canvas id="canvas"></canvas>
+            </div>
+
+            <div class="ai-chat-container" id="aiChatContainer" data-collapsed="0">
+                <div class="ai-background" id="aiBackground"></div>
+                <div class="ai-header">
+                    <h3>🤖 AI Assistent Pro</h3>
+                    <button onclick="toggleAI()" class="btn" style="padding: 4px 10px; font-size: 10px;">▼</button>
+                </div>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-suggestions" id="chatSuggestions"></div>
+                <div class="chat-input-group">
+                    <input type="text" id="chatInput" placeholder="Spør om alt...">
+                    <button onclick="sendMessage()" class="btn" style="flex: 0 0 auto; padding: 8px 12px;">Send</button>
+                </div>
+            </div>
         </div>
     </div>
-    
+
+    <!-- ADMIN MODAL -->
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-modal-content">
+            <h2>⚙️ ULTIMATE ADMIN PANEL - JanS2A</h2>
+
+            <div class="admin-tabs">
+                <button class="admin-tab active" onclick="switchTab('general')">🎨 Generelt</button>
+                <button class="admin-tab" onclick="switchTab('canvas')">📊 Canvas</button>
+                <button class="admin-tab" onclick="switchTab('grid')">📐 Grid</button>
+                <button class="admin-tab" onclick="switchTab('ui')">🎯 UI</button>
+                <button class="admin-tab" onclick="switchTab('formulas')">📐 Formler</button>
+                <button class="admin-tab" onclick="switchTab('export')">💾 Lagring</button>
+            </div>
+
+            <!-- GENERAL TAB -->
+            <div id="general" class="admin-tab-content active">
+                <h3>🎨 Generelle Innstillinger</h3>
+
+                <div class="admin-setting">
+                    <label>📏 Logo Høyde (px)</label>
+                    <input type="number" id="logoHeight" value="200" min="30" max="300">
+                </div>
+
+                <div class="admin-setting">
+                    <label>🖼️ Logo Bredde (px)</label>
+                    <input type="number" id="logoWidth" value="auto" placeholder="auto">
+                </div>
+
+                <div class="admin-row">
+                    <div class="admin-setting">
+                        <label>🌈 Gradient 1. Farge (Lyst)</label>
+                        <input type="color" id="gradientColor1" value="#667eea">
+                    </div>
+                    <div class="admin-setting">
+                        <label>🌈 Gradient 2. Farge (Lyst)</label>
+                        <input type="color" id="gradientColor2" value="#764ba2">
+                    </div>
+                </div>
+
+                <div class="admin-row">
+                    <div class="admin-setting">
+                        <label>🌙 Dark Mode Gradient 1</label>
+                        <input type="color" id="darkGradient1" value="#1a1a2e">
+                    </div>
+                    <div class="admin-setting">
+                        <label>🌙 Dark Mode Gradient 2</label>
+                        <input type="color" id="darkGradient2" value="#16213e">
+                    </div>
+                </div>
+            </div>
+
+            <!-- CANVAS TAB -->
+            <div id="canvas" class="admin-tab-content">
+                <h3>📊 Canvas Innstillinger</h3>
+
+                <div class="admin-row">
+                    <div class="admin-setting">
+                        <label>🎨 Canvas Bakgrunn</label>
+                        <input type="color" id="canvasBg" value="#ffffff">
+                    </div>
+                    <div class="admin-setting">
+                        <label>📐 Grid Stil</label>
+                        <select id="gridStyle">
+                            <option value="lines">Linjer</option>
+                            <option value="dots">Prikker</option>
+                            <option value="combined">Kombinert</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="admin-row">
+                    <div class="admin-setting">
+                        <label>🎯 Punkt Størrelse (px)</label>
+                        <input type="number" id="pointSize" value="5" min="1" max="15">
+                    </div>
+                    <div class="admin-setting">
+                        <label>📊 Formel Farge</label>
+                        <input type="color" id="formulaColor" value="#667eea">
+                    </div>
+                </div>
+
+                <div class="admin-row">
+                    <div class="admin-setting">
+                        <label>🔗 Polygon Farge</label>
+                        <input type="color" id="polygonColor" value="#ff9800">
+                    </div>
+                    <div class="admin-setting">
+                        <label>🔤 Tall Størrelse (px)</label>
+                        <input type="number" id="fontSize" value="11" min="8" max="20">
+                    </div>
+                </div>
+            </div>
+
+            <!-- GRID TAB -->
+            <div id="grid" class="admin-tab-content">
+                <h3>📐 Grid Innstillinger</h3>
+
+                <div class="admin-setting">
+                    <label>📏 Grid Avstand (px mellom hver rute = 1 enhet)</label>
+                    <input type="number" id="gridSize" value="50" min="20" max="200">
+                    <p style="font-size: 10px; color: #666; margin-top: 5px;">Grid er nøyaktig justert til aksene. Zoom endrer skalaen dynamisk!</p>
+                </div>
+
+                <div class="admin-setting">
+                    <label>🔢 Tall Intervall på X-akse</label>
+                    <select id="xAxisInterval">
+                        <option value="1" selected>Hver 1</option>
+                        <option value="2">Hver 2</option>
+                        <option value="5">Hver 5</option>
+                        <option value="10">Hver 10</option>
+                        <option value="20">Hver 20</option>
+                        <option value="50">Hver 50</option>
+                    </select>
+                </div>
+
+                <div class="admin-setting">
+                    <label>🔢 Tall Intervall på Y-akse</label>
+                    <select id="yAxisInterval">
+                        <option value="1" selected>Hver 1</option>
+                        <option value="2">Hver 2</option>
+                        <option value="5">Hver 5</option>
+                        <option value="10">Hver 10</option>
+                        <option value="20">Hver 20</option>
+                        <option value="50">Hver 50</option>
+                    </select>
+                </div>
+
+                <div class="admin-setting">
+                    <label>📐 Mini-Grid Mellom Hovedlinjer</label>
+                    <select id="miniGridLines">
+                        <option value="0">Ingen</option>
+                        <option value="1">1 linje</option>
+                        <option value="2">2 linjer</option>
+                        <option value="4">4 linjer</option>
+                        <option value="9">9 linjer</option>
+                    </select>
+                </div>
+
+                <div class="admin-setting">
+                    <label>🎨 Hovedgrid Farga</label>
+                    <input type="color" id="gridColor" value="#cccccc">
+                </div>
+
+                <div class="admin-setting">
+                    <label>🎨 Mini-Grid Farga</label>
+                    <input type="color" id="miniGridColor" value="#e8e8e8">
+                </div>
+            </div>
+
+            <!-- UI TAB -->
+            <div id="ui" class="admin-tab-content">
+                <h3>🎯 UI Innstillinger</h3>
+
+                <div class="admin-row">
+                    <div class="admin-setting">
+                        <label>📏 Venstre Panel Bredde (%)</label>
+                        <input type="number" id="panelWidth" value="25" min="15" max="50">
+                    </div>
+                    <div class="admin-setting">
+                        <label>🎛️ Chat Høyde (px)</label>
+                        <input type="number" id="chatHeight" value="360" min="200" max="600">
+                    </div>
+                </div>
+
+                <div class="admin-setting">
+                    <label>🖼️ Chat Bakgrunn Transparens (%)</label>
+                    <input type="number" id="chatBgOpacity" value="15" min="0" max="100">
+                </div>
+
+                <div class="admin-setting">
+                    <label>🖼️ Logo Bakgrunn Transparens (%)</label>
+                    <input type="number" id="logoBgOpacity" value="8" min="0" max="100">
+                </div>
+
+                <div class="admin-setting">
+                    <label>✓ Vis Logo i Chat Bakgrunn</label>
+                    <select id="showChatLogo">
+                        <option value="true">Ja</option>
+                        <option value="false">Nei</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- FORMULAS TAB -->
+            <div id="formulas" class="admin-tab-content">
+                <h3>📐 Formel Innstillinger</h3>
+
+                <div class="admin-setting">
+                    <label>➕ Legg til Egne Formler (komma-separert)</label>
+                    <textarea id="customFormulas" style="width: 100%; height: 100px; padding: 8px; border-radius: 6px; border: 1px solid #ddd;" placeholder="f.eks: 3*x+2, x**3, Math.tan(x)"></textarea>
+                </div>
+            </div>
+
+            <!-- EXPORT TAB -->
+            <div id="export" class="admin-tab-content">
+                <h3>💾 Lagring & Eksport</h3>
+
+                <div class="preset-buttons">
+                    <button class="preset-btn" onclick="saveAllSettings()">💾 Lagre Alt</button>
+                    <button class="preset-btn" onclick="loadAllSettings()">📥 Last Inn</button>
+                    <button class="preset-btn" onclick="resetAllSettings()">🔄 Tilbakestill</button>
+                    <button class="preset-btn" onclick="exportJSON()">📤 Eksporter JSON</button>
+                </div>
+
+                <div class="admin-setting" style="margin-top: 20px;">
+                    <label>📋 Innstillinger JSON</label>
+                    <textarea id="settingsJSON" style="width: 100%; height: 150px; padding: 8px; border-radius: 6px; border: 1px solid #ddd; font-family: monospace; font-size: 10px;" placeholder="Paste JSON her for å importere"></textarea>
+                    <button onclick="importJSON()" class="btn" style="width: 100%; margin-top: 10px;">📥 Importer</button>
+                </div>
+
+                <div class="admin-setting">
+                    <label>🎨 Forhåndsvalgte Temaer</label>
+                    <div class="preset-buttons">
+                        <button class="preset-btn" onclick="applyTheme('dark')">🌙 Mørkt</button>
+                        <button class="preset-btn" onclick="applyTheme('light')">☀️ Lyst</button>
+                        <button class="preset-btn" onclick="applyTheme('neon')">⚡ Neon</button>
+                        <button class="preset-btn" onclick="applyTheme('ocean')">🌊 Ocean</button>
+                        <button class="preset-btn" onclick="applyTheme('forest')">🌲 Forest</button>
+                        <button class="preset-btn" onclick="applyTheme('sunset')">🌅 Sunset</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="admin-buttons">
+                <button onclick="saveAllSettings()" class="btn" style="flex: 1;">💾 LAGRE INNSTILLINGER</button>
+                <button onclick="closeAdminPanel()" class="btn" style="flex: 1; background: #6c757d;">✕ LUKK</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // ============ DEFAULT SETTINGS ============
+        let settings = {
+            logoHeight: 200,
+            logoWidth: 'auto',
+            gradientColor1: '#667eea',
+            gradientColor2: '#764ba2',
+            darkGradient1: '#1a1a2e',
+            darkGradient2: '#16213e',
+            canvasBg: '#ffffff',
+            gridStyle: 'lines',
+            gridSize: 50,
+            pointSize: 5,
+            formulaColor: '#667eea',
+            polygonColor: '#ff9800',
+            fontSize: 11,
+            xAxisInterval: 1,
+            yAxisInterval: 1,
+            miniGridLines: 1,
+            gridColor: '#cccccc',
+            miniGridColor: '#e8e8e8',
+            panelWidth: 25,
+            chatHeight: 360,
+            chatBgOpacity: 15,
+            logoBgOpacity: 8,
+            showChatLogo: true
+        };
+
+        // ============ STATE ============
+        let points = [];
+        let linkedPoints = [];
+        let currentFormula = null;
+        let panelCollapsed = false;
+        let linkMode = false;
+        let isDragging = false;
+        let dragStart = { x: 0, y: 0 };
+        let originOffset = { x: 0, y: 0 };
+        let currentZoom = 100;
+        let chatHistory = [];
+        let chatHistoryIndex = -1;
+        let zoomIndicatorTimeout;
+
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-        const xInput = document.getElementById('xInput');
-        const yInput = document.getElementById('yInput');
-        const pointsTable = document.getElementById('pointsTable').getElementsByTagName('tbody')[0];
-        const areaValue = document.getElementById('areaValue');
-        const perimeterValue = document.getElementById('perimeterValue');
-        
-        let points = [];
-        let connected = [];
-        
-        function resizeCanvas() {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-            draw();
-        }
-        
-        function addPoint() {
-            const x = parseFloat(xInput.value) || 0;
-            const y = parseFloat(yInput.value) || 0;
-            points.push({x, y});
-            updateTable();
-            updateStats();
-            draw();
-            xInput.value = '';
-            yInput.value = '';
-        }
-        
-        function deletePoint(index) {
-            points.splice(index, 1);
-            connected.splice(index, 1);
-            updateTable();
-            updateStats();
-            draw();
-        }
-        
-        function toggleConnection(index) {
-            connected[index] = !connected[index];
-            updateTable();
-            updateStats();
-            draw();
-        }
-        
-        function updateTable() {
-            pointsTable.innerHTML = '';
-            points.forEach((p, i) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${p.x}</td>
-                    <td>${p.y}</td>
-                    <td><button class="small" onclick="toggleConnection(${i})">${connected[i] ? '✓' : ''}</button></td>
-                    <td><button class="small delete-btn" onclick="deletePoint(${i})">✕</button></td>
-                `;
-                pointsTable.appendChild(row);
+        const leftPanel = document.getElementById('leftPanel');
+        const mainContainer = document.getElementById('mainContainer');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const canvasWrapper = document.getElementById('canvasWrapper');
+        const zoomIndicator = document.getElementById('zoomIndicator');
+        const logoImg = document.getElementById('logoImg');
+
+        const FORMULAS = [
+            { name: 'y=2x+1', formula: '2*x+1' },
+            { name: 'y=x²', formula: 'x**2' },
+            { name: 'y=x³', formula: 'x**3' },
+            { name: 'y=sin(x)', formula: 'Math.sin(x)' },
+            { name: 'y=cos(x)', formula: 'Math.cos(x)' },
+            { name: 'y=e^x', formula: 'Math.exp(x)' },
+            { name: 'y=ln(x)', formula: 'Math.log(x)' },
+            { name: 'y=1/x', formula: '1/x' },
+            { name: 'y=√x', formula: 'Math.sqrt(x)' },
+            { name: 'y=|x|', formula: 'Math.abs(x)' },
+            { name: 'y=-x²+4', formula: '-x**2+4' },
+            { name: 'y=tan(x)', formula: 'Math.tan(x)' }
+        ];
+
+        const aiDatabase = {
+            greetings: {
+                keywords: ['hei', 'hallo', 'hey'],
+                response: 'Hei Jan! 👋 Jeg er din AI-assistent. Spør meg om formler, plotting, zoom eller admin-funksjoner!'
+            },
+            formulas: {
+                keywords: ['formel', 'ligning', 'funksjon'],
+                response: 'Du kan plotte formler som:\n• 2*x+1\n• x**2\n• Math.sin(x)\n• Math.exp(x)\nSkriv og trykk ✓!'
+            },
+            points: {
+                keywords: ['punkt', 'poeng', 'koordinat'],
+                response: 'Legg til punkter:\n1. Skriv X og Y\n2. Trykk ➕\n3. Koble med 🔗 for polygon!'
+            },
+            area: {
+                keywords: ['areal', 'omkrets', 'polygon'],
+                response: 'For areal:\n1. Legg til 3+ punkter\n2. Trykk 🔗\n3. Beregner automatisk!'
+            },
+            admin: {
+                keywords: ['/admin', 'admin', 'innstilling'],
+                response: '⚙️ Admin Panel åpent! Du kan justere ALT:\n🎨 Farger\n📐 Grid\n🔤 Skrifter\n💾 Lagring'
+            }
+        };
+
+        function init() {
+            loadAllSettings();
+            resizeCanvas();
+            renderFormulaButtons();
+            renderChatSuggestions();
+            updateChatBackground();
+            redraw();
+
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                redraw();
             });
-        }
-        
-        function calculateArea() {
-            if (points.length < 3) return 0;
-            let area = 0;
-            for (let i = 0; i < points.length; i++) {
-                const j = (i + 1) % points.length;
-                area += points[i].x * points[j].y;
-                area -= points[j].x * points[i].y;
-            }
-            return Math.abs(area / 2);
-        }
-        
-        function calculatePerimeter() {
-            if (points.length < 2) return 0;
-            let perimeter = 0;
-            for (let i = 0; i < points.length; i++) {
-                const j = (i + 1) % points.length;
-                const dx = points[j].x - points[i].x;
-                const dy = points[j].y - points[i].y;
-                perimeter += Math.sqrt(dx * dx + dy * dy);
-            }
-            return perimeter;
-        }
-        
-        function updateStats() {
-            areaValue.textContent = calculateArea().toFixed(2);
-            perimeterValue.textContent = calculatePerimeter().toFixed(2);
-        }
-        
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            canvas.addEventListener('mousedown', startDrag);
+            canvas.addEventListener('mousemove', drag);
+            canvas.addEventListener('mouseup', stopDrag);
             
-            // Draw grid
-            drawGrid();
-            
-            // Draw polygon
-            if (points.length > 2) {
-                ctx.fillStyle = 'rgba(102, 126, 234, 0.1)';
-                ctx.strokeStyle = '#667eea';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                const p0 = worldToScreen(points[0]);
-                ctx.moveTo(p0.x, p0.y);
-                for (let i = 1; i < points.length; i++) {
-                    const p = worldToScreen(points[i]);
-                    ctx.lineTo(p.x, p.y);
+            // Zoom med musehjul overalt
+            document.addEventListener('wheel', handleMouseWheel, { passive: false });
+
+            document.getElementById('chatInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+                else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (chatHistoryIndex < chatHistory.length - 1) {
+                        chatHistoryIndex++;
+                        document.getElementById('chatInput').value = chatHistory[chatHistoryIndex];
+                    }
                 }
-                ctx.closePath();
-                ctx.fill();
-                ctx.stroke();
-            }
+            });
+
+            addAIMessage('🚀 Velkommen til JanS2A Ultimate Koordinat Plotter!\n\nSkriv /admin for admin panel eller spør meg om hva som helst! 👑\n\n💡 Zoom med musehjul hvor som helst!');
+        }
+
+        // ============ MOUSEWHEEL ZOOM - ANYWHERE ============
+        function handleMouseWheel(e) {
+            e.preventDefault();
+            const zoomSpeed = 10;
+            const direction = e.deltaY > 0 ? -1 : 1;
+            const newZoom = Math.max(20, Math.min(300, currentZoom + (direction * zoomSpeed)));
             
-            // Draw lines
-            if (points.length > 1) {
-                ctx.strokeStyle = '#667eea';
+            if (newZoom !== currentZoom) {
+                currentZoom = newZoom;
+                document.getElementById('zoomSlider').value = currentZoom;
+                updateZoomDisplay();
+                redraw();
+            }
+        }
+
+        function updateZoomDisplay() {
+            document.getElementById('zoomPercent').textContent = currentZoom + '%';
+            zoomIndicator.textContent = '🔍 Zoom: ' + currentZoom + '%';
+            zoomIndicator.classList.add('show');
+            
+            clearTimeout(zoomIndicatorTimeout);
+            zoomIndicatorTimeout = setTimeout(() => {
+                zoomIndicator.classList.remove('show');
+            }, 1500);
+            
+            updatePointsList();
+        }
+
+        // ============ FORMULAS ============
+        function renderFormulaButtons() {
+            const grid = document.getElementById('formulaGrid');
+            grid.innerHTML = FORMULAS.map(f => 
+                `<button class="formula-btn" onclick="insertFormula('${f.formula}')" title="${f.formula}">${f.name}</button>`
+            ).join('');
+        }
+
+        function insertFormula(formula) {
+            document.getElementById('formulaInput').value = formula;
+            plotFormula();
+        }
+
+        // ============ CANVAS ============
+        function resizeCanvas() {
+            const wrapper = document.querySelector('.canvas-wrapper');
+            canvas.width = wrapper.clientWidth;
+            canvas.height = wrapper.clientHeight;
+        }
+
+        function redraw() {
+            ctx.fillStyle = settings.canvasBg;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            drawGrid();
+            drawAxes();
+            drawFormula();
+            drawLinkedPoints();
+            drawPoints();
+        }
+
+        function drawGrid() {
+            const centerX = canvas.width / 2 + originOffset.x;
+            const centerY = canvas.height / 2 + originOffset.y;
+            const scale = settings.gridSize * (currentZoom / 100);
+
+            // Mini grid
+            if (settings.miniGridLines > 0) {
+                ctx.strokeStyle = settings.miniGridColor;
                 ctx.lineWidth = 1;
-                for (let i = 0; i < points.length - 1; i++) {
-                    if (connected[i]) {
-                        const p1 = worldToScreen(points[i]);
-                        const p2 = worldToScreen(points[i + 1]);
+
+                for (let x = -500; x <= 500; x += 1) {
+                    for (let i = 1; i <= settings.miniGridLines; i++) {
+                        const miniPx = centerX + (x + i / (settings.miniGridLines + 1)) * scale;
                         ctx.beginPath();
-                        ctx.moveTo(p1.x, p1.y);
-                        ctx.lineTo(p2.x, p2.y);
+                        ctx.moveTo(miniPx, 0);
+                        ctx.lineTo(miniPx, canvas.height);
+                        ctx.stroke();
+                    }
+                }
+
+                for (let y = -500; y <= 500; y += 1) {
+                    for (let i = 1; i <= settings.miniGridLines; i++) {
+                        const miniPy = centerY - (y + i / (settings.miniGridLines + 1)) * scale;
+                        ctx.beginPath();
+                        ctx.moveTo(0, miniPy);
+                        ctx.lineTo(canvas.width, miniPy);
                         ctx.stroke();
                     }
                 }
             }
-            
-            // Draw points
-            points.forEach((p, i) => {
-                const screenPoint = worldToScreen(p);
-                ctx.fillStyle = '#667eea';
-                ctx.beginPath();
-                ctx.arc(screenPoint.x, screenPoint.y, 6, 0, 2 * Math.PI);
-                ctx.fill();
-            });
-        }
-        
-        function drawGrid() {
-            const gridSize = 40;
-            ctx.strokeStyle = '#ddd';
-            ctx.lineWidth = 0.5;
-            
-            for (let i = 0; i <= canvas.width; i += gridSize) {
-                ctx.beginPath();
-                ctx.moveTo(i, 0);
-                ctx.lineTo(i, canvas.height);
-                ctx.stroke();
-            }
-            
-            for (let i = 0; i <= canvas.height; i += gridSize) {
-                ctx.beginPath();
-                ctx.moveTo(0, i);
-                ctx.lineTo(canvas.width, i);
-                ctx.stroke();
-            }
-            
-            // Draw axes
-            ctx.strokeStyle = '#000';
+
+            // Hovedgrid - ALLTID HELT JUSTERT TIL AKSENE
+            ctx.strokeStyle = settings.gridColor;
             ctx.lineWidth = 2;
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            
-            ctx.beginPath();
-            ctx.moveTo(centerX, 0);
-            ctx.lineTo(centerX, canvas.height);
-            ctx.stroke();
-            
+
+            for (let x = -500; x <= 500; x += 1) {
+                const px = centerX + x * scale;
+                if (px >= 0 && px <= canvas.width) {
+                    ctx.beginPath();
+                    ctx.moveTo(px, 0);
+                    ctx.lineTo(px, canvas.height);
+                    ctx.stroke();
+                }
+            }
+
+            for (let y = -500; y <= 500; y += 1) {
+                const py = centerY - y * scale;
+                if (py >= 0 && py <= canvas.height) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, py);
+                    ctx.lineTo(canvas.width, py);
+                    ctx.stroke();
+                }
+            }
+
+            // Tegn tall - JUSTERT TIL GRID
+            ctx.fillStyle = '#666';
+            ctx.font = `${settings.fontSize}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+
+            const xInterval = parseInt(settings.xAxisInterval);
+            const yInterval = parseInt(settings.yAxisInterval);
+
+            for (let x = -500; x <= 500; x += xInterval) {
+                const px = centerX + x * scale;
+                if (px >= 20 && px <= canvas.width - 20) {
+                    ctx.fillText(x, px, centerY + 8);
+                }
+            }
+
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            for (let y = -500; y <= 500; y += yInterval) {
+                const py = centerY - y * scale;
+                if (py >= 20 && py <= canvas.height - 20) {
+                    ctx.fillText(y, centerX - 8, py);
+                }
+            }
+        }
+
+        function drawAxes() {
+            const centerX = canvas.width / 2 + originOffset.x;
+            const centerY = canvas.height / 2 + originOffset.y;
+
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+
             ctx.beginPath();
             ctx.moveTo(0, centerY);
             ctx.lineTo(canvas.width, centerY);
             ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(centerX, 0);
+            ctx.lineTo(centerX, canvas.height);
+            ctx.stroke();
+
+            ctx.fillStyle = '#333';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 4, 0, Math.PI * 2);
+            ctx.fill();
         }
-        
-        function worldToScreen(point) {
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const scale = 20;
-            
-            return {
-                x: centerX + point.x * scale,
-                y: centerY - point.y * scale
+
+        function drawFormula() {
+            if (!currentFormula) return;
+
+            const centerX = canvas.width / 2 + originOffset.x;
+            const centerY = canvas.height / 2 + originOffset.y;
+            const scale = settings.gridSize * (currentZoom / 100);
+
+            ctx.strokeStyle = settings.formulaColor;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+
+            let first = true;
+            for (let px = 0; px < canvas.width; px += 2) {
+                const x = (px - centerX) / scale;
+                try {
+                    const y = currentFormula(x);
+                    const py = centerY - y * scale;
+
+                    if (isFinite(y) && Math.abs(y) < 10000) {
+                        if (first) {
+                            ctx.moveTo(px, py);
+                            first = false;
+                        } else {
+                            ctx.lineTo(px, py);
+                        }
+                    } else {
+                        first = true;
+                    }
+                } catch (e) {
+                    first = true;
+                }
+            }
+            ctx.stroke();
+        }
+
+        function drawLinkedPoints() {
+            if (linkedPoints.length < 2) return;
+
+            const centerX = canvas.width / 2 + originOffset.x;
+            const centerY = canvas.height / 2 + originOffset.y;
+            const scale = settings.gridSize * (currentZoom / 100);
+
+            ctx.strokeStyle = settings.polygonColor;
+            ctx.lineWidth = 2;
+            ctx.fillStyle = settings.polygonColor + '40';
+            ctx.beginPath();
+
+            linkedPoints.forEach((idx, i) => {
+                const p = points[idx];
+                const px = centerX + p.x * scale;
+                const py = centerY - p.y * scale;
+
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            });
+
+            if (linkedPoints.length > 2) {
+                const p = points[linkedPoints[0]];
+                const px = centerX + p.x * scale;
+                const py = centerY - p.y * scale;
+                ctx.lineTo(px, py);
+            }
+
+            ctx.stroke();
+            ctx.fill();
+        }
+
+        function drawPoints() {
+            const centerX = canvas.width / 2 + originOffset.x;
+            const centerY = canvas.height / 2 + originOffset.y;
+            const scale = settings.gridSize * (currentZoom / 100);
+
+            points.forEach((p, i) => {
+                const px = centerX + p.x * scale;
+                const py = centerY - p.y * scale;
+
+                ctx.fillStyle = linkedPoints.includes(i) ? '#ff9800' : '#ff6b6b';
+                ctx.beginPath();
+                ctx.arc(px, py, settings.pointSize, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        // ============ POINTS ============
+        function addPoint() {
+            const x = parseFloat(document.getElementById('pointX').value);
+            const y = parseFloat(document.getElementById('pointY').value);
+
+            if (isNaN(x) || isNaN(y)) {
+                addAIMessage('❌ Skriv gyldige tall!');
+                return;
+            }
+
+            points.push({ x, y });
+            updatePointsList();
+            redraw();
+            addAIMessage(`✅ Punkt (${x}, ${y}) lagt til!`);
+        }
+
+        function removePoint(idx) {
+            points.splice(idx, 1);
+            linkedPoints = linkedPoints.filter(i => i < points.length).map(i => i > idx ? i - 1 : i);
+            updatePointsList();
+            redraw();
+        }
+
+        function togglePointLink(idx) {
+            const linkIdx = linkedPoints.indexOf(idx);
+            if (linkIdx > -1) {
+                linkedPoints.splice(linkIdx, 1);
+            } else {
+                linkedPoints.push(idx);
+            }
+            updatePointsList();
+            redraw();
+        }
+
+        function updatePointsList() {
+            const tbody = document.getElementById('pointsTableBody');
+            if (points.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="empty-state">Ingen punkter</td></tr>';
+            } else {
+                tbody.innerHTML = points.map((p, i) => `
+                    <tr>
+                        <td>${p.x}</td>
+                        <td>${p.y}</td>
+                        <td><button onclick="togglePointLink(${i})" class="btn" style="background: ${linkedPoints.includes(i) ? '#ff9800' : '#999'}; padding: 4px 6px; font-size: 10px;">🔗</button></td>
+                        <td><button onclick="removePoint(${i})" class="btn" style="padding: 4px 6px; font-size: 10px;">✕</button></td>
+                    </tr>
+                `).join('');
+            }
+
+            document.getElementById('pointCount').textContent = points.length;
+            document.getElementById('scaleValue').textContent = (currentZoom / 100).toFixed(2);
+            updateArea();
+        }
+
+        // ============ AREA ============
+        function calculateArea(pts) {
+            if (pts.length < 3) return 0;
+            let area = 0;
+            for (let i = 0; i < pts.length; i++) {
+                const p1 = pts[i];
+                const p2 = pts[(i + 1) % pts.length];
+                area += (p1.x * p2.y - p2.x * p1.y) / 2;
+            }
+            return Math.abs(area);
+        }
+
+        function calculatePerimeter(pts) {
+            if (pts.length < 2) return 0;
+            let perimeter = 0;
+            for (let i = 0; i < pts.length; i++) {
+                const p1 = pts[i];
+                const p2 = pts[(i + 1) % pts.length];
+                const dx = p2.x - p1.x;
+                const dy = p2.y - p1.y;
+                perimeter += Math.sqrt(dx * dx + dy * dy);
+            }
+            return perimeter;
+        }
+
+        function updateArea() {
+            if (linkedPoints.length > 0) {
+                const linkedPts = linkedPoints.map(i => points[i]);
+                const area = calculateArea(linkedPts);
+                const perimeter = calculatePerimeter(linkedPts);
+                document.getElementById('areaValue').textContent = area.toFixed(2);
+                document.getElementById('perimeterValue').textContent = perimeter.toFixed(2);
+            } else {
+                document.getElementById('areaValue').textContent = '0';
+                document.getElementById('perimeterValue').textContent = '0';
+            }
+        }
+
+        function toggleLinkMode() {
+            linkMode = !linkMode;
+            document.getElementById('linkBtn').style.background = linkMode ? '#4caf50' : 'linear-gradient(135deg, #667eea, #764ba2)';
+        }
+
+        function clearLinkedPoints() {
+            linkedPoints = [];
+            updatePointsList();
+            redraw();
+        }
+
+        // ============ FORMULA ============
+        function plotFormula() {
+            const input = document.getElementById('formulaInput').value.trim();
+            if (!input) {
+                addAIMessage('❌ Skriv en formel!');
+                return;
+            }
+
+            try {
+                currentFormula = new Function('x', `return ${input}`);
+                currentFormula(0);
+                redraw();
+                addAIMessage(`📈 Plottet: f(x) = ${input}`);
+            } catch (e) {
+                addAIMessage(`❌ Feil: ${e.message}`);
+            }
+        }
+
+        // ============ ZOOM ============
+        function zoomCanvas(percent) {
+            currentZoom = parseInt(percent);
+            updateZoomDisplay();
+            redraw();
+        }
+
+        function zoomIn() {
+            const newZoom = Math.min(300, currentZoom + 10);
+            currentZoom = newZoom;
+            document.getElementById('zoomSlider').value = currentZoom;
+            updateZoomDisplay();
+            redraw();
+        }
+
+        function zoomOut() {
+            const newZoom = Math.max(20, currentZoom - 10);
+            currentZoom = newZoom;
+            document.getElementById('zoomSlider').value = currentZoom;
+            updateZoomDisplay();
+            redraw();
+        }
+
+        // ============ DRAG ============
+        function startDrag(e) {
+            isDragging = true;
+            dragStart = { x: e.clientX, y: e.clientY };
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            originOffset.x += (e.clientX - dragStart.x);
+            originOffset.y += (e.clientY - dragStart.y);
+            dragStart = { x: e.clientX, y: e.clientY };
+            redraw();
+        }
+
+        function stopDrag() {
+            isDragging = false;
+        }
+
+        // ============ TOGGLE ============
+        function toggleLeftPanel() {
+            panelCollapsed = !panelCollapsed;
+            if (panelCollapsed) {
+                leftPanel.style.width = '0px';
+                leftPanel.style.padding = '0';
+                leftPanel.style.overflow = 'hidden';
+                toggleBtn.classList.add('fixed-left');
+                toggleBtn.textContent = '▶';
+            } else {
+                leftPanel.style.width = settings.panelWidth + '%';
+                leftPanel.style.padding = '15px';
+                leftPanel.style.overflow = 'auto';
+                toggleBtn.classList.remove('fixed-left');
+                toggleBtn.textContent = '◀';
+            }
+            setTimeout(() => {
+                resizeCanvas();
+                redraw();
+            }, 300);
+        }
+
+        function toggleAI() {
+            const container = document.getElementById('aiChatContainer');
+            const collapsed = container.getAttribute('data-collapsed') === '1';
+
+            if (!collapsed) {
+                container.style.height = '40px';
+                container.setAttribute('data-collapsed', '1');
+                container.querySelector('.chat-messages').style.display = 'none';
+                container.querySelector('.chat-suggestions').style.display = 'none';
+                container.querySelector('.chat-input-group').style.display = 'none';
+            } else {
+                container.style.height = settings.chatHeight + 'px';
+                container.setAttribute('data-collapsed', '0');
+                container.querySelector('.chat-messages').style.display = 'flex';
+                container.querySelector('.chat-suggestions').style.display = 'flex';
+                container.querySelector('.chat-input-group').style.display = 'flex';
+            }
+        }
+
+        // ============ AI CHAT ============
+        function updateChatBackground() {
+            const background = document.getElementById('aiBackground');
+            if (settings.showChatLogo) {
+                const logoSrc = document.body.classList.contains('dark-mode') ? 'bin/Logo2.png' : 'bin/Logo.png';
+                background.style.backgroundImage = `url('${logoSrc}')`;
+                background.style.opacity = (settings.logoBgOpacity / 100);
+            } else {
+                background.style.backgroundImage = 'none';
+            }
+        }
+
+        function renderChatSuggestions() {
+            const suggestions = document.getElementById('chatSuggestions');
+            suggestions.innerHTML = [
+                'Hva er formler?',
+                'Tegn sinus',
+                'Legg til punkt',
+                'Admin panel',
+                '/admin'
+            ].map(s => `<button class="suggestion-chip" onclick="suggestMessage('${s}')">${s}</button>`).join('');
+        }
+
+        function suggestMessage(msg) {
+            document.getElementById('chatInput').value = msg;
+            sendMessage();
+        }
+
+        function addAIMessage(text) {
+            const container = document.getElementById('chatMessages');
+            const msg = document.createElement('div');
+            msg.className = 'chat-message ai';
+            msg.textContent = text;
+            container.appendChild(msg);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function addUserMessage(text) {
+            const container = document.getElementById('chatMessages');
+            const msg = document.createElement('div');
+            msg.className = 'chat-message user';
+            msg.textContent = text;
+            container.appendChild(msg);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            addUserMessage(text);
+            chatHistory.unshift(text);
+            chatHistoryIndex = -1;
+            input.value = '';
+
+            if (text === '/admin') {
+                openAdminPanel();
+                addAIMessage('🔧 Admin Panel åpnet!');
+                return;
+            }
+
+            setTimeout(() => {
+                const match = Object.values(aiDatabase).find(db => 
+                    db.keywords.some(kw => text.toLowerCase().includes(kw))
+                );
+                addAIMessage(match ? match.response : '🤔 Spør om formler, punkter, zoom eller admin!');
+            }, 300);
+        }
+
+        // ============ ADMIN PANEL ============
+        function openAdminPanel() {
+            document.getElementById('adminModal').classList.add('show');
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminModal').classList.remove('show');
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.admin-tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function saveAllSettings() {
+            settings.logoHeight = parseInt(document.getElementById('logoHeight').value);
+            settings.logoWidth = document.getElementById('logoWidth').value || 'auto';
+            settings.gradientColor1 = document.getElementById('gradientColor1').value;
+            settings.gradientColor2 = document.getElementById('gradientColor2').value;
+            settings.canvasBg = document.getElementById('canvasBg').value;
+            settings.gridStyle = document.getElementById('gridStyle').value;
+            settings.gridSize = parseInt(document.getElementById('gridSize').value);
+            settings.pointSize = parseInt(document.getElementById('pointSize').value);
+            settings.formulaColor = document.getElementById('formulaColor').value;
+            settings.polygonColor = document.getElementById('polygonColor').value;
+            settings.fontSize = parseInt(document.getElementById('fontSize').value);
+            settings.xAxisInterval = parseInt(document.getElementById('xAxisInterval').value);
+            settings.yAxisInterval = parseInt(document.getElementById('yAxisInterval').value);
+            settings.miniGridLines = parseInt(document.getElementById('miniGridLines').value);
+            settings.gridColor = document.getElementById('gridColor').value;
+            settings.miniGridColor = document.getElementById('miniGridColor').value;
+            settings.panelWidth = parseInt(document.getElementById('panelWidth').value);
+            settings.chatHeight = parseInt(document.getElementById('chatHeight').value);
+            settings.chatBgOpacity = parseInt(document.getElementById('chatBgOpacity').value);
+            settings.logoBgOpacity = parseInt(document.getElementById('logoBgOpacity').value);
+            settings.showChatLogo = document.getElementById('showChatLogo').value === 'true';
+
+            localStorage.setItem('geoMathSettings', JSON.stringify(settings));
+            applySettings();
+            addAIMessage('💾 Innstillinger lagret!');
+        }
+
+        function loadAllSettings() {
+            const saved = localStorage.getItem('geoMathSettings');
+            if (saved) {
+                settings = { ...settings, ...JSON.parse(saved) };
+            }
+            applySettings();
+        }
+
+        function applySettings() {
+            const logo = document.getElementById('logoImg');
+            logo.style.maxHeight = settings.logoHeight + 'px';
+            if (settings.logoWidth !== 'auto') {
+                logo.style.maxWidth = settings.logoWidth + 'px';
+            }
+
+            document.body.style.background = document.body.classList.contains('dark-mode') 
+                ? `linear-gradient(135deg, ${settings.darkGradient1} 0%, ${settings.darkGradient2} 100%)`
+                : `linear-gradient(135deg, ${settings.gradientColor1} 0%, ${settings.gradientColor2} 100%)`;
+
+            leftPanel.style.width = settings.panelWidth + '%';
+            document.getElementById('aiChatContainer').style.height = settings.chatHeight + 'px';
+
+            updateChatBackground();
+            redraw();
+        }
+
+        function resetAllSettings() {
+            localStorage.removeItem('geoMathSettings');
+            settings = {
+                logoHeight: 200,
+                logoWidth: 'auto',
+                gradientColor1: '#667eea',
+                gradientColor2: '#764ba2',
+                darkGradient1: '#1a1a2e',
+                darkGradient2: '#16213e',
+                canvasBg: '#ffffff',
+                gridStyle: 'lines',
+                gridSize: 50,
+                pointSize: 5,
+                formulaColor: '#667eea',
+                polygonColor: '#ff9800',
+                fontSize: 11,
+                xAxisInterval: 1,
+                yAxisInterval: 1,
+                miniGridLines: 1,
+                gridColor: '#cccccc',
+                miniGridColor: '#e8e8e8',
+                panelWidth: 25,
+                chatHeight: 360,
+                chatBgOpacity: 15,
+                logoBgOpacity: 8,
+                showChatLogo: true
             };
+            applySettings();
+            addAIMessage('🔄 Innstillinger tilbakestilt!');
         }
-        
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+
+        function exportJSON() {
+            const json = JSON.stringify(settings, null, 2);
+            document.getElementById('settingsJSON').value = json;
+        }
+
+        function importJSON() {
+            try {
+                const json = document.getElementById('settingsJSON').value;
+                settings = JSON.parse(json);
+                saveAllSettings();
+                addAIMessage('📥 Innstillinger importert!');
+            } catch (e) {
+                addAIMessage('❌ Ugyldig JSON');
+            }
+        }
+
+        function applyTheme(theme) {
+            const themes = {
+                dark: { g1: '#1a1a2e', g2: '#16213e', dg1: '#0f1a2e', dg2: '#16213e' },
+                light: { g1: '#667eea', g2: '#764ba2', dg1: '#1a1a2e', dg2: '#16213e' },
+                neon: { g1: '#00ff88', g2: '#0088ff', dg1: '#000000', dg2: '#111111' },
+                ocean: { g1: '#0077be', g2: '#00d4ff', dg1: '#001f3f', dg2: '#003d5c' },
+                forest: { g1: '#00a86b', g2: '#228b22', dg1: '#0b3d0b', dg2: '#1a5a1a' },
+                sunset: { g1: '#ff6b6b', g2: '#ff8e53', dg1: '#2c1810', dg2: '#4a2417' }
+            };
+
+            const t = themes[theme];
+            document.getElementById('gradientColor1').value = t.g1;
+            document.getElementById('gradientColor2').value = t.g2;
+            document.getElementById('darkGradient1').value = t.dg1;
+            document.getElementById('darkGradient2').value = t.dg2;
+        }
+
+        function clearAll() {
+            points = [];
+            linkedPoints = [];
+            currentFormula = null;
+            document.getElementById('pointX').value = '0';
+            document.getElementById('pointY').value = '0';
+            updatePointsList();
+            redraw();
+            addAIMessage('🗑️ Alt tømt!');
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            
+            // Bytt logo basert på tema
+            if (document.body.classList.contains('dark-mode')) {
+                logoImg.src = 'bin/Logo2.png';
+                addAIMessage('🌙 Mørkt tema aktivert - Logo bytt til Logo2.png');
+            } else {
+                logoImg.src = 'bin/Logo.png';
+                addAIMessage('☀️ Lyst tema aktivert - Logo bytt til Logo.png');
+            }
+            
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+            updateChatBackground();
+            applySettings();
+        }
+
+        function resetTheme() {
+            document.body.classList.remove('dark-mode');
+            logoImg.src = 'bin/Logo.png';
+            localStorage.setItem('darkMode', false);
+            updateChatBackground();
+            applySettings();
+            addAIMessage('☀️ Lyst tema - Logo bytt til Logo.png');
+        }
+
+        // Close modal on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeAdminPanel();
+        });
+
+        window.addEventListener('load', init);
     </script>
 </body>
 </html>
