@@ -117,6 +117,27 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+        table th {
+            background: #667eea;
+            color: white;
+            padding: 6px;
+            font-weight: 600;
+        }
+        table td {
+            padding: 6px;
+            border-bottom: 1px solid #ddd;
+            background: white;
+        }
+        body.dark-mode table td {
+            background: #4a4a6a;
+            border-bottom-color: #5a5a7a;
+            color: #e0e0e0;
+        }
     </style>
 </head>
 <body>
@@ -131,8 +152,25 @@
                 <button class="btn" onclick="addPoint()">Legg til punkt</button>
             </div>
             <div class="section">
-                <h3>Informasjon</h3>
-                <p style="font-size: 12px;">Velkommen til JanS2A Origo - Ultimate Koordinat Plotter!</p>
+                <h3>Punkter</h3>
+                <table id="pointsTable">
+                    <thead>
+                        <tr>
+                            <th>X</th>
+                            <th>Y</th>
+                            <th>Koble</th>
+                            <th>Slett</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pointsTableBody">
+                        <tr><td colspan="4" style="text-align:center;font-size:10px;">Ingen punkter</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="section">
+                <h3>Statistikk</h3>
+                <p style="font-size:12px;"><strong>Areal:</strong> <span id="areaValue">0</span></p>
+                <p style="font-size:12px;"><strong>Omkrets:</strong> <span id="perimeterValue">0</span></p>
             </div>
         </div>
         <div class="main-container">
@@ -146,6 +184,8 @@
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         let points = [];
+        let linkedPoints = [];
+        let currentZoom = 100;
 
         function resizeCanvas() {
             const wrapper = canvas.parentElement;
@@ -159,7 +199,80 @@
             const y = parseFloat(document.getElementById('pointY').value);
             if (!isNaN(x) && !isNaN(y)) {
                 points.push({x, y});
+                updatePointsList();
                 redraw();
+            }
+        }
+
+        function removePoint(idx) {
+            points.splice(idx, 1);
+            linkedPoints = linkedPoints.filter(i => i < points.length).map(i => i < idx ? i : i - 1);
+            updatePointsList();
+            redraw();
+        }
+
+        function togglePointLink(idx) {
+            const linkIdx = linkedPoints.indexOf(idx);
+            if (linkIdx > -1) {
+                linkedPoints.splice(linkIdx, 1);
+            } else {
+                linkedPoints.push(idx);
+            }
+            updatePointsList();
+            updateArea();
+            redraw();
+        }
+
+        function updatePointsList() {
+            const tbody = document.getElementById('pointsTableBody');
+            if (points.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;font-size:10px;">Ingen punkter</td></tr>';
+            } else {
+                tbody.innerHTML = points.map((p, i) => `
+                    <tr>
+                        <td>${p.x}</td>
+                        <td>${p.y}</td>
+                        <td><button class="btn" onclick="togglePointLink(${i})" style="background: ${linkedPoints.includes(i) ? '#ff9800' : '#999'}; padding:4px 6px; font-size:10px;">K</button></td>
+                        <td><button class="btn" onclick="removePoint(${i})" style="padding:4px 6px; font-size:10px;">X</button></td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        function calculateArea(pts) {
+            if (pts.length < 3) return 0;
+            let area = 0;
+            for (let i = 0; i < pts.length; i++) {
+                const p1 = pts[i];
+                const p2 = pts[(i + 1) % pts.length];
+                area += (p1.x * p2.y - p2.x * p1.y) / 2;
+            }
+            return Math.abs(area);
+        }
+
+        function calculatePerimeter(pts) {
+            if (pts.length < 2) return 0;
+            let perimeter = 0;
+            for (let i = 0; i < pts.length; i++) {
+                const p1 = pts[i];
+                const p2 = pts[(i + 1) % pts.length];
+                const dx = p2.x - p1.x;
+                const dy = p2.y - p1.y;
+                perimeter += Math.sqrt(dx * dx + dy * dy);
+            }
+            return perimeter;
+        }
+
+        function updateArea() {
+            if (linkedPoints.length > 0) {
+                const linkedPts = linkedPoints.map(i => points[i]);
+                const area = calculateArea(linkedPts);
+                const perimeter = calculatePerimeter(linkedPts);
+                document.getElementById('areaValue').textContent = area.toFixed(2);
+                document.getElementById('perimeterValue').textContent = perimeter.toFixed(2);
+            } else {
+                document.getElementById('areaValue').textContent = '0';
+                document.getElementById('perimeterValue').textContent = '0';
             }
         }
 
@@ -167,12 +280,12 @@
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Draw grid
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-            const scale = 50;
+            const scale = 50 * (currentZoom / 100);
             
-            ctx.strokeStyle = '#cccccc';
+            // Draw grid
+            ctx.strokeStyle = '#e0e0e0';
             ctx.lineWidth = 1;
             for (let x = -500; x < 500; x += 1) {
                 const px = centerX + x * scale;
@@ -205,11 +318,29 @@
             ctx.lineTo(centerX, canvas.height);
             ctx.stroke();
             
+            // Draw linked polygon
+            if (linkedPoints.length > 1) {
+                ctx.strokeStyle = '#ff9800';
+                ctx.lineWidth = 2;
+                ctx.fillStyle = 'rgba(255, 152, 0, 0.1)';
+                ctx.beginPath();
+                linkedPoints.forEach((idx, i) => {
+                    const p = points[idx];
+                    const px = centerX + p.x * scale;
+                    const py = centerY - p.y * scale;
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                });
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+            }
+            
             // Draw points
-            ctx.fillStyle = '#667eea';
-            points.forEach(p => {
+            points.forEach((p, i) => {
                 const px = centerX + p.x * scale;
                 const py = centerY - p.y * scale;
+                ctx.fillStyle = linkedPoints.includes(i) ? '#ff9800' : '#667eea';
                 ctx.beginPath();
                 ctx.arc(px, py, 5, 0, Math.PI * 2);
                 ctx.fill();
