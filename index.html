@@ -10,6 +10,7 @@
             padding: 0;
             box-sizing: border-box;
         }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -17,340 +18,397 @@
             color: #333;
             transition: all 0.3s;
         }
+        
         body.dark-mode {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             color: #e0e0e0;
         }
+        
         .container {
             display: flex;
             height: 100vh;
-            gap: 10px;
-            padding: 10px;
+            gap: 16px;
+            padding: 16px;
         }
+        
         .left-panel {
             width: 25%;
             background: white;
             border-radius: 12px;
-            padding: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
             overflow-y: auto;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            max-height: 100vh;
         }
-        body.dark-mode .left-panel {
+        
+        .left-panel.dark-mode {
             background: #2d2d44;
         }
-        .main-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .canvas-wrapper {
+        
+        .right-panel {
             flex: 1;
             background: white;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            position: relative;
-            cursor: grab;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
-        body.dark-mode .canvas-wrapper {
+        
+        .right-panel.dark-mode {
             background: #2d2d44;
         }
-        canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-        .section {
-            background: #f8f9fa;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            border-left: 4px solid #667eea;
-        }
-        body.dark-mode .section {
-            background: #3a3a52;
-            border-left-color: #764ba2;
-        }
-        .section h3 {
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
             color: #667eea;
-            font-size: 14px;
-            margin-bottom: 10px;
-            font-weight: 600;
         }
-        body.dark-mode .section h3 {
-            color: #a78bfa;
+        
+        h2 {
+            font-size: 16px;
+            margin-top: 16px;
+            margin-bottom: 12px;
+            color: #667eea;
         }
+        
         .input-group {
+            margin-bottom: 12px;
             display: flex;
             gap: 8px;
-            margin-bottom: 8px;
             align-items: center;
         }
-        .input-group input {
-            flex: 1;
+        
+        input[type="number"] {
             padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 12px;
-            background: white;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            flex: 1;
         }
-        body.dark-mode .input-group input {
-            background: #4a4a6a;
-            border-color: #5a5a7a;
-            color: #e0e0e0;
+        
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
         }
-        .btn {
-            padding: 8px 12px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+        
+        button {
+            padding: 10px 16px;
+            background: #667eea;
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
             font-weight: 600;
-            transition: all 0.2s;
+            transition: all 0.3s;
         }
-        .btn:hover {
+        
+        button:hover {
+            background: #5568d3;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
+        
+        button.small {
+            padding: 6px 10px;
+            font-size: 12px;
+            margin: 0;
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 11px;
+            margin-top: 12px;
+            font-size: 14px;
         }
-        table th {
+        
+        th {
             background: #667eea;
             color: white;
-            padding: 6px;
+            padding: 10px;
+            text-align: left;
             font-weight: 600;
         }
-        table td {
-            padding: 6px;
-            border-bottom: 1px solid #ddd;
-            background: white;
+        
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
         }
-        body.dark-mode table td {
-            background: #4a4a6a;
-            border-bottom-color: #5a5a7a;
-            color: #e0e0e0;
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .dark-mode tr:hover {
+            background: #3a3a52;
+        }
+        
+        .stats {
+            margin-top: 16px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .dark-mode .stats {
+            background: #3a3a52;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 6px 0;
+            font-size: 14px;
+        }
+        
+        canvas {
+            width: 100%;
+            height: 100%;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+        
+        .delete-btn {
+            background: #ff6b6b;
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+        
+        .delete-btn:hover {
+            background: #ff5252;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="left-panel">
-            <div class="section">
-                <h3>Koordinat Plotter</h3>
-                <div class="input-group">
-                    <input type="number" id="pointX" placeholder="X" value="0" step="0.5">
-                    <input type="number" id="pointY" placeholder="Y" value="0" step="0.5">
+            <h1>Koordinat Plotter</h1>
+            
+            <div class="input-group">
+                <input type="number" id="xInput" placeholder="X" value="5">
+                <input type="number" id="yInput" placeholder="Y" value="2">
+            </div>
+            <button onclick="addPoint()">Legg til punkt</button>
+            
+            <h2>Punkter</h2>
+            <table id="pointsTable">
+                <thead>
+                    <tr>
+                        <th>X</th>
+                        <th>Y</th>
+                        <th>Koble</th>
+                        <th>Slett</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            
+            <h2>Statistikk</h2>
+            <div class="stats">
+                <div class="stat-item">
+                    <span>Areal:</span>
+                    <span id="areaValue">0</span>
                 </div>
-                <button class="btn" onclick="addPoint()">Legg til punkt</button>
-            </div>
-            <div class="section">
-                <h3>Punkter</h3>
-                <table id="pointsTable">
-                    <thead>
-                        <tr>
-                            <th>X</th>
-                            <th>Y</th>
-                            <th>Koble</th>
-                            <th>Slett</th>
-                        </tr>
-                    </thead>
-                    <tbody id="pointsTableBody">
-                        <tr><td colspan="4" style="text-align:center;font-size:10px;">Ingen punkter</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="section">
-                <h3>Statistikk</h3>
-                <p style="font-size:12px;"><strong>Areal:</strong> <span id="areaValue">0</span></p>
-                <p style="font-size:12px;"><strong>Omkrets:</strong> <span id="perimeterValue">0</span></p>
+                <div class="stat-item">
+                    <span>Omkrets:</span>
+                    <span id="perimeterValue">0</span>
+                </div>
             </div>
         </div>
-        <div class="main-container">
-            <div class="canvas-wrapper">
-                <canvas id="canvas"></canvas>
-            </div>
+        
+        <div class="right-panel">
+            <canvas id="canvas"></canvas>
         </div>
     </div>
-
+    
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
+        const xInput = document.getElementById('xInput');
+        const yInput = document.getElementById('yInput');
+        const pointsTable = document.getElementById('pointsTable').getElementsByTagName('tbody')[0];
+        const areaValue = document.getElementById('areaValue');
+        const perimeterValue = document.getElementById('perimeterValue');
+        
         let points = [];
-        let linkedPoints = [];
-        let currentZoom = 100;
-
+        let connected = [];
+        
         function resizeCanvas() {
-            const wrapper = canvas.parentElement;
-            canvas.width = wrapper.clientWidth;
-            canvas.height = wrapper.clientHeight;
-            redraw();
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            draw();
         }
-
+        
         function addPoint() {
-            const x = parseFloat(document.getElementById('pointX').value);
-            const y = parseFloat(document.getElementById('pointY').value);
-            if (!isNaN(x) && !isNaN(y)) {
-                points.push({x, y});
-                updatePointsList();
-                redraw();
-            }
+            const x = parseFloat(xInput.value) || 0;
+            const y = parseFloat(yInput.value) || 0;
+            points.push({x, y});
+            updateTable();
+            updateStats();
+            draw();
+            xInput.value = '';
+            yInput.value = '';
         }
-
-        function removePoint(idx) {
-            points.splice(idx, 1);
-            linkedPoints = linkedPoints.filter(i => i < points.length).map(i => i < idx ? i : i - 1);
-            updatePointsList();
-            redraw();
+        
+        function deletePoint(index) {
+            points.splice(index, 1);
+            connected.splice(index, 1);
+            updateTable();
+            updateStats();
+            draw();
         }
-
-        function togglePointLink(idx) {
-            const linkIdx = linkedPoints.indexOf(idx);
-            if (linkIdx > -1) {
-                linkedPoints.splice(linkIdx, 1);
-            } else {
-                linkedPoints.push(idx);
-            }
-            updatePointsList();
-            updateArea();
-            redraw();
+        
+        function toggleConnection(index) {
+            connected[index] = !connected[index];
+            updateTable();
+            updateStats();
+            draw();
         }
-
-        function updatePointsList() {
-            const tbody = document.getElementById('pointsTableBody');
-            if (points.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;font-size:10px;">Ingen punkter</td></tr>';
-            } else {
-                tbody.innerHTML = points.map((p, i) => `
-                    <tr>
-                        <td>${p.x}</td>
-                        <td>${p.y}</td>
-                        <td><button class="btn" onclick="togglePointLink(${i})" style="background: ${linkedPoints.includes(i) ? '#ff9800' : '#999'}; padding:4px 6px; font-size:10px;">K</button></td>
-                        <td><button class="btn" onclick="removePoint(${i})" style="padding:4px 6px; font-size:10px;">X</button></td>
-                    </tr>
-                `).join('');
-            }
+        
+        function updateTable() {
+            pointsTable.innerHTML = '';
+            points.forEach((p, i) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${p.x}</td>
+                    <td>${p.y}</td>
+                    <td><button class="small" onclick="toggleConnection(${i})">${connected[i] ? '✓' : ''}</button></td>
+                    <td><button class="small delete-btn" onclick="deletePoint(${i})">✕</button></td>
+                `;
+                pointsTable.appendChild(row);
+            });
         }
-
-        function calculateArea(pts) {
-            if (pts.length < 3) return 0;
+        
+        function calculateArea() {
+            if (points.length < 3) return 0;
             let area = 0;
-            for (let i = 0; i < pts.length; i++) {
-                const p1 = pts[i];
-                const p2 = pts[(i + 1) % pts.length];
-                area += (p1.x * p2.y - p2.x * p1.y) / 2;
+            for (let i = 0; i < points.length; i++) {
+                const j = (i + 1) % points.length;
+                area += points[i].x * points[j].y;
+                area -= points[j].x * points[i].y;
             }
-            return Math.abs(area);
+            return Math.abs(area / 2);
         }
-
-        function calculatePerimeter(pts) {
-            if (pts.length < 2) return 0;
+        
+        function calculatePerimeter() {
+            if (points.length < 2) return 0;
             let perimeter = 0;
-            for (let i = 0; i < pts.length; i++) {
-                const p1 = pts[i];
-                const p2 = pts[(i + 1) % pts.length];
-                const dx = p2.x - p1.x;
-                const dy = p2.y - p1.y;
+            for (let i = 0; i < points.length; i++) {
+                const j = (i + 1) % points.length;
+                const dx = points[j].x - points[i].x;
+                const dy = points[j].y - points[i].y;
                 perimeter += Math.sqrt(dx * dx + dy * dy);
             }
             return perimeter;
         }
-
-        function updateArea() {
-            if (linkedPoints.length > 0) {
-                const linkedPts = linkedPoints.map(i => points[i]);
-                const area = calculateArea(linkedPts);
-                const perimeter = calculatePerimeter(linkedPts);
-                document.getElementById('areaValue').textContent = area.toFixed(2);
-                document.getElementById('perimeterValue').textContent = perimeter.toFixed(2);
-            } else {
-                document.getElementById('areaValue').textContent = '0';
-                document.getElementById('perimeterValue').textContent = '0';
-            }
+        
+        function updateStats() {
+            areaValue.textContent = calculateArea().toFixed(2);
+            perimeterValue.textContent = calculatePerimeter().toFixed(2);
         }
-
-        function redraw() {
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const scale = 50 * (currentZoom / 100);
+        
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             
             // Draw grid
-            ctx.strokeStyle = '#e0e0e0';
-            ctx.lineWidth = 1;
-            for (let x = -500; x < 500; x += 1) {
-                const px = centerX + x * scale;
-                if (px > 0 && px < canvas.width) {
-                    ctx.beginPath();
-                    ctx.moveTo(px, 0);
-                    ctx.lineTo(px, canvas.height);
-                    ctx.stroke();
-                }
-            }
-            for (let y = -500; y < 500; y += 1) {
-                const py = centerY - y * scale;
-                if (py > 0 && py < canvas.height) {
-                    ctx.beginPath();
-                    ctx.moveTo(0, py);
-                    ctx.lineTo(canvas.width, py);
-                    ctx.stroke();
-                }
-            }
+            drawGrid();
             
-            // Draw axes
-            ctx.strokeStyle = '#333';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(0, centerY);
-            ctx.lineTo(canvas.width, centerY);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(centerX, 0);
-            ctx.lineTo(centerX, canvas.height);
-            ctx.stroke();
-            
-            // Draw linked polygon
-            if (linkedPoints.length > 1) {
-                ctx.strokeStyle = '#ff9800';
+            // Draw polygon
+            if (points.length > 2) {
+                ctx.fillStyle = 'rgba(102, 126, 234, 0.1)';
+                ctx.strokeStyle = '#667eea';
                 ctx.lineWidth = 2;
-                ctx.fillStyle = 'rgba(255, 152, 0, 0.1)';
                 ctx.beginPath();
-                linkedPoints.forEach((idx, i) => {
-                    const p = points[idx];
-                    const px = centerX + p.x * scale;
-                    const py = centerY - p.y * scale;
-                    if (i === 0) ctx.moveTo(px, py);
-                    else ctx.lineTo(px, py);
-                });
+                const p0 = worldToScreen(points[0]);
+                ctx.moveTo(p0.x, p0.y);
+                for (let i = 1; i < points.length; i++) {
+                    const p = worldToScreen(points[i]);
+                    ctx.lineTo(p.x, p.y);
+                }
                 ctx.closePath();
                 ctx.fill();
                 ctx.stroke();
             }
             
+            // Draw lines
+            if (points.length > 1) {
+                ctx.strokeStyle = '#667eea';
+                ctx.lineWidth = 1;
+                for (let i = 0; i < points.length - 1; i++) {
+                    if (connected[i]) {
+                        const p1 = worldToScreen(points[i]);
+                        const p2 = worldToScreen(points[i + 1]);
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            
             // Draw points
             points.forEach((p, i) => {
-                const px = centerX + p.x * scale;
-                const py = centerY - p.y * scale;
-                ctx.fillStyle = linkedPoints.includes(i) ? '#ff9800' : '#667eea';
+                const screenPoint = worldToScreen(p);
+                ctx.fillStyle = '#667eea';
                 ctx.beginPath();
-                ctx.arc(px, py, 5, 0, Math.PI * 2);
+                ctx.arc(screenPoint.x, screenPoint.y, 6, 0, 2 * Math.PI);
                 ctx.fill();
             });
         }
-
-        window.addEventListener('resize', () => {
-            resizeCanvas();
-        });
         
+        function drawGrid() {
+            const gridSize = 40;
+            ctx.strokeStyle = '#ddd';
+            ctx.lineWidth = 0.5;
+            
+            for (let i = 0; i <= canvas.width; i += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+            
+            for (let i = 0; i <= canvas.height; i += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
+            
+            // Draw axes
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            
+            ctx.beginPath();
+            ctx.moveTo(centerX, 0);
+            ctx.lineTo(centerX, canvas.height);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(0, centerY);
+            ctx.lineTo(canvas.width, centerY);
+            ctx.stroke();
+        }
+        
+        function worldToScreen(point) {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const scale = 20;
+            
+            return {
+                x: centerX + point.x * scale,
+                y: centerY - point.y * scale
+            };
+        }
+        
+        window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
     </script>
 </body>
