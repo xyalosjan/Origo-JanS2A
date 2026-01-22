@@ -2,22 +2,19 @@
   <!-- Hvit bakgrunn -->
   <rect x="0" y="0" width="500" height="500" fill="#ffffff"/>
 
-  <!-- Minimal krone -->
-  <g transform="translate(250, 150)">
-    <!-- Bue / base -->
-    <path d="M -120 55 Q 0 95 120 55 L 110 80 Q 0 115 -110 80 Z"
-          fill="#c99818"/>
-
-    <!-- Venstre bue + sirkel -->
-    <path d="M -120 55 Q -60 -5 0 40 Q -60 5 -120 55 Z" fill="#d4a017"/>
-    <circle cx="-60" cy="-5" r="9" fill="#d4a017"/>
-
-    <!-- Høyre bue + sirkel -->
-    <path d="M 120 55 Q 60 -5 0 40 Q 60 5 120 55 Z" fill="#d4a017"/>
-    <circle cx="60" cy="-5" r="9" fill="#d4a017"/>
-
-    <!-- Midtkule -->
-    <circle cx="0" cy="-20" r="10" fill="#d4a017"/>
+  <!-- Elegant krone -->
+  <g transform="translate(250, 150)" fill="#c99818">
+    <!-- Bunnplate -->
+    <path d="M -110 70 Q 0 95 110 70 L 95 100 Q 0 120 -95 100 Z" />
+    
+    <!-- Bue-former -->
+    <path d="M -90 65 Q -40 15 0 40 Q -40 10 -90 65 Z" />
+    <path d="M 90 65 Q 40 15 0 40 Q 40 10 90 65 Z" />
+    
+    <!-- Kuler -->
+    <circle cx="-45" cy="10" r="8" />
+    <circle cx="0" cy="-5" r="9" />
+    <circle cx="45" cy="10" r="8" />
   </g>
 
   <!-- Tekst "JanS2A" -->
