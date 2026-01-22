@@ -1,5 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <rect x="10" y="10" width="80" height="80" fill="#667eea" rx="10"/>
-  <circle cx="50" cy="50" r="30" fill="#fff"/>
-  <path d="M 40 40 L 60 40 L 55 60 L 45 60 Z" fill="#667eea"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <!-- Bakgrunn -->
+  <rect x="0" y="0" width="400" height="400" fill="#ffffff"/>
+  
+  <!-- Tekst "JanS2A" -->
+  <text x="200" y="320" font-family="Georgia, serif" font-size="120" font-weight="700" fill="#b8860b" text-anchor="middle" letter-spacing="5">JanS2A</text>
+  
+  <!-- Krone -->
+  <g transform="translate(200, 120)">
+    <!-- Krone base -->
+    <path d="M -80 30 L -60 0 L -40 20 L -20 0 L 0 -30 L 20 0 L 40 20 L 60 0 L 80 30 Q 0 50 0 50 Q 0 50 -80 30" fill="#b8860b"/>
+    
+    <!-- Krone detaljer -->
+    <circle cx="-50" cy="-5" r="8" fill="#d4a017"/>
+    <circle cx="0" cy="-35" r="12" fill="#d4a017"/>
+    <circle cx="50" cy="-5" r="8" fill="#d4a017"/>
+    
+    <!-- Krone kant -->
+    <path d="M -80 30 L -60 0 L -40 20 L -20 0 L 0 -30 L 20 0 L 40 20 L 60 0 L 80 30" stroke="#d4a017" stroke-width="2" fill="none"/>
+  </g>
 </svg>
