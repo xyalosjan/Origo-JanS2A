@@ -2,23 +2,30 @@
   <!-- Hvit bakgrunn -->
   <rect x="0" y="0" width="500" height="500" fill="#ffffff"/>
 
-  <!-- Enkel, ren krone -->
+  <!-- Minimal krone -->
   <g transform="translate(250, 150)">
-    <!-- Bunn -->
-    <path d="M -110 70 L 110 70 L 90 100 L -90 100 Z" fill="#d4a017"/>
-    <!-- Spisser + kuler -->
-    <path d="M -100 70 L -60 0 L 0 60 L 60 0 L 100 70 Z" fill="#b8860b"/>
-    <circle cx="-60" cy="0" r="10" fill="#b8860b"/>
-    <circle cx="0" cy="60" r="10" fill="#b8860b"/>
-    <circle cx="60" cy="0" r="10" fill="#b8860b"/>
+    <!-- Bue / base -->
+    <path d="M -120 55 Q 0 95 120 55 L 110 80 Q 0 115 -110 80 Z"
+          fill="#c99818"/>
+
+    <!-- Venstre bue + sirkel -->
+    <path d="M -120 55 Q -60 -5 0 40 Q -60 5 -120 55 Z" fill="#d4a017"/>
+    <circle cx="-60" cy="-5" r="9" fill="#d4a017"/>
+
+    <!-- Høyre bue + sirkel -->
+    <path d="M 120 55 Q 60 -5 0 40 Q 60 5 120 55 Z" fill="#d4a017"/>
+    <circle cx="60" cy="-5" r="9" fill="#d4a017"/>
+
+    <!-- Midtkule -->
+    <circle cx="0" cy="-20" r="10" fill="#d4a017"/>
   </g>
 
-  <!-- Tekst "JanS2A" (mer lik logoen din) -->
-  <text x="250" y="360"
+  <!-- Tekst "JanS2A" -->
+  <text x="250" y="365"
         font-family="Georgia, 'Times New Roman', serif"
         font-size="120"
         font-weight="700"
-        fill="#b8860b"
+        fill="#c99818"
         text-anchor="middle">
     JanS2A
   </text>
