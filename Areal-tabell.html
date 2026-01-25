@@ -470,7 +470,7 @@
         const centerY = canvas.height / 2 + offset.y;
         const scale = 50 * (zoom / 100);
         
-        ctx.strokeStyle = '#e0e0e0';
+        ctx.strokeStyle = document.body.classList.contains('dark-mode') ? '#3a3a52' : '#e0e0e0';
         ctx.lineWidth = 1;
         
         for (let x = -100; x <= 100; x++) {
@@ -486,11 +486,38 @@
     function drawAxes() {
         const centerX = canvas.width / 2 + offset.x;
         const centerY = canvas.height / 2 + offset.y;
+        const scale = 50 * (zoom / 100);
+        const isDark = document.body.classList.contains('dark-mode');
         
-        ctx.strokeStyle = '#333';
+        ctx.strokeStyle = isDark ? '#666' : '#333';
         ctx.lineWidth = 2;
         ctx.beginPath(); ctx.moveTo(0, centerY); ctx.lineTo(canvas.width, centerY); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(centerX, 0); ctx.lineTo(centerX, canvas.height); ctx.stroke();
+
+        // Draw numbers
+        ctx.fillStyle = isDark ? '#aaa' : '#333';
+        ctx.font = '10px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+
+        const step = 1;
+        // X-axis numbers
+        for (let x = -20; x <= 20; x += step) {
+            if (x === 0) continue;
+            const px = centerX + x * scale;
+            ctx.fillText(x, px, centerY + 5);
+            ctx.beginPath(); ctx.moveTo(px, centerY - 3); ctx.lineTo(px, centerY + 3); ctx.stroke();
+        }
+
+        // Y-axis numbers
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        for (let y = -20; y <= 20; y += step) {
+            if (y === 0) continue;
+            const py = centerY - y * scale;
+            ctx.fillText(y, centerX - 5, py);
+            ctx.beginPath(); ctx.moveTo(centerX - 3, py); ctx.lineTo(centerX + 3, py); ctx.stroke();
+        }
     }
 
     function drawPoints() {
