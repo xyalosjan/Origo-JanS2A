@@ -17,9 +17,8 @@
     }
     .wrapper { width: 100%; max-width: 720px; padding: 24px; }
     .logo { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; }
-    .logo-text { font-size: 2rem; letter-spacing: 0.06em; color: #ffd876; }
-    .crown { width: 42px; height: 42px; border-radius: 999px; border: 1px solid rgba(255, 216, 118, 0.2); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 18px rgba(255, 216, 118, 0.25); font-size: 24px; }
-    .subtitle { text-align: center; font-size: 0.95rem; color: #b3b6d8; margin-bottom: 18px; }
+    .logo-text img { max-height: 80px; width: auto; }
+    .subtitle { text-align: center; font-size: 1.1rem; color: #b3b6d8; margin-bottom: 24px; font-weight: 500; }
     .top-sites-label { text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.18em; color: #767a9c; margin-bottom: 10px; }
     .cards { display: flex; flex-direction: column; gap: 10px; }
     .card { display: flex; align-items: center; padding: 10px 14px; border-radius: 14px; background: rgba(17, 20, 35, 0.9); border: 1px solid rgba(90, 105, 190, 0.35); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.02); cursor: pointer; text-decoration: none; color: inherit; transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, border-color 0.12s ease-out, background 0.12s ease-out; }
@@ -30,16 +29,15 @@
     .card-text { display: flex; flex-direction: column; gap: 2px; }
     .card-title { font-size: 0.95rem; font-weight: 600; color: #f5f6ff; }
     .card-sub { font-size: 0.8rem; color: #9da3d6; }
-    @media (max-width: 520px) { .wrapper { padding: 18px 14px; } .logo-text { font-size: 1.6rem; } }
+    @media (max-width: 520px) { .wrapper { padding: 18px 14px; } }
   </style>
 </head>
 <body>
   <div class="wrapper">
     <div class="logo">
-      <div class="crown">♛</div>
-      <div class="logo-text">JanS2A</div>
+      <div class="logo-text"><img src="logo2.svg" alt="Logo"/></div>
     </div>
-    <p class="subtitle">Velkommen til samlesiden din. Åpne verktøyene dine via raske “Top Sites”-kort.</p>
+    <p class="subtitle">Jan side Hjemmelagde verktøy</p>
     <div class="top-sites-label">Top Sites</div>
     <div class="cards">
       <a href="Origo-Tabell.html" class="card">
