@@ -474,12 +474,10 @@
         ctx.strokeStyle = document.body.classList.contains('dark-mode') ? '#3a3a52' : '#e0e0e0';
         ctx.lineWidth = 1;
         
-        for (let x = -100; x <= 100; x++) {
-            const px = centerX + x * scale;
+        for (let x = -10; x <= 10; x++) {            const px = centerX + x * scale;
             ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, canvas.height); ctx.stroke();
         }
-        for (let y = -100; y <= 100; y++) {
-            const py = centerY - y * scale;
+        for (let y = -5; y <= 5; y++) {            const py = centerY - y * scale;
             ctx.beginPath(); ctx.moveTo(0, py); ctx.lineTo(canvas.width, py); ctx.stroke();
         }
     }
