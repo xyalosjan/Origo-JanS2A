@@ -47,43 +47,44 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="left-panel" id="leftPanel">
-            <div class="logo-section">
-                <img id="logoImg" src="logo.svg" alt="Logo" style="max-height: 150px;">
-            </div>
-            
-            <div class="section">
-                <h3>Design & Tema</h3>
-                <div class="input-group">
-                    <button onclick="toggleDarkMode()" class="btn" style="flex: 1;">Mørkt</button>
-                    <button onclick="resetTheme()" class="btn" style="flex: 1;">Standard</button>
-                </div>
-            </div>
+<div class="container">
+    <div class="left-panel" id="leftPanel">
+        <div class="logo-section">
+            <img id="logoImg" src="logo.svg" alt="Logo" style="max-height: 150px;">
+        </div>
 
-            <div class="section">
-                <h3>Legg til Punkt <span class="snap-badge" id="snapBadge">0.5x0.5</span></h3>
-                <div class="input-group">
-                    <button id="pointToolBtn" onclick="togglePointTool()" class="btn" style="flex: 1;">Punkt-verktøy</button>
-                </div>
-                <div class="input-group">
-                    <select id="snapGrid" onchange="updateSnapBadge()" style="flex: 1; padding: 6px; border: 1px solid #ddd; border-radius: 6px; font-size: 11px;">
-                        <option value="1">1x1</option>
-                        <option value="0.5" selected>0.5x0.5</option>
-                        <option value="0.25">0.25x0.25</option>
-                        <option value="0.1">0.1x0.1</option>
-                        <option value="0">Fri (ingen snap)</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <input type="number" id="pointX" placeholder="X" value="0" step="0.5">
-                    <input type="number" id="pointY" placeholder="Y" value="0" step="0.5">
-                    <button onclick="addPoint()" class="btn" style="flex: 0 0 auto;">+</button>
-                </div>
+        <div class="section">
+            <h3>Design & Tema</h3>
+            <div class="input-group">
+                <button onclick="toggleDarkMode()" class="btn" style="flex: 1;">Mørkt</button>
+                <button onclick="resetTheme()" class="btn" style="flex: 1;">Standard</button>
             </div>
+        </div>
 
-            <div class="section">
-                <h3>Punkter & Linjer</h3>
+        <div class="section">
+            <h3>Legg til Punkt <span class="snap-badge" id="snapBadge">0.5x0.5</span></h3>
+            <div class="input-group">
+                <button id="pointToolBtn" onclick="togglePointTool()" class="btn" style="flex: 1;">Punkt-verktøy</button>
+            </div>
+            <div class="input-group">
+                <select id="snapGrid" onchange="updateSnapBadge()" style="flex: 1; padding: 6px; border: 1px solid #ddd; border-radius: 6px; font-size: 11px;">
+                    <option value="1">1x1</option>
+                    <option value="0.5" selected>0.5x0.5</option>
+                    <option value="0.25">0.25x0.25</option>
+                    <option value="0.1">0.1x0.1</option>
+                    <option value="0">Fri (ingen snap)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <input type="number" id="pointX" placeholder="X" value="0" step="0.5">
+                <input type="number" id="pointY" placeholder="Y" value="0" step="0.5">
+                <button onclick="addPoint()" class="btn" style="flex: 0 0 auto;">+</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Punkter & Linjer</h3>
+            <div style="max-height: 200px; overflow-y: auto;">
                 <table id="pointsTable">
                     <thead>
                         <tr>
@@ -96,433 +97,445 @@
                         <tr><td colspan="3" class="empty-state">Ingen punkter</td></tr>
                     </tbody>
                 </table>
-                
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-label">Punkt</div>
-                        <div class="stat-value" id="pointCount">0</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Linjer</div>
-                        <div class="stat-value" id="lineCount">0</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Areal</div>
-                        <div class="stat-value" id="areaValue">0</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Omkrets</div>
-                        <div class="stat-value" id="perimeterValue">0</div>
-                    </div>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Punkt</div>
+                    <div class="stat-value" id="pointCount">0</div>
                 </div>
-                
-                <div class="input-group" style="margin-top: 10px;">
-                    <button onclick="clearManualLines()" class="btn" style="flex: 1; background: #ff9800;">Tøm Linjer</button>
+                <div class="stat-item">
+                    <div class="stat-label">Linjer</div>
+                    <div class="stat-value" id="lineCount">0</div>
                 </div>
             </div>
-
-            <div class="section">
-                <h3>Zoom</h3>
-                <div class="input-group">
-                    <button onclick="zoomOut()" class="btn">-</button>
-                    <input type="range" id="zoomSlider" min="20" max="300" value="100" oninput="zoomCanvas(this.value)" style="flex: 1;">
-                    <button onclick="zoomIn()" class="btn">+</button>
+            <div class="stats">
+                <div class="stat-item" style="grid-column: span 2;">
+                    <div class="stat-label">Areal</div>
+                    <div class="stat-value" id="areaValue">0</div>
                 </div>
-                <div style="text-align: center; font-size: 12px; margin-top: 5px; color: #667eea; font-weight: 600;">
-                    Zoom: <span id="zoomValue">100</span>%
+                <div class="stat-item" style="grid-column: span 2;">
+                    <div class="stat-label">Omkrets</div>
+                    <div class="stat-value" id="perimeterValue">0</div>
                 </div>
             </div>
-
-            <div class="section">
-                <h3>Data</h3>
-                <div class="input-group">
-                    <button onclick="clearAll()" class="btn" style="flex: 1; background: #dc3545;">Tøm Alt</button>
-                </div>
-            </div>
+            <button onclick="clearManualLines()" class="btn" style="width: 100%; margin-top: 10px; background: #6c757d;">Tøm Linjer</button>
         </div>
 
-        <div class="main-container">
-            <div class="canvas-wrapper">
-                <canvas id="canvas"></canvas>
+        <div class="section">
+            <h3>Zoom</h3>
+            <div class="input-group">
+                <button onclick="zoomOut()" class="btn">-</button>
+                <input type="range" id="zoomSlider" min="20" max="300" value="100" oninput="zoomCanvas(this.value)" style="flex: 1;">
+                <button onclick="zoomIn()" class="btn">+</button>
             </div>
+            <div style="text-align: center; font-size: 11px; margin-top: 5px;">Zoom: <span id="zoomValue">100</span>%</div>
+        </div>
+
+        <div class="section">
+            <h3>Data</h3>
+            <button onclick="clearAll()" class="btn" style="width: 100%; background: #dc3545;">Tøm Alt</button>
         </div>
     </div>
 
-    <script>
-        let points = [];
-        let manualLines = [];
-        let pointTool = false;
-        let zoom = 100;
-        let offset = { x: 0, y: 0, start: null };
-        let isDragging = false;
-        let draggingFromPoint = null;
-        let hoverPointIndex = null;
-        let selectedForLineMode = [];
+    <div class="main-container">
+        <div class="canvas-wrapper">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+</div>
 
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
+<script>
+    let points = [];
+    let manualLines = [];
+    let pointTool = false;
+    let zoom = 100;
+    let offset = { x: 0, y: 0, start: null };
+    let isDragging = false;
+    let draggingFromPoint = null;
+    let hoverPointIndex = null;
+    let selectedForLineMode = [];
 
-        function init() {
-            resizeCanvas();
-            draw();
-            setupEvents();
-        }
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
 
-        function setupEvents() {
-            window.addEventListener('resize', () => { resizeCanvas(); draw(); });
+    function init() {
+        resizeCanvas();
+        draw();
+        setupEvents();
+    }
+
+    function setupEvents() {
+        window.addEventListener('resize', () => { resizeCanvas(); draw(); });
+
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const px = e.clientX - rect.left;
+            const py = e.clientY - rect.top;
+            const idx = getPointAtCanvasPos(px, py);
             
-            canvas.addEventListener('mousedown', (e) => {
-                const rect = canvas.getBoundingClientRect();
-                const px = e.clientX - rect.left;
-                const py = e.clientY - rect.top;
-                
-                const idx = getPointAtCanvasPos(px, py);
-                if (idx !== null) {
-                    draggingFromPoint = idx;
-                } else {
-                    offset.start = { x: e.clientX, y: e.clientY };
-                }
-            });
-
-            canvas.addEventListener('mousemove', (e) => {
-                const rect = canvas.getBoundingClientRect();
-                const px = e.clientX - rect.left;
-                const py = e.clientY - rect.top;
-                
-                hoverPointIndex = getPointAtCanvasPos(px, py);
-
-                if (offset.start) {
-                    offset.x += e.clientX - offset.start.x;
-                    offset.y += e.clientY - offset.start.y;
-                    offset.start = { x: e.clientX, y: e.clientY };
-                    draw();
-                } else if (draggingFromPoint !== null) {
-                    draw();
-                    // Draw preview line
-                    const centerX = canvas.width / 2 + offset.x;
-                    const centerY = canvas.height / 2 + offset.y;
-                    const scale = 50 * (zoom / 100);
-                    const p = points[draggingFromPoint];
-                    const x1 = centerX + p.x * scale;
-                    const y1 = centerY - p.y * scale;
-                    
-                    ctx.strokeStyle = '#ff9800';
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    ctx.moveTo(x1, y1);
-                    ctx.lineTo(px, py);
-                    ctx.stroke();
-                }
-            });
-
-            canvas.addEventListener('mouseup', (e) => {
-                if (draggingFromPoint !== null) {
-                    const rect = canvas.getBoundingClientRect();
-                    const px = e.clientX - rect.left;
-                    const py = e.clientY - rect.top;
-                    const toIndex = getPointAtCanvasPos(px, py);
-                    
-                    if (toIndex !== null && toIndex !== draggingFromPoint) {
-                        manualLines.push({ from: draggingFromPoint, to: toIndex });
-                    }
-                    draggingFromPoint = null;
-                    draw();
-                }
-                offset.start = null;
-            });
-
-            canvas.addEventListener('click', handleCanvasClick);
-            
-            document.addEventListener('wheel', (e) => {
-                const direction = e.deltaY > 0 ? -1 : 1;
-                zoom = Math.max(20, Math.min(300, zoom + direction * 10));
-                document.getElementById('zoomSlider').value = zoom;
-                document.getElementById('zoomValue').textContent = zoom;
-                draw();
-            }, { passive: false });
-        }
-
-        function resizeCanvas() {
-            const wrapper = canvas.parentElement;
-            canvas.width = wrapper.clientWidth;
-            canvas.height = wrapper.clientHeight;
-        }
-
-        function addPoint() {
-            const x = snapToGrid(parseFloat(document.getElementById('pointX').value));
-            const y = snapToGrid(parseFloat(document.getElementById('pointY').value));
-            if (isNaN(x) || isNaN(y)) return;
-            points.push({ x, y });
-            updateTable();
-            draw();
-        }
-
-        function getPointAtCanvasPos(px, py) {
-            const centerX = canvas.width / 2 + offset.x;
-            const centerY = canvas.height / 2 + offset.y;
-            const scale = 50 * (zoom / 100);
-            const radius = 10;
-            
-            for (let i = 0; i < points.length; i++) {
-                const p = points[i];
-                const x = centerX + p.x * scale;
-                const y = centerY - p.y * scale;
-                const dx = px - x;
-                const dy = py - y;
-                if (dx * dx + dy * dy < radius * radius) return i;
+            if (idx !== null) {
+                draggingFromPoint = idx;
+            } else {
+                offset.start = { x: e.clientX, y: e.clientY };
             }
-            return null;
-        }
+        });
 
-        function snapToGrid(val) {
-            const snap = parseFloat(document.getElementById('snapGrid').value);
-            if (snap === 0) return val;
-            return Math.round(val / snap) * snap;
-        }
-
-        function updateSnapBadge() {
-            const snap = document.getElementById('snapGrid').value;
-            document.getElementById('snapBadge').textContent = snap === '0' ? 'Fri' : snap + 'x' + snap;
-        }
-
-        function handleCanvasClick(e) {
-            if (!pointTool) return;
+        canvas.addEventListener('mousemove', (e) => {
             const rect = canvas.getBoundingClientRect();
             const px = e.clientX - rect.left;
             const py = e.clientY - rect.top;
             
-            const centerX = canvas.width / 2 + offset.x;
-            const centerY = canvas.height / 2 + offset.y;
-            const scale = 50 * (zoom / 100);
-            
-            let x = (px - centerX) / scale;
-            let y = (centerY - py) / scale;
-            
-            x = snapToGrid(x);
-            y = snapToGrid(y);
-            
-            points.push({ x, y });
-            updateTable();
-            draw();
-        }
+            hoverPointIndex = getPointAtCanvasPos(px, py);
 
-        function removePoint(i) {
-            points.splice(i, 1);
-            manualLines = manualLines.filter(line => line.from !== i && line.to !== i);
-            manualLines = manualLines.map(line => {
-                return {
-                    from: line.from > i ? line.from - 1 : line.from,
-                    to: line.to > i ? line.to - 1 : line.to
-                };
-            });
-            updateTable();
-            draw();
-        }
-
-        function updateTable() {
-            const body = document.getElementById('pointsTableBody');
-            if (points.length === 0) {
-                body.innerHTML = '<tr><td colspan="3" class="empty-state">Ingen punkter</td></tr>';
-            } else {
-                body.innerHTML = points.map((p, i) => `
-                    <tr onclick="toggleLineSelect(${i})" class="${selectedForLineMode.includes(i) ? 'selected' : ''}">
-                        <td>${p.x}</td>
-                        <td>${p.y}</td>
-                        <td><button class="btn" onclick="event.stopPropagation(); removePoint(${i})">Slett</button></td>
-                    </tr>
-                `).join('');
+            if (offset.start) {
+                offset.x += e.clientX - offset.start.x;
+                offset.y += e.clientY - offset.start.y;
+                offset.start = { x: e.clientX, y: e.clientY };
+                draw();
+            } else if (draggingFromPoint !== null) {
+                draw();
+                // Draw preview line
+                const centerX = canvas.width / 2 + offset.x;
+                const centerY = canvas.height / 2 + offset.y;
+                const scale = 50 * (zoom / 100);
+                const p = points[draggingFromPoint];
+                const x1 = centerX + p.x * scale;
+                const y1 = centerY - p.y * scale;
+                
+                ctx.strokeStyle = '#ff9800';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(px, py);
+                ctx.stroke();
             }
-            document.getElementById('pointCount').textContent = points.length;
-            document.getElementById('lineCount').textContent = manualLines.length;
-        }
+        });
 
-        function toggleLineSelect(i) {
-            if (selectedForLineMode.includes(i)) {
-                selectedForLineMode = selectedForLineMode.filter(idx => idx !== i);
-            } else {
-                selectedForLineMode.push(i);
-                if (selectedForLineMode.length === 2) {
-                    manualLines.push({ from: selectedForLineMode[0], to: selectedForLineMode[1] });
-                    selectedForLineMode = [];
+        canvas.addEventListener('mouseup', (e) => {
+            if (draggingFromPoint !== null) {
+                const rect = canvas.getBoundingClientRect();
+                const px = e.clientX - rect.left;
+                const py = e.clientY - rect.top;
+                const toIndex = getPointAtCanvasPos(px, py);
+                
+                if (toIndex !== null && toIndex !== draggingFromPoint) {
+                    manualLines.push({ from: draggingFromPoint, to: toIndex });
                 }
+                draggingFromPoint = null;
+                draw();
             }
-            updateTable();
-            draw();
-        }
+            offset.start = null;
+        });
 
-        function zoomIn() { zoom = Math.min(300, zoom + 10); updateZoomUI(); }
-        function zoomOut() { zoom = Math.max(20, zoom - 10); updateZoomUI(); }
-        function zoomCanvas(v) { zoom = parseInt(v); updateZoomUI(); }
-        function updateZoomUI() {
+        canvas.addEventListener('click', handleCanvasClick);
+
+        document.addEventListener('wheel', (e) => {
+            const direction = e.deltaY > 0 ? -1 : 1;
+            zoom = Math.max(20, Math.min(300, zoom + direction * 10));
             document.getElementById('zoomSlider').value = zoom;
             document.getElementById('zoomValue').textContent = zoom;
             draw();
+        }, { passive: false });
+    }
+
+    function resizeCanvas() {
+        const wrapper = canvas.parentElement;
+        canvas.width = wrapper.clientWidth;
+        canvas.height = wrapper.clientHeight;
+    }
+
+    function addPoint() {
+        const x = snapToGrid(parseFloat(document.getElementById('pointX').value));
+        const y = snapToGrid(parseFloat(document.getElementById('pointY').value));
+        if (isNaN(x) || isNaN(y)) return;
+        points.push({ x, y });
+        updateTable();
+        draw();
+    }
+
+    function getPointAtCanvasPos(px, py) {
+        const centerX = canvas.width / 2 + offset.x;
+        const centerY = canvas.height / 2 + offset.y;
+        const scale = 50 * (zoom / 100);
+        const radius = 10;
+        
+        for (let i = 0; i < points.length; i++) {
+            const p = points[i];
+            const x = centerX + p.x * scale;
+            const y = centerY - p.y * scale;
+            const dx = px - x;
+            const dy = py - y;
+            if (dx * dx + dy * dy < radius * radius) return i;
+        }
+        return null;
+    }
+
+    function snapToGrid(val) {
+        const snap = parseFloat(document.getElementById('snapGrid').value);
+        if (snap === 0) return val;
+        return Math.round(val / snap) * snap;
+    }
+
+    function updateSnapBadge() {
+        const snap = document.getElementById('snapGrid').value;
+        document.getElementById('snapBadge').textContent = snap === '0' ? 'Fri' : snap + 'x' + snap;
+    }
+
+    function handleCanvasClick(e) {
+        if (!pointTool) return;
+        const rect = canvas.getBoundingClientRect();
+        const px = e.clientX - rect.left;
+        const py = e.clientY - rect.top;
+        
+        const centerX = canvas.width / 2 + offset.x;
+        const centerY = canvas.height / 2 + offset.y;
+        const scale = 50 * (zoom / 100);
+        
+        let x = (px - centerX) / scale;
+        let y = (centerY - py) / scale;
+        
+        x = snapToGrid(x);
+        y = snapToGrid(y);
+        
+        points.push({ x, y });
+        updateTable();
+        draw();
+    }
+
+    function removePoint(i) {
+        points.splice(i, 1);
+        manualLines = manualLines.filter(line => line.from !== i && line.to !== i);
+        manualLines = manualLines.map(line => {
+            return {
+                from: line.from > i ? line.from - 1 : line.from,
+                to: line.to > i ? line.to - 1 : line.to
+            };
+        });
+        updateTable();
+        draw();
+    }
+
+    function updateTable() {
+        const body = document.getElementById('pointsTableBody');
+        if (points.length === 0) {
+            body.innerHTML = '<tr><td colspan="3" class="empty-state">Ingen punkter</td></tr>';
+        } else {
+            body.innerHTML = points.map((p, i) => `
+                <tr onclick="toggleLineSelect(${i})" class="${selectedForLineMode.includes(i) ? 'selected' : ''}">
+                    <td>${p.x}</td>
+                    <td>${p.y}</td>
+                    <td><button class="btn" onclick="event.stopPropagation(); removePoint(${i})">Slett</button></td>
+                </tr>
+            `).join('');
+        }
+        document.getElementById('pointCount').textContent = points.length;
+        document.getElementById('lineCount').textContent = manualLines.length;
+    }
+
+    function toggleLineSelect(i) {
+        if (selectedForLineMode.includes(i)) {
+            selectedForLineMode = selectedForLineMode.filter(idx => idx !== i);
+        } else {
+            selectedForLineMode.push(i);
+            if (selectedForLineMode.length === 2) {
+                manualLines.push({ from: selectedForLineMode[0], to: selectedForLineMode[1] });
+                selectedForLineMode = [];
+            }
+        }
+        updateTable();
+        draw();
+    }
+
+    function zoomIn() { zoom = Math.min(300, zoom + 10); updateZoomUI(); }
+    function zoomOut() { zoom = Math.max(20, zoom - 10); updateZoomUI(); }
+    function zoomCanvas(v) { zoom = parseInt(v); updateZoomUI(); }
+    function updateZoomUI() {
+        document.getElementById('zoomSlider').value = zoom;
+        document.getElementById('zoomValue').textContent = zoom;
+        draw();
+    }
+
+    function toggleDarkMode() {
+        document.body.classList.add('dark-mode');
+        document.getElementById('logoImg').src = 'logo2.svg';
+        draw();
+    }
+
+    function resetTheme() {
+        document.body.classList.remove('dark-mode');
+        document.getElementById('logoImg').src = 'logo.svg';
+        draw();
+    }
+
+    function togglePointTool() {
+        pointTool = !pointTool;
+        document.getElementById('pointToolBtn').classList.toggle('active', pointTool);
+    }
+
+    function clearManualLines() {
+        manualLines = [];
+        draw();
+        updateTable();
+    }
+
+    function clearAll() {
+        points = [];
+        manualLines = [];
+        draw();
+        updateTable();
+    }
+
+    function calculatePolygonStats() {
+        const areaEl = document.getElementById('areaValue');
+        const perimeterEl = document.getElementById('perimeterValue');
+        
+        if (manualLines.length < 3) {
+            areaEl.textContent = "0";
+            perimeterEl.textContent = "0";
+            return;
         }
 
-        function toggleDarkMode() { document.body.classList.add('dark-mode'); draw(); }
-        function resetTheme() { document.body.classList.remove('dark-mode'); draw(); }
-        function togglePointTool() {
-            pointTool = !pointTool;
-            document.getElementById('pointToolBtn').classList.toggle('active', pointTool);
+        // Simple poly builder (assumes a single closed loop)
+        let polyPoints = buildPolygonFromLines();
+        if (polyPoints.length < 3) {
+            areaEl.textContent = "0";
+            perimeterEl.textContent = "0";
+            return;
         }
 
-        function clearManualLines() { manualLines = []; draw(); updateTable(); }
-        function clearAll() { points = []; manualLines = []; draw(); updateTable(); }
+        let area = 0;
+        for (let i = 0; i < polyPoints.length; i++) {
+            const p1 = polyPoints[i];
+            const p2 = polyPoints[(i + 1) % polyPoints.length];
+            area += (p1.x * p2.y) - (p2.x * p1.y);
+        }
+        area = Math.abs(area) / 2;
 
-        function calculatePolygonStats() {
-            const areaEl = document.getElementById('areaValue');
-            const perimeterEl = document.getElementById('perimeterValue');
-            
-            if (manualLines.length < 3) {
-                areaEl.textContent = "0";
-                perimeterEl.textContent = "0";
-                return;
-            }
-
-            // Simple poly builder (assumes a single closed loop)
-            let polyPoints = buildPolygonFromLines();
-            if (polyPoints.length < 3) {
-                areaEl.textContent = "0";
-                perimeterEl.textContent = "0";
-                return;
-            }
-
-            let area = 0;
-            for (let i = 0; i < polyPoints.length; i++) {
-                const p1 = polyPoints[i];
-                const p2 = polyPoints[(i + 1) % polyPoints.length];
-                area += (p1.x * p2.y) - (p2.x * p1.y);
-            }
-            area = Math.abs(area) / 2;
-
-            let perimeter = 0;
-            for (let i = 0; i < polyPoints.length; i++) {
-                const p1 = polyPoints[i];
-                const p2 = polyPoints[(i + 1) % polyPoints.length];
-                const dx = p2.x - p1.x;
-                const dy = p2.y - p1.y;
-                perimeter += Math.sqrt(dx * dx + dy * dy);
-            }
-
-            areaEl.textContent = area.toFixed(2);
-            perimeterEl.textContent = perimeter.toFixed(2);
+        let perimeter = 0;
+        for (let i = 0; i < polyPoints.length; i++) {
+            const p1 = polyPoints[i];
+            const p2 = polyPoints[(i + 1) % polyPoints.length];
+            const dx = p2.x - p1.x;
+            const dy = p2.y - p1.y;
+            perimeter += Math.sqrt(dx * dx + dy * dy);
         }
 
-        function buildPolygonFromLines() {
-            if (manualLines.length === 0) return [];
-            let poly = [];
-            let currentIdx = manualLines[0].from;
-            let visitedLines = new Set();
-            
-            for (let i = 0; i < manualLines.length; i++) {
-                let found = false;
-                for (let j = 0; j < manualLines.length; j++) {
-                    if (visitedLines.has(j)) continue;
-                    const line = manualLines[j];
-                    if (line.from === currentIdx) {
-                        poly.push(points[line.from]);
-                        currentIdx = line.to;
-                        visitedLines.add(j);
-                        found = true;
-                        break;
-                    } else if (line.to === currentIdx) {
-                        poly.push(points[line.to]);
-                        currentIdx = line.from;
-                        visitedLines.add(j);
-                        found = true;
-                        break;
-                    }
+        areaEl.textContent = area.toFixed(2);
+        perimeterEl.textContent = perimeter.toFixed(2);
+    }
+
+    function buildPolygonFromLines() {
+        if (manualLines.length === 0) return [];
+        let poly = [];
+        let currentIdx = manualLines[0].from;
+        let visitedLines = new Set();
+        
+        for (let i = 0; i < manualLines.length; i++) {
+            let found = false;
+            for (let j = 0; j < manualLines.length; j++) {
+                if (visitedLines.has(j)) continue;
+                const line = manualLines[j];
+                if (line.from === currentIdx) {
+                    poly.push(points[line.from]);
+                    currentIdx = line.to;
+                    visitedLines.add(j);
+                    found = true;
+                    break;
+                } else if (line.to === currentIdx) {
+                    poly.push(points[line.to]);
+                    currentIdx = line.from;
+                    visitedLines.add(j);
+                    found = true;
+                    break;
                 }
-                if (!found) break;
             }
-            return poly;
+            if (!found) break;
         }
+        return poly;
+    }
 
-        function draw() {
-            ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#2d2d44' : '#ffffff';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            drawGrid();
-            drawAxes();
-            drawManualLines();
-            drawPoints();
-            calculatePolygonStats();
+    function draw() {
+        ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#2d2d44' : '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        drawGrid();
+        drawAxes();
+        drawManualLines();
+        drawPoints();
+        calculatePolygonStats();
+    }
+
+    function drawGrid() {
+        const centerX = canvas.width / 2 + offset.x;
+        const centerY = canvas.height / 2 + offset.y;
+        const scale = 50 * (zoom / 100);
+        
+        ctx.strokeStyle = '#e0e0e0';
+        ctx.lineWidth = 1;
+        
+        for (let x = -100; x <= 100; x++) {
+            const px = centerX + x * scale;
+            ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, canvas.height); ctx.stroke();
         }
-
-        function drawGrid() {
-            const centerX = canvas.width / 2 + offset.x;
-            const centerY = canvas.height / 2 + offset.y;
-            const scale = 50 * (zoom / 100);
-            
-            ctx.strokeStyle = '#e0e0e0';
-            ctx.lineWidth = 1;
-            
-            for (let x = -100; x <= 100; x++) {
-                const px = centerX + x * scale;
-                ctx.beginPath();
-                ctx.moveTo(px, 0);
-                ctx.lineTo(px, canvas.height);
-                ctx.stroke();
-            }
-            for (let y = -100; y <= 100; y++) {
-                const py = centerY - y * scale;
-                ctx.beginPath();
-                ctx.moveTo(0, py);
-                ctx.lineTo(canvas.width, py);
-                ctx.stroke();
-            }
+        for (let y = -100; y <= 100; y++) {
+            const py = centerY - y * scale;
+            ctx.beginPath(); ctx.moveTo(0, py); ctx.lineTo(canvas.width, py); ctx.stroke();
         }
+    }
 
-        function drawAxes() {
-            const centerX = canvas.width / 2 + offset.x;
-            const centerY = canvas.height / 2 + offset.y;
-            ctx.strokeStyle = '#333';
-            ctx.lineWidth = 2;
+    function drawAxes() {
+        const centerX = canvas.width / 2 + offset.x;
+        const centerY = canvas.height / 2 + offset.y;
+        
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(0, centerY); ctx.lineTo(canvas.width, centerY); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(centerX, 0); ctx.lineTo(centerX, canvas.height); ctx.stroke();
+    }
+
+    function drawPoints() {
+        const centerX = canvas.width / 2 + offset.x;
+        const centerY = canvas.height / 2 + offset.y;
+        const scale = 50 * (zoom / 100);
+        
+        points.forEach((p, i) => {
+            const px = centerX + p.x * scale;
+            const py = centerY - p.y * scale;
+            
+            ctx.fillStyle = (i === hoverPointIndex) ? '#ff9800' : '#ff6b6b';
             ctx.beginPath();
-            ctx.moveTo(0, centerY); ctx.lineTo(canvas.width, centerY); ctx.stroke();
+            ctx.arc(px, py, 6, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 10px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(i + 1, px, py);
+        });
+    }
+
+    function drawManualLines() {
+        const centerX = canvas.width / 2 + offset.x;
+        const centerY = canvas.height / 2 + offset.y;
+        const scale = 50 * (zoom / 100);
+        
+        ctx.strokeStyle = '#ff9800';
+        ctx.lineWidth = 3;
+        
+        manualLines.forEach(line => {
+            const p1 = points[line.from];
+            const p2 = points[line.to];
+            if (!p1 || !p2) return;
+            
             ctx.beginPath();
-            ctx.moveTo(centerX, 0); ctx.lineTo(centerX, canvas.height); ctx.stroke();
-        }
+            ctx.moveTo(centerX + p1.x * scale, centerY - p1.y * scale);
+            ctx.lineTo(centerX + p2.x * scale, centerY - p2.y * scale);
+            ctx.stroke();
+        });
+    }
 
-        function drawPoints() {
-            const centerX = canvas.width / 2 + offset.x;
-            const centerY = canvas.height / 2 + offset.y;
-            const scale = 50 * (zoom / 100);
-            
-            points.forEach((p, i) => {
-                const px = centerX + p.x * scale;
-                const py = centerY - p.y * scale;
-                ctx.fillStyle = (i === hoverPointIndex) ? '#ff9800' : '#ff6b6b';
-                ctx.beginPath();
-                ctx.arc(px, py, 6, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = 'white';
-                ctx.font = 'bold 10px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(i + 1, px, py);
-            });
-        }
-
-        function drawManualLines() {
-            const centerX = canvas.width / 2 + offset.x;
-            const centerY = canvas.height / 2 + offset.y;
-            const scale = 50 * (zoom / 100);
-            
-            ctx.strokeStyle = '#ff9800';
-            ctx.lineWidth = 3;
-            manualLines.forEach(line => {
-                const p1 = points[line.from];
-                const p2 = points[line.to];
-                if (!p1 || !p2) return;
-                ctx.beginPath();
-                ctx.moveTo(centerX + p1.x * scale, centerY - p1.y * scale);
-                ctx.lineTo(centerX + p2.x * scale, centerY - p2.y * scale);
-                ctx.stroke();
-            });
-        }
-
-        window.onload = init;
-    </script>
+    window.onload = init;
+</script>
 </body>
 </html>
