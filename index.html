@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JanS2A – Math Hub</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at top, #26293a 0, #050608 55%, #000 100%);
+      color: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .wrapper { width: 100%; max-width: 720px; padding: 24px; }
+    .logo { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; }
+    .logo-text { font-size: 2rem; letter-spacing: 0.06em; color: #ffd876; }
+    .crown { width: 42px; height: 42px; border-radius: 999px; border: 1px solid rgba(255, 216, 118, 0.2); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 18px rgba(255, 216, 118, 0.25); font-size: 24px; }
+    .subtitle { text-align: center; font-size: 0.95rem; color: #b3b6d8; margin-bottom: 18px; }
+    .top-sites-label { text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.18em; color: #767a9c; margin-bottom: 10px; }
+    .cards { display: flex; flex-direction: column; gap: 10px; }
+    .card { display: flex; align-items: center; padding: 10px 14px; border-radius: 14px; background: rgba(17, 20, 35, 0.9); border: 1px solid rgba(90, 105, 190, 0.35); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.02); cursor: pointer; text-decoration: none; color: inherit; transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, border-color 0.12s ease-out, background 0.12s ease-out; }
+    .card:hover { transform: translateY(-2px); border-color: rgba(142, 163, 255, 0.9); background: rgba(26, 32, 64, 0.95); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 18px rgba(142, 163, 255, 0.45); }
+    .icon-pill { width: 34px; height: 34px; border-radius: 999px; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0; font-size: 18px; color: #fff; }
+    .icon-origo { background: linear-gradient(135deg, #ff6b6b, #ffb36b); }
+    .icon-areal { background: linear-gradient(135deg, #00c9a7, #007cf0); }
+    .card-text { display: flex; flex-direction: column; gap: 2px; }
+    .card-title { font-size: 0.95rem; font-weight: 600; color: #f5f6ff; }
+    .card-sub { font-size: 0.8rem; color: #9da3d6; }
+    @media (max-width: 520px) { .wrapper { padding: 18px 14px; } .logo-text { font-size: 1.6rem; } }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="logo">
+      <div class="crown">♛</div>
+      <div class="logo-text">JanS2A</div>
+    </div>
+    <p class="subtitle">Velkommen til samlesiden din. Åpne verktøyene dine via raske “Top Sites”-kort.</p>
+    <div class="top-sites-label">Top Sites</div>
+    <div class="cards">
+      <a href="Origo-Tabell.html" class="card">
+        <div class="icon-pill icon-origo">X</div>
+        <div class="card-text">
+          <div class="card-title">Origo-Tabell</div>
+          <div class="card-sub">Koordinat-plotter med admin-panel og AI-chat.</div>
+        </div>
+      </a>
+      <a href="Areal-tabell.html" class="card">
+        <div class="icon-pill icon-areal">A</div>
+        <div class="card-text">
+          <div class="card-title">Areal-tabell</div>
+          <div class="card-sub">Punkt, linjer, areal og omkrets med snap-grid.</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</body>
+</html>
