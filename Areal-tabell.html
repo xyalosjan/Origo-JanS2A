@@ -461,6 +461,7 @@
         drawGrid();
         drawAxes();
         drawManualLines();
+         drawPolygonArea();
         drawPoints();
         calculatePolygonStats();
     }
@@ -561,6 +562,23 @@
             ctx.stroke();
         });
     }
+
+     function drawPolygonArea() {
+ if (manualLines.length < 3) return;
+ let polyPoints = buildPolygonFromLines();
+ if (polyPoints.length < 3) return;
+ const centerX = canvas.width / 2 + offset.x;
+ const centerY = canvas.height / 2 + offset.y;
+ const scale = 50 * (zoom / 100);
+ ctx.fillStyle = 'rgba(102, 126, 234, 0.3)';
+ ctx.beginPath();
+ ctx.moveTo(centerX + polyPoints[0].x * scale, centerY - polyPoints[0].y * scale);
+ for (let i = 1; i < polyPoints.length; i++) {
+ ctx.lineTo(centerX + polyPoints[i].x * scale, centerY - polyPoints[i].y * scale);
+ }
+ ctx.closePath();
+ ctx.fill();
+ }
 
     window.onload = init;
 </script>
