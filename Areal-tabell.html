@@ -590,22 +590,44 @@ ffunction drawPolygonArea() {
                         found = true;
                     }
                     if (found) {
+ function drawPolygonArea() {
+    if (manualLines.length < 3) return;
+    try {
+        const centerX = canvas.width / 2 + offset.x;
+        const centerY = canvas.height / 2 + offset.y;
+        const scale = 50 * (zoom / 100);
+        ctx.fillStyle = 'rgba(102, 126, 234, 0.3)';
+        ctx.beginPath();
+        let usedPoints = new Set();
+        let currentIdx = manualLines[0].from;
+        if (points[currentIdx]) {
+            ctx.moveTo(centerX + points[currentIdx].x * scale, centerY - points[currentIdx].y * scale);
+            usedPoints.add(currentIdx);
+            for (let i = 0; i < manualLines.length; i++) {
+                let found = false;
+                for (let j = 0; j < manualLines.length; j++) {
+                    const line = manualLines[j];
+                    let next = (line.from === currentIdx) ? line.to : (line.to === currentIdx ? line.from : null);
+                    if (next !== null && !usedPoints.has(next)) {
+                        currentIdx = next;
                         if (points[currentIdx]) {
                             ctx.lineTo(centerX + points[currentIdx].x * scale, centerY - points[currentIdx].y * scale);
                             usedPoints.add(currentIdx);
                         }
+                        found = true;
                         break;
                     }
                 }
                 if (!found) break;
             }
         }
-    }
-    ctx.closePath();
-    ctx.fill();
+        ctx.closePath();
+        ctx.fill();
+    } catch(e) {}
 }
 
 window.onload = init;
 </script>
 </body>
+</html>
 </html>
