@@ -12,13 +12,14 @@
       background: radial-gradient(circle at top, #26293a 0, #050608 55%, #000 100%);
       color: #f5f5f5;
       display: flex;
-      align-items: center;
+      align-items: flex-start; /* Flyttet opp fra center */
       justify-content: center;
+      padding-top: 8vh; /* Avstand fra toppen */
     }
     .wrapper { width: 100%; max-width: 720px; padding: 24px; }
-    .logo { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; }
-    .logo-text img { max-height: 120px; width: auto; }
-    .subtitle { text-align: center; font-size: 1.15rem; color: #b3b6d8; margin-bottom: 32px; font-weight: 500; letter-spacing: 0.02em; }
+    .logo { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px; }
+    .logo-text img { max-height: 180px; width: auto; } /* Gjort logoen større */
+    .subtitle { text-align: center; font-size: 1.2rem; color: #b3b6d8; margin-bottom: 32px; font-weight: 500; letter-spacing: 0.02em; }
     .top-sites-label { text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.18em; color: #767a9c; margin-bottom: 10px; }
     .cards { display: flex; flex-direction: column; gap: 10px; }
     .card { display: flex; align-items: center; padding: 10px 14px; border-radius: 14px; background: rgba(17, 20, 35, 0.9); border: 1px solid rgba(90, 105, 190, 0.35); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.02); cursor: pointer; text-decoration: none; color: inherit; transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, border-color 0.12s ease-out, background 0.12s ease-out; }
@@ -29,7 +30,7 @@
     .card-text { display: flex; flex-direction: column; gap: 2px; }
     .card-title { font-size: 0.95rem; font-weight: 600; color: #f5f6ff; }
     .card-sub { font-size: 0.8rem; color: #9da3d6; }
-    @media (max-width: 520px) { .wrapper { padding: 18px 14px; } }
+    @media (max-width: 520px) { .wrapper { padding: 18px 14px; } .logo-text img { max-height: 140px; } }
   </style>
 </head>
 <body>
@@ -37,7 +38,7 @@
     <div class="logo">
       <div class="logo-text"><img src="logo2.svg" alt="Logo"/></div>
     </div>
-    <p class="subtitle">Jan side Hjemmelagde verktøy</p>
+    <p class="subtitle">Jan sine fritids problemer</p> <!-- Oppdatert tekst -->
     <div class="top-sites-label">Top Sites</div>
     <div class="cards">
       <a href="Origo-Tabell.html" class="card">
