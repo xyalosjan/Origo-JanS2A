@@ -257,11 +257,8 @@
         canvas.height = wrapper.clientHeight;
     }
 
-    320
-                310
-                328
-                () {
-        const x = snapToGrid(parseFloat(document.getElementById('pointX').value));
+function addPoint() {
+    +const x = snapToGrid(parseFloat(document.getElementById('pointX').value));
         const y = snapToGrid(parseFloat(document.getElementById('pointY').value));
         if (isNaN(x) || isNaN(y)) return;
         points.push({ x, y });
