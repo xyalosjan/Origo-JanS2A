@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="no">
 <head>
@@ -198,8 +197,10 @@ table td {
   border-bottom: 1px solid #ddd;
   background: white;
 }
-
-
+        body.dark-mode table td {
+            background: #2d2d44;
+            border-bottom-color: #444;
+        }
 
         .ai-chat-container {
             display: flex;
@@ -372,7 +373,6 @@ table td {
             align-items: center;
             justify-content: center;
         }
-
         .admin-modal.show {
             display: flex;
         }
@@ -542,7 +542,6 @@ table td {
         body.dark-mode .stats {
             background: #4a4a6a;
         }
-
         .stat-item {
             text-align: center;
         }
@@ -1209,7 +1208,7 @@ table td {
                 }
             }
 
-            // Hovedgrid - ALLTID HELT JUSTERT TIL AKSENE
+            // Hovedgrid
             ctx.strokeStyle = settings.gridColor;
             ctx.lineWidth = 2;
 
@@ -1233,7 +1232,7 @@ table td {
                 }
             }
 
-            // Tegn tall - JUSTERT TIL GRID
+            // Tall på aksene
             ctx.fillStyle = '#666';
             ctx.font = `${settings.fontSize}px Arial`;
             ctx.textAlign = 'center';
@@ -1282,6 +1281,7 @@ table td {
             ctx.fill();
         }
 
+        // ============ FORMELLINJE + TREFF ============
         function drawFormula() {
             if (!currentFormula) return;
 
@@ -1315,6 +1315,28 @@ table td {
                 }
             }
             ctx.stroke();
+
+            // Marker punkter som ligger på linja
+            if (points && points.length > 0) {
+                ctx.fillStyle = '#ff4444';
+                ctx.strokeStyle = '#cc0000';
+                ctx.lineWidth = 2;
+
+                points.forEach(p => {
+                    try {
+                        const yFormula = currentFormula(p.x);
+                        if (Math.abs(yFormula - p.y) < 0.1) {
+                            const px = centerX + p.x * scale;
+                            const py = centerY - p.y * scale;
+
+                            ctx.beginPath();
+                            ctx.arc(px, py, 8, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.stroke();
+                        }
+                    } catch (e) {}
+                });
+            }
         }
 
         function drawLinkedPoints() {
@@ -1349,19 +1371,27 @@ table td {
             ctx.fill();
         }
 
+        // ============ PUNKTER (manuelle + genererte) ============
         function drawPoints() {
             const centerX = canvas.width / 2 + originOffset.x;
             const centerY = canvas.height / 2 + originOffset.y;
             const scale = settings.gridSize * (currentZoom / 100);
 
-            points.forEach((p, i) => {
+            points.forEach((p) => {
                 const px = centerX + p.x * scale;
                 const py = centerY - p.y * scale;
 
-                ctx.fillStyle = linkedPoints.includes(i) ? '#ff9800' : '#ff6b6b';
+                const isGenerated = p.generated === true;
+
                 ctx.beginPath();
-                ctx.arc(px, py, settings.pointSize, 0, Math.PI * 2);
+                ctx.fillStyle = isGenerated ? '#ff8800' : '#007bff';
+                ctx.strokeStyle = isGenerated ? '#cc6600' : '#004a99';
+                ctx.lineWidth = 1.5;
+
+                const radius = isGenerated ? settings.pointSize * 0.6 : settings.pointSize;
+                ctx.arc(px, py, radius, 0, Math.PI * 2);
                 ctx.fill();
+                ctx.stroke();
             });
         }
 
@@ -1375,7 +1405,7 @@ table td {
                 return;
             }
 
-            points.push({ x, y });
+            points.push({ x, y, generated: false });
             updatePointsList();
             redraw();
             addAIMessage(`✅ Punkt (${x}, ${y}) lagt til!`);
@@ -1480,10 +1510,33 @@ table td {
                 currentFormula = new Function('x', `return ${input}`);
                 currentFormula(0);
                 redraw();
+                generatePointsFromFormula(); // lager punkter langs linja
                 addAIMessage(`📈 Plottet: f(x) = ${input}`);
             } catch (e) {
                 addAIMessage(`❌ Feil: ${e.message}`);
             }
+        }
+
+        // ============ GENERATE POINTS FROM FORMULA ============
+        function generatePointsFromFormula() {
+            if (!currentFormula) return;
+
+            points = [];
+
+            // Velg fornuftig x-område, her -7 til 9 ut fra bildet
+            for (let x = -7; x <= 9; x++) {
+                let y;
+                try {
+                    y = currentFormula(x);
+                } catch (e) {
+                    continue;
+                }
+                if (!isFinite(y)) continue;
+                points.push({ x, y: parseFloat(y.toFixed(2)), generated: true });
+            }
+
+            updatePointsList();
+            redraw();
         }
 
         // ============ ZOOM ============
@@ -1786,7 +1839,6 @@ table td {
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             
-            // Bytt logo basert på tema
             if (document.body.classList.contains('dark-mode')) {
                 logoImg.src = 'logo2.svg';
                 addAIMessage('🌙 Mørkt tema aktivert - Logo bytt til Logo2.png');
@@ -1809,7 +1861,6 @@ table td {
             addAIMessage('☀️ Lyst tema - Logo bytt til Logo.png');
         }
 
-        // Close modal on escape
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeAdminPanel();
         });
