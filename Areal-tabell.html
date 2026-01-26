@@ -473,8 +473,6 @@
     }
 
     570
-            () {
-
         function autoAdjust() {
     if (points.length === 0) return;
     
@@ -505,6 +503,7 @@
     
     draw();
 }
+                    function draw() {
         ctx.fillStyle = document.body.classList.contains('dark-mode') ? '#2d2d44' : '#ffffff';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
