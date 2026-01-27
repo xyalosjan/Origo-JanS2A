@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <title>🪿 SUPRISE GOOSE INVASION! 🪿</title>
+    <style>
+        body { background: #000; color: lime; font-family: monospace; overflow: hidden; margin:0; }
+        #goose { position: absolute; font-size: 100px; animation: gooseFly 5s infinite; z-index: 9999; }
+        @keyframes gooseFly {
+            0%   { top:10%; left:10%; }
+            25%  { top:20%; left:80%; transform: rotate(90deg); }
+            50%  { top:80%; left:90%; }
+            75%  { top:60%; left:20%; transform: rotate(-90deg); }
+            100% { top:10%; left:10%; }
+        }
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+            background: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="goose">🪿 HONK! HONK!</div>
+    <h1 style="text-align:center; margin-top:50px;">GOOSE ATTACK INCOMING! 😱</h1>
+    <p style="text-align:center;">Klikk for å slippe løs den ekte Desktop Goose! 🎉</p>
+    <div style="text-align:center; margin-top:20px;">
+        <button onclick="launchRealGoose()">🚀 AKTIVER EKTEN GOOSE NÅ!</button>
+    </div>
+
+    <script>
+        function launchRealGoose() {
+            alert("🪿 GOOSE FRIGJORT! Du sendes til Desktop Goose-nedlastingssiden. 🪿");
+            window.open("https://samperson.itch.io/desktop-goose", "_blank");
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            const g = document.getElementById('goose');
+            g.style.left = (e.clientX + Math.random()*50 - 25) + 'px';
+            g.style.top  = (e.clientY + Math.random()*50 - 25) + 'px';
+        });
+
+        function confetti() {
+            for (let i = 0; i < 50; i++) {
+                let div = document.createElement('div');
+                div.innerHTML = '🪿';
+                div.style.position = 'fixed';
+                div.style.left = Math.random()*100 + 'vw';
+                div.style.top = '-10px';
+                div.style.animation = 'fall 3s linear forwards';
+                document.body.appendChild(div);
+                setTimeout(() => div.remove(), 3000);
+            }
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fall {
+                from { transform: translateY(0); }
+                to   { transform: translateY(110vh); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        setInterval(confetti, 5000);
+    </script>
+</body>
+</html>
