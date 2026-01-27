@@ -2,108 +2,125 @@
 <html lang="no">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🪿 GOOSE INVASION!</title>
     <style>
-        body { 
-            background: #000; 
-            color: lime; 
-            font-family: monospace; 
-            overflow: hidden; 
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
         }
-        #goose { 
-            position: fixed; 
-            font-size: 100px; 
-            z-index: 9999; 
-            user-select: none;
-        }
-        h1, p { text-align: center; }
-        .container {
+        
+        .content {
             text-align: center;
-            background: rgba(255, 0, 0, 0.1);
-            padding: 30px;
-            border: 3px solid lime;
-            border-radius: 10px;
+            z-index: 10;
         }
+        
+        h1 {
+            font-size: 60px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #00ff00;
+        }
+        
+        p {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #00dd00;
+        }
+        
         button {
+            padding: 15px 40px;
             font-size: 18px;
-            padding: 15px 30px;
+            font-weight: bold;
+            border: 2px solid #00ff00;
+            background: #000;
+            color: #00ff00;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+        
+        button:hover {
             background: #00ff00;
             color: #000;
-            border: 2px solid lime;
-            cursor: pointer;
-            font-weight: bold;
-            margin: 10px;
-            transition: 0.2s;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
         }
-        button:hover {
-            background: lime;
-            transform: scale(1.1);
+        
+        .goose {
+            position: fixed;
+            font-size: 100px;
+            z-index: 9999;
+            user-select: none;
         }
-        .info {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #00dd00;
+        
+        .confetti {
+            position: fixed;
+            font-size: 40px;
+            user-select: none;
+            pointer-events: none;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="goose">🪿</div>
+    <div class="goose" id="mainGoose">🪿</div>
     
-    <div class="container">
-        <h1>🪿 DESKTOP GOOSE INVASION! 🪿</h1>
-        <p>En gås er på vei til skrivebordet ditt...</p>
-        
-        <button onclick="downloadGoose()">📥 Last ned Desktop Goose</button>
-        
-        <div class="info">
-            <p>⚠️ MERK: Du må laste ned og installere programmet på datamaskinen din.</p>
-            <p>Denne siden kan ikke kjøre Desktop Goose direkte.</p>
-        </div>
+    <div class="content">
+        <h1>🪿 GOOSE ATTACK! 🪿</h1>
+        <p>En gås er løs på skjermen...</p>
+        <button onclick="tilbake()">← TILBAKE</button>
     </div>
 
     <script>
-        function downloadGoose() {
-            window.open("https://samperson.itch.io/desktop-goose", "_blank");
-        }
-
-        // Gåsanimasjon som følger musen
+        const goose = document.getElementById('mainGoose');
+        
+        // Gåsen følger musen
         document.addEventListener('mousemove', (e) => {
-            const g = document.getElementById('goose');
-            g.style.left = e.clientX + 'px';
-            g.style.top = e.clientY + 'px';
+            goose.style.left = (e.clientX - 50) + 'px';
+            goose.style.top = (e.clientY - 50) + 'px';
         });
-
+        
         // Confetti-effekt
-        function confetti() {
-            for (let i = 0; i < 30; i++) {
-                let div = document.createElement('div');
-                div.innerHTML = '🪿';
-                div.style.position = 'fixed';
-                div.style.left = Math.random() * 100 + 'vw';
-                div.style.top = '-50px';
-                div.style.fontSize = '30px';
-                div.style.animation = 'fall 4s linear forwards';
-                div.style.userSelect = 'none';
-                document.body.appendChild(div);
-                setTimeout(() => div.remove(), 4000);
+        function createConfetti() {
+            for (let i = 0; i < 40; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.textContent = '🪿';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-50px';
+                confetti.style.animation = `fall ${3 + Math.random() * 2}s linear forwards`;
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 5000);
             }
         }
-
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes fall {
-                to { transform: translateY(110vh) rotate(720deg); }
-            }
-        `;
-        document.head.appendChild(style);
-
-        setInterval(confetti, 3000);
+        
+        // Confetti hver 4. sekund
+        setInterval(createConfetti, 4000);
+        createConfetti(); // Start med en gang
+        
+        // Tilbake-knapp
+        function tilbake() {
+            window.location.href = 'index.html';
+        }
     </script>
 </body>
 </html>
