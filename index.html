@@ -1,120 +1,131 @@
 <!DOCTYPE html>
 <html lang="no">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JanS2A – Tool Hub</title>
-    <link rel="stylesheet" href="/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🪿 GOOSE HUB</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            min-height: 100vh;
-            font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-            background: radial-gradient(circle at top, #26293a 0, #050608 55%, #000 100%);
-            color: #f5f5f5;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
             display: flex;
-            align-items: flex-start;
             justify-content: center;
-            padding-top: 8vh;
-        }
-        .wrapper { width: 100%; max-width: 720px; padding: 24px; }
-        .logo { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px; }
-        .logo-text img { max-height: 250px; width: auto; }
-        .subtitle { text-align: center; font-size: 1.2rem; color: #b3b6d8; margin-bottom: 32px; font-weight: 500; letter-spacing: 0.02em; }
-        .top-sites-label { text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.18em; color: #767a9c; margin-bottom: 10px; }
-        .cards { display: flex; flex-direction: column; gap: 10px; }
-        .card { display: flex; align-items: center; padding: 10px 14px; border-radius: 14px; background: rgba(17, 20, 35, 0.9); border: 1px solid rgba(90, 105, 190, 0.35); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.02); cursor: pointer; text-decoration: none; color: inherit; transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, border-color 0.12s ease-out, background 0.12s ease-out; }
-        .card:hover { transform: translateY(-2px); border-color: rgba(142, 163, 255, 0.9); background: rgba(26, 32, 64, 0.95); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 18px rgba(142, 163, 255, 0.45); }
-        .icon-pill { width: 34px; height: 34px; border-radius: 999px; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0; font-size: 18px; color: #fff; }
-        .icon-origo { background: linear-gradient(135deg, #ff6b6b, #ffb36b); }
-        .icon-areal { background: linear-gradient(135deg, #00c9a7, #007cf0); }
-        .card-text { display: flex; flex-direction: column; gap: 2px; }
-        .card-title { font-size: 0.95rem; font-weight: 600; color: #f5f6ff; }
-        .card-sub { font-size: 0.8rem; color: #9da3d6; }
-        @media (max-width: 700px) {
-            .wrapper { padding: 20px 16px; }
-            .logo-text img { max-height: 250px; }
-        }
-
-        /* GOOSE-KNAPP – «mini-card» stil */
-        #goose-btn {
-            position: fixed;
-            top: 14px;
-            left: 14px;
-            z-index: 9999;
-            display: flex;
             align-items: center;
-            gap: 8px;
-
-            padding: 8px 14px;
-            border-radius: 999px;
-
-            background: rgba(17, 20, 35, 0.95);
-            border: 1px solid rgba(142, 163, 255, 0.6);
-            box-shadow:
-                0 10px 28px rgba(0, 0, 0, 0.65),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.03);
-
-            color: #f5f6ff;
-            font-size: 0.8rem;
-            font-weight: 600;
-            font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-            letter-spacing: 0.04em;
-            text-decoration: none;
-            text-transform: uppercase;
-
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-
-            transition:
-                transform 0.12s ease-out,
-                box-shadow 0.12s ease-out,
-                border-color 0.12s ease-out,
-                background 0.12s ease-out,
-                color 0.12s ease-out;
+            min-height: 100vh;
+            overflow: hidden;
         }
-
-        #goose-btn::before {
-            content: "🪿";
-            font-size: 1rem;
+        
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            border: 3px solid #00ff00;
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            max-width: 600px;
         }
-
-        #goose-btn:hover {
-            transform: translateY(-1px);
-            background: rgba(26, 32, 64, 0.98);
-            border-color: rgba(190, 210, 255, 0.95);
-            box-shadow:
-                0 14px 36px rgba(0, 0, 0, 0.85),
-                0 0 18px rgba(142, 163, 255, 0.6);
-            color: #ffffff;
+        
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ff00;
+            animation: glow 2s ease-in-out infinite;
+        }
+        
+        p {
+            font-size: 18px;
+            margin-bottom: 40px;
+            color: #00dd00;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            border: 2px solid #00ff00;
+            background: #000;
+            color: #00ff00;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+        
+        button:hover {
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+            transform: scale(1.05);
+        }
+        
+        button:active {
+            transform: scale(0.95);
+        }
+        
+        .goose-floating {
+            position: fixed;
+            font-size: 80px;
+            user-select: none;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        @keyframes glow {
+            0%, 100% {
+                text-shadow: 0 0 10px #00ff00;
+            }
+            50% {
+                text-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
+            }
         }
     </style>
 </head>
 <body>
-    <a href="goose.html" id="goose-btn">GOOSE INVASION</a>
-
-    <div class="wrapper">
-        <div class="logo">
-            <div class="logo-text"><img src="logo2.svg" alt="Logo" /></div>
-        </div>
-        <p class="subtitle">Verktøy Laget Med Fritids Problemer</p>
-        <div class="top-sites-label">Self Lagde sider</div>
-        <div class="cards">
-            <a href="Origo-Tabell.html" class="card">
-                <div class="icon-pill icon-origo">X</div>
-                <div class="card-text">
-                    <div class="card-title">Origo-Tabell</div>
-                    <div class="card-sub">Origo tabell med formler X og Y.</div>
-                </div>
-            </a>
-            <a href="Areal-tabell.html" class="card">
-                <div class="icon-pill icon-areal">A</div>
-                <div class="card-text">
-                    <div class="card-title">Areal-tabell</div>
-                    <div class="card-sub">Punkt, linjer, areal med Snap grid.</div>
-                </div>
-            </a>
+    <div class="container">
+        <h1>🪿 GOOSE HUB 🪿</h1>
+        <p>Velg ditt eventyr:</p>
+        
+        <div class="button-group">
+            <button onclick="åpneGoose()">🎮 GOOSE MODUS</button>
+            <button onclick="åpneDownload()">📥 LAST NED</button>
         </div>
     </div>
+
+    <script>
+        function åpneGoose() {
+            window.location.href = 'goose.html';
+        }
+        
+        function åpneDownload() {
+            window.open('https://samperson.itch.io/desktop-goose', '_blank');
+        }
+        
+        // Flytende gås-effekt
+        document.addEventListener('mousemove', (e) => {
+            let goose = document.querySelector('.goose-floating');
+            if (!goose) {
+                goose = document.createElement('div');
+                goose.className = 'goose-floating';
+                goose.textContent = '🪿';
+                document.body.appendChild(goose);
+            }
+            goose.style.left = (e.clientX + 20) + 'px';
+            goose.style.top = (e.clientY - 20) + 'px';
+        });
+    </script>
 </body>
 </html>
