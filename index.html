@@ -62,7 +62,6 @@
             letter-spacing: 0.04em;
             text-decoration: none;
             text-transform: uppercase;
-            cursor: pointer;
 
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
@@ -80,7 +79,7 @@
             font-size: 1rem;
         }
 
-        #goose-btn:hover:not(:disabled) {
+        #goose-btn:hover {
             transform: translateY(-1px);
             background: rgba(26, 32, 64, 0.98);
             border-color: rgba(190, 210, 255, 0.95);
@@ -89,55 +88,10 @@
                 0 0 18px rgba(142, 163, 255, 0.6);
             color: #ffffff;
         }
-
-        #goose-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        /* Status-melding */
-        .status-message {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.95);
-            color: #f5f6ff;
-            padding: 30px 40px;
-            border: 2px solid rgba(142, 163, 255, 0.8);
-            border-radius: 16px;
-            font-size: 16px;
-            display: none;
-            z-index: 10000;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(142, 163, 255, 0.4);
-        }
-
-        .status-message.show {
-            display: block;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -60%);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, -50%);
-            }
-        }
     </style>
 </head>
 <body>
-    <button id="goose-btn" onclick="startInvasjon()">GOOSE INVASION</button>
-
-    <div class="status-message" id="statusMsg">
-        <div>🪿 NEDLASTING STARTET! 🪿</div>
-        <div style="font-size: 14px; margin-top: 10px; color: #b3b6d8;">Desktop Goose blir lastet ned...</div>
-    </div>
+    <a href="goose.html" id="goose-btn">GOOSE INVASION</a>
 
     <div class="wrapper">
         <div class="logo">
@@ -162,46 +116,5 @@
             </a>
         </div>
     </div>
-
-    <script>
-        let nedlastingAktiv = false;
-
-        function startInvasjon() {
-            if (nedlastingAktiv) {
-                alert("❌ Nedlasting pågår allerede!");
-                return;
-            }
-
-            nedlastingAktiv = true;
-            const btn = document.getElementById('goose-btn');
-            btn.disabled = true;
-
-            // Vis status-melding
-            const statusMsg = document.getElementById('statusMsg');
-            statusMsg.classList.add('show');
-
-            // Start nedlasting
-            setTimeout(() => {
-                alert("🪿 GOOSE FRIGJORT! Du sendes til Desktop Goose-nedlastingssiden. 🪿");
-                window.open("https://samperson.itch.io/desktop-goose", "_blank");
-
-                // Skjul status etter 3 sekunder
-                setTimeout(() => {
-                    statusMsg.classList.remove('show');
-                    nedlastingAktiv = false;
-                    btn.disabled = false;
-                }, 3000);
-            }, 1500);
-        }
-
-        // Forhindrer lukking under nedlasting
-        window.addEventListener('beforeunload', (e) => {
-            if (nedlastingAktiv) {
-                e.preventDefault();
-                e.returnValue = '🪿 Nedlasting pågår! Vent før du lukker siden.';
-                return e.returnValue;
-            }
-        });
-    </script>
 </body>
 </html>
