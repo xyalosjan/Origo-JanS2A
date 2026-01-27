@@ -1,120 +1,64 @@
 <!DOCTYPE html>
 <html lang="no">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JanS2A – Tool Hub</title>
+  <m
     <link rel="stylesheet" href="/style.css">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            min-height: 100vh;
-            font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-            background: radial-gradient(circle at top, #26293a 0, #050608 55%, #000 100%);
-            color: #f5f5f5;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            padding-top: 8vh;
-        }
-        .wrapper { width: 100%; max-width: 720px; padding: 24px; }
-        .logo { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px; }
-        .logo-text img { max-height: 250px; width: auto; }
-        .subtitle { text-align: center; font-size: 1.2rem; color: #b3b6d8; margin-bottom: 32px; font-weight: 500; letter-spacing: 0.02em; }
-        .top-sites-label { text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.18em; color: #767a9c; margin-bottom: 10px; }
-        .cards { display: flex; flex-direction: column; gap: 10px; }
-        .card { display: flex; align-items: center; padding: 10px 14px; border-radius: 14px; background: rgba(17, 20, 35, 0.9); border: 1px solid rgba(90, 105, 190, 0.35); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.02); cursor: pointer; text-decoration: none; color: inherit; transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, border-color 0.12s ease-out, background 0.12s ease-out; }
-        .card:hover { transform: translateY(-2px); border-color: rgba(142, 163, 255, 0.9); background: rgba(26, 32, 64, 0.95); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 18px rgba(142, 163, 255, 0.45); }
-        .icon-pill { width: 34px; height: 34px; border-radius: 999px; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0; font-size: 18px; color: #fff; }
-        .icon-origo { background: linear-gradient(135deg, #ff6b6b, #ffb36b); }
-        .icon-areal { background: linear-gradient(135deg, #00c9a7, #007cf0); }
-        .card-text { display: flex; flex-direction: column; gap: 2px; }
-        .card-title { font-size: 0.95rem; font-weight: 600; color: #f5f6ff; }
-        .card-sub { font-size: 0.8rem; color: #9da3d6; }
-        @media (max-width: 700px) {
-            .wrapper { padding: 20px 16px; }
-            .logo-text img { max-height: 250px; }
-        }
-
-        /* GOOSE-KNAPP – «mini-card» stil */
-        #goose-btn {
-            position: fixed;
-            top: 14px;
-            left: 14px;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-
-            padding: 8px 14px;
-            border-radius: 999px;
-
-            background: rgba(17, 20, 35, 0.95);
-            border: 1px solid rgba(142, 163, 255, 0.6);
-            box-shadow:
-                0 10px 28px rgba(0, 0, 0, 0.65),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.03);
-
-            color: #f5f6ff;
-            font-size: 0.8rem;
-            font-weight: 600;
-            font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-            letter-spacing: 0.04em;
-            text-decoration: none;
-            text-transform: uppercase;
-
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-
-            transition:
-                transform 0.12s ease-out,
-                box-shadow 0.12s ease-out,
-                border-color 0.12s ease-out,
-                background 0.12s ease-out,
-                color 0.12s ease-out;
-        }
-
-        #goose-btn::before {
-            content: "🪿";
-            font-size: 1rem;
-        }
-
-        #goose-btn:hover {
-            transform: translateY(-1px);
-            background: rgba(26, 32, 64, 0.98);
-            border-color: rgba(190, 210, 255, 0.95);
-            box-shadow:
-                0 14px 36px rgba(0, 0, 0, 0.85),
-                0 0 18px rgba(142, 163, 255, 0.6);
-            color: #ffffff;
-        }
-    </style>
+        <meta charset="UTF-8" 
+              /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JanS2A – Tool Hub </title>
+        <link rel="stylesheet" href="/style.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at top, #26293a 0, #050608 55%, #000 100%);
+      color: #f5f5f5;
+      display: flex;
+      align-items: flex-start; /* Flyttet opp fra center */
+      justify-content: center;
+      padding-top: 8vh; /* Avstand fra toppen */
+    }
+    .wrapper { width: 100%; max-width: 720px; padding: 24px; }
+    .logo { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px; }
+    .logo-text img { max-height: 250px; width: auto; } /* Gjort logoen større */
+    .subtitle { text-align: center; font-size: 1.2rem; color: #b3b6d8; margin-bottom: 32px; font-weight: 500; letter-spacing: 0.02em; }
+    .top-sites-label { text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.18em; color: #767a9c; margin-bottom: 10px; }
+    .cards { display: flex; flex-direction: column; gap: 10px; }
+    .card { display: flex; align-items: center; padding: 10px 14px; border-radius: 14px; background: rgba(17, 20, 35, 0.9); border: 1px solid rgba(90, 105, 190, 0.35); box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.02); cursor: pointer; text-decoration: none; color: inherit; transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, border-color 0.12s ease-out, background 0.12s ease-out; }
+    .card:hover { transform: translateY(-2px); border-color: rgba(142, 163, 255, 0.9); background: rgba(26, 32, 64, 0.95); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 18px rgba(142, 163, 255, 0.45); }
+    .icon-pill { width: 34px; height: 34px; border-radius: 999px; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0; font-size: 18px; color: #fff; }
+    .icon-origo { background: linear-gradient(135deg, #ff6b6b, #ffb36b); }
+    .icon-areal { background: linear-gradient(135deg, #00c9a7, #007cf0); }
+    .card-text { display: flex; flex-direction: column; gap: 2px; }
+    .card-title { font-size: 0.95rem; font-weight: 600; color: #f5f6ff; }
+    .card-sub { font-size: 0.8rem; color: #9da3d6; }
+    @media (max-width: 700px) { .wrapper { padding: 20px 16px; } .logo-text img { max-height: 250px; } }
+  </style>
 </head>
 <body>
-    <a href="goose.html" id="goose-btn">GOOSE INVASION</a>
-
-    <div class="wrapper">
-        <div class="logo">
-            <div class="logo-text"><img src="logo2.svg" alt="Logo" /></div>
-        </div>
-        <p class="subtitle">Verktøy Laget Med Fritids Problemer</p>
-        <div class="top-sites-label">Self Lagde sider</div>
-        <div class="cards">
-            <a href="Origo-Tabell.html" class="card">
-                <div class="icon-pill icon-origo">X</div>
-                <div class="card-text">
-                    <div class="card-title">Origo-Tabell</div>
-                    <div class="card-sub">Origo tabell med formler X og Y.</div>
-                </div>
-            </a>
-            <a href="Areal-tabell.html" class="card">
-                <div class="icon-pill icon-areal">A</div>
-                <div class="card-text">
-                    <div class="card-title">Areal-tabell</div>
-                    <div class="card-sub">Punkt, linjer, areal med Snap grid.</div>
-                </div>
-            </a>
-        </div>
+  <div class="wrapper">
+    <div class="logo">
+      <div class="logo-text"><img src="logo2.svg" alt="Logo"/></div>
     </div>
+    <p class="subtitle">Verktøy Laget Med Fritids Problemer</p> <!-- Oppdatert tekst -->
+    <div class="top-sites-label"> Self Lagde sider </div>
+    <div class="cards">
+      <a href="Origo-Tabell.html" class="card">
+        <div class="icon-pill icon-origo">X</div>
+        <div class="card-text">
+          <div class="card-title">Origo-Tabell</div>
+          <div class="card-sub">Origo tabell med formler X og Y.</div>
+        </div>
+      </a>
+      <a href="Areal-tabell.html" class="card">
+        <div class="icon-pill icon-areal">A</div>
+        <div class="card-text">
+          <div class="card-title">Areal-tabell</div>
+          <div class="card-sub">Punkt, linjer, areal med Snap grid.</div>
+        </div>
+      </a>
+    </div>
+  </div>
 </body>
 </html>
