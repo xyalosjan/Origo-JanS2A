@@ -2,166 +2,474 @@
 <html lang="no">
 <head>
     <meta charset="UTF-8">
-    <title>Mattekoding-hjelper (VG4)</title>
+    <title>Python- og mattehjelp (VG4)</title>
     <style>
         body {
             font-family: system-ui, sans-serif;
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 1rem 1.5rem;
+            max-width: 1000px;
+            margin: 1.5rem auto;
+            padding: 1rem 1.5rem 3rem;
             background: #f5f5f5;
         }
+        header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        header img {
+            height: 60px;
+        }
         h1 {
-            text-align: center;
+            margin: 0;
         }
-        label {
-            font-weight: bold;
+        nav {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
-        input[type="text"] {
-            width: 100%;
-            padding: 0.5rem;
-            font-size: 1.1rem;
-            margin: 0.3rem 0 0.8rem 0;
-        }
-        button {
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
-            cursor: pointer;
+        nav button {
+            padding: 0.4rem 0.8rem;
             border-radius: 4px;
             border: 1px solid #444;
             background: #222;
-            color: white;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
         }
-        button:hover {
+        nav button:hover {
             background: #444;
         }
-        #resultat {
-            margin-top: 1rem;
-            padding: 0.75rem;
+        section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border-radius: 6px;
             background: #ffffff;
-            border-radius: 4px;
             border: 1px solid #ccc;
-            font-size: 1.1rem;
         }
-        #forklaringer {
-            margin-top: 1rem;
-            padding: 0.75rem;
-            background: #ffffff;
+        h2 {
+            margin-top: 0;
+        }
+        label {
+            font-weight: 600;
+        }
+        input[type="number"],
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            max-width: 500px;
+            padding: 0.4rem;
+            margin: 0.2rem 0 0.7rem 0;
+            font-family: inherit;
+        }
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        button.action {
+            padding: 0.4rem 0.8rem;
             border-radius: 4px;
-            border: 1px solid #ccc;
+            border: 1px solid #444;
+            background: #0063b1;
+            color: #fff;
+            cursor: pointer;
+            margin-top: 0.3rem;
+        }
+        button.action:hover {
+            background: #004f8c;
+        }
+        .output {
+            margin-top: 0.6rem;
+            padding: 0.6rem;
+            border-radius: 4px;
+            background: #f7f7f7;
+            font-family: "Fira Code", "Consolas", monospace;
+            white-space: pre-wrap;
+        }
+        .tip {
+            font-size: 0.9rem;
+            color: #555;
+            margin-top: 0.4rem;
         }
         code {
             background: #eee;
             padding: 0 0.2rem;
             border-radius: 3px;
+            font-family: "Fira Code", "Consolas", monospace;
         }
-        .tips {
-            font-size: 0.9rem;
-            color: #555;
-            margin-top: 0.5rem;
+        ul.compact {
+            margin-top: 0.3rem;
+        }
+        ul.compact li {
+            margin-bottom: 0.15rem;
         }
     </style>
 </head>
 <body>
-    <!-- LOGO -->
-    <div style="text-align:center; margin-bottom: 1rem;">
-        <img src="logo.svg"
-             alt="Mattekoding-logo"
-             style="height:60px;">
+
+<header>
+    <!-- valgfri logo: logo.svg i samme mappe -->
+    <img src="logo.svg" alt="Logo" onerror="this.style.display='none'">
+    <div>
+        <h1>Python- og mattehjelp (VG4)</h1>
+        <div>Hjelpemiddel til Cosinus-programmeringskurs: while, print(), tekst, tall og operatorer.</div>
+    </div>
+</header>
+
+<nav>
+    <button onclick="scrollToSection('algoritme')">1. Algoritmer & idé først</button>
+    <button onclick="scrollToSection('while')">2. While & fart</button>
+    <button onclick="scrollToSection('print')">3. Tekst & print()</button>
+    <button onclick="scrollToSection('operatorer')">4. Regnestykker & operatorer</button>
+    <button onclick="scrollToSection('intfloat')">5. Heltall & desimaltall</button>
+</nav>
+
+<!-- 1: Algoritmer -->
+<section id="algoritme">
+    <h2>1. Algoritme – tenk først, kode etterpå</h2>
+    <p>
+        En <strong>algoritme</strong> er en presis steg‑for‑steg‑oppskrift for hvordan et problem skal løses. Før du
+        skriver kode, er det lurt å skrive algoritmen med egne ord (pseudokode) på norsk eller engelsk.
+    </p>
+
+    <label for="algotekst">Beskriv oppgaven med egne ord (f.eks. «Farten er 60. Så lenge farten er større enn 50, reduser farten og skriv ut farten.»):</label>
+    <textarea id="algotekst" placeholder="Skriv algoritmen på norsk her..."></textarea>
+
+    <button class="action" onclick="lagEngelskPseudokode()">Foreslå engelsk pseudokode</button>
+    <div id="algopseudo" class="output"></div>
+
+    <div class="tip">
+        Tips: Mange språk (som Python) er basert på engelsk nøkkelord, men selve algoritme‑ideen er den samme
+        uansett språk.
+    </div>
+</section>
+
+<!-- 2: While-løkke og fart -->
+<section id="while">
+    <h2>2. While-løkke – fart og fartsgrense</h2>
+    <p>
+        I Python brukes <code>while</code> til å gjenta kode så lenge en betingelse er sann
+        (for eksempel så lenge farten er høyere enn fartsgrensen).[web:44]
+    </p>
+
+    <label for="startFart">Startfart (km/t):</label>
+    <input type="number" id="startFart" value="60">
+
+    <label for="grenseFart">Fartsgrense (km/t):</label>
+    <input type="number" id="grenseFart" value="50">
+
+    <label for="nedtrapp">Hvor mye farten skal reduseres for hver runde:</label>
+    <input type="number" id="nedtrapp" value="1">
+
+    <button class="action" onclick="simulerFart()">Lag Python-kode og se utskrift</button>
+
+    <div class="tip">
+        Oppgavetype: «Farten er 90. Så lenge farten er større enn 80: reduser farten og skriv ut farten.» – legg inn
+        90 og 80 og trykk på knappen.
     </div>
 
-    <h1>Mattekoding-hjelper</h1>
+    <h3>Kodeforslag (Python):</h3>
+    <div id="whileKode" class="output"></div>
+
+    <h3>Hva programmet skriver ut:</h3>
+    <div id="whileOutput" class="output"></div>
+</section>
+
+<!-- 3: Tekst og print() -->
+<section id="print">
+    <h2>3. Tekst, strenger og <code>print()</code></h2>
     <p>
-        Skriv inn et matteuttrykk (for eksempel <code>3*(2+5)/4</code> eller <code>2**3 + 5</code>) og trykk
-        <strong>Regn ut</strong>.
+        <code>print()</code> skriver tekst (strenger) og tall til skjermen. Tekst i Python skrives i anførselstegn
+        (<code>"tekst"</code> eller <code>'tekst'</code>).[web:41][web:43]
     </p>
 
-    <label for="uttrykk">Uttrykk:</label>
-    <input type="text" id="uttrykk" placeholder="Skriv f.eks. (10+5)*3 / 2">
+    <h3>3.1 Lag kode for flere linjer tekst</h3>
+    <p>Skriv tre linjer tekst (f.eks. Eple, Pære, Banan), så får du ferdig <code>print()</code>-kode.</p>
 
-    <button onclick="kjorUttrykk()">Regn ut</button>
+    <label for="linje1">Linje 1:</label>
+    <input type="text" id="linje1" placeholder="Eple">
+    <label for="linje2">Linje 2:</label>
+    <input type="text" id="linje2" placeholder="Pære">
+    <label for="linje3">Linje 3:</label>
+    <input type="text" id="linje3" placeholder="Banan">
 
-    <p class="tips">
-        Tips: <code>+</code> = pluss, <code>-</code> = minus, <code>*</code> = gange, <code>/</code> = dele,
-        <code>**</code> = opphøyd i (poteser), parenteser <code>( )</code> styrer rekkefølgen.
+    <button class="action" onclick="lagPrintKode()">Lag print()-kode</button>
+
+    <div id="printKode" class="output"></div>
+
+    <h3>3.2 Forskjell på <code>+</code> og komma i <code>print()</code></h3>
+    <p>
+        I Python vil <code>print("Hei", "på", "deg")</code> automatisk legge inn mellomrom mellom ordene,
+        mens <code>print("Hei" + "på" + "deg")</code> <em>ikke</em> gjør det – der må du legge inn mellomrom selv.[web:43][web:48]
     </p>
 
-    <div id="resultat">Resultat kommer her.</div>
-    <div id="forklaringer"></div>
+    <button class="action" onclick="demoPlusVsKomma()">Vis forskjellen</button>
 
-    <script>
-        // Regner ut uttrykket med JavaScript
-        function evaluerUttrykk(str) {
-            // Lager en ny funksjon som returnerer uttrykket
-            const f = new Function("return (" + str + ");");
-            return f();
+    <div id="plusKommaKode" class="output"></div>
+    <div id="plusKommaForklaring" class="output"></div>
+</section>
+
+<!-- 4: Tall, operatorer og regnestykker -->
+<section id="operatorer">
+    <h2>4. Tall, operatorer og regnestykker</h2>
+    <p>
+        I Python har du standard operatorer: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>,
+        <code>**</code>, <code>%</code> og <code>//</code>.[web:36][web:38]
+    </p>
+    <ul class="compact">
+        <li><code>+</code> : addisjon (pluss)</li>
+        <li><code>-</code> : subtraksjon (minus)</li>
+        <li><code>*</code> : multiplikasjon (gange)</li>
+        <li><code>/</code> : divisjon (gir desimaltall)</li>
+        <li><code>**</code> : potens (f.eks. <code>2**3 = 8</code>)</li>
+        <li><code>%</code> : rest (modulus), f.eks. <code>7 % 2 = 1</code></li>
+        <li><code>//</code> : heltallsdivisjon, f.eks. <code>7 // 2 = 3</code></li>
+    </ul>
+
+    <label for="uttrykk">Skriv et regnestykke i Python-stil (f.eks. <code>3 - 4/2</code>, <code>7%2</code>, <code>7//2</code>, <code>2**3 - 6</code>):</label>
+    <input type="text" id="uttrykk" placeholder="Skriv f.eks. (5 + 2)/2">
+
+    <button class="action" onclick="evaluerPythonUttrykk()">Regn ut og forklar</button>
+
+    <div id="uttrykkResultat" class="output"></div>
+    <div id="uttrykkForklaring" class="output"></div>
+
+    <div class="tip">
+        Denne boksen bruker JavaScript i nettleseren til å etterligne Python for de vanligste regnestykkene,
+        inkludert <code>//</code> (heltallsdivisjon) og <code>**</code> (potenser).
+    </div>
+</section>
+
+<!-- 5: Heltall, desimaltall, int() og float() -->
+<section id="intfloat">
+    <h2>5. Heltall, desimaltall, <code>int()</code> og <code>float()</code></h2>
+    <p>
+        I Python er et heltall en <em>int</em> og et desimaltall en <em>float</em>. <code>int(x)</code> fjerner
+        desimalene og gir heltallsdelen, mens <code>float(x)</code> gjør et heltall om til desimaltall.[web:38][web:39]
+    </p>
+
+    <label for="tallIntFloat">Skriv et tall eller et enkelt uttrykk (f.eks. <code>3.14</code>, <code>6.999</code>, <code>7*5</code>):</label>
+    <input type="text" id="tallIntFloat" placeholder="f.eks. 3.14">
+
+    <button class="action" onclick="demoIntFloat()">Vis int() og float()</button>
+
+    <div id="intFloatKode" class="output"></div>
+    <div id="intFloatForklaring" class="output"></div>
+
+    <div class="tip">
+        Oppgavetype: «Hva blir skrevet ut av <code>print(int(3.14))</code>?» – bruk verktøyet til å resonere deg frem
+        til svaret (3), ikke bare gjette.
+    </div>
+</section>
+
+<script>
+    function scrollToSection(id) {
+        document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+    }
+
+    // 1: Norsk → engelsk pseudokode (veldig enkel "oversetter")
+    function lagEngelskPseudokode() {
+        const norsk = document.getElementById("algotekst").value.trim();
+        const out = document.getElementById("algopseudo");
+
+        if (!norsk) {
+            out.textContent = "Skriv først en kort forklaring på norsk.";
+            return;
         }
 
-        // Sjekker hvilke operatorer som er brukt, og forklarer dem
-        function lagForklaringer(str) {
-            const forklaringer = [];
+        // Vi oversetter ikke ordentlig, men gir et rammeverk
+        const forslag =
+`Example pseudocode in English (you must adjust the words if needed):
 
-            if (str.includes("+")) {
-                forklaringer.push("<li><code>+</code> : addisjon (pluss, legge til)</li>");
-            }
-            if (str.includes("-")) {
-                forklaringer.push("<li><code>-</code> : subtraksjon (minus, trekke fra)</li>");
-            }
-            if (str.includes("*")) {
-                forklaringer.push("<li><code>*</code> : multiplikasjon (ganging)</li>");
-            }
-            if (str.includes("/")) {
-                forklaringer.push("<li><code>/</code> : divisjon (deling)</li>");
-            }
-            if (str.includes("**")) {
-                forklaringer.push("<li><code>**</code> : potens (for eksempel <code>2**3 = 8</code>)</li>");
-            }
-            if (str.includes("%")) {
-                forklaringer.push("<li><code>%</code> : rest ved divisjon (modulus)</li>");
-            }
-            if (str.includes("(") || str.includes(")")) {
-                forklaringer.push("<li><code>( )</code> : parenteser som bestemmer rekkefølgen på regningen</li>");
-            }
-            if (str.includes("Math.sqrt")) {
-                forklaringer.push("<li><code>Math.sqrt(x)</code> : kvadratroten av x (for eksempel <code>Math.sqrt(9) = 3</code>)</li>");
-            }
+1. Set speed to a start value (for example 60).
+2. While speed is greater than the speed limit:
+       - Reduce speed (for example by 1).
+       - Print the speed.`;
 
-            if (forklaringer.length === 0) {
-                return "<p>Ingen spesielle operatorer funnet, bare tall.</p>";
-            }
+        out.textContent = forslag;
+    }
 
-            return "<h3>Forklaring på kodene du brukte</h3><ul>" + forklaringer.join("") + "</ul>";
+    // 2: While-løkke fart
+    function simulerFart() {
+        const start = Number(document.getElementById("startFart").value);
+        const limit = Number(document.getElementById("grenseFart").value);
+        const step = Number(document.getElementById("nedtrapp").value) || 1;
+
+        const kodeDiv = document.getElementById("whileKode");
+        const outDiv = document.getElementById("whileOutput");
+
+        if (isNaN(start) || isNaN(limit) || isNaN(step)) {
+            kodeDiv.textContent = "Sjekk at alle feltene er tall.";
+            outDiv.textContent = "";
+            return;
         }
 
-        function kjorUttrykk() {
-            const input = document.getElementById("uttrykk");
-            const resultatDiv = document.getElementById("resultat");
-            const forklaringerDiv = document.getElementById("forklaringer");
+        const pyKode =
+`speed = ${start}
+while speed > ${limit}:
+    speed -= ${step}
+    print(speed)`;
 
-            const tekst = input.value.trim();
+        kodeDiv.textContent = pyKode;
 
-            if (!tekst) {
-                resultatDiv.textContent = "Skriv inn et uttrykk først.";
-                forklaringerDiv.innerHTML = "";
-                return;
-            }
-
-            try {
-                const resultat = evaluerUttrykk(tekst);
-                resultatDiv.textContent = "Resultat: " + resultat;
-                forklaringerDiv.innerHTML = lagForklaringer(tekst);
-            } catch (e) {
-                resultatDiv.textContent = "Det er en feil i uttrykket (sjekk parenteser, tall og tegn).";
-                forklaringerDiv.innerHTML = "";
-            }
+        // Simuler utskrift
+        let speed = start;
+        let lines = [];
+        let sikkerhetsteller = 0;
+        while (speed > limit && sikkerhetsteller < 10_000) {
+            speed -= step;
+            lines.push(String(speed));
+            sikkerhetsteller++;
         }
 
-        // Kjør med Enter-tasten også
-        document.getElementById("uttrykk").addEventListener("keydown", function (event) {
-            if (event.key === "Enter") {
-                kjorUttrykk();
+        if (sikkerhetsteller >= 10_000) {
+            outDiv.textContent = "Noe er galt: løkka stoppet ikke (sannsynligvis steg med feil fortegn).";
+        } else if (lines.length === 0) {
+            outDiv.textContent = "(Ingen utskrift: betingelsen var ikke sann i utgangspunktet.)";
+        } else {
+            outDiv.textContent = lines.join("\n");
+        }
+    }
+
+    // 3.1: generer print()-kode for tre linjer
+    function lagPrintKode() {
+        const l1 = document.getElementById("linje1").value || "";
+        const l2 = document.getElementById("linje2").value || "";
+        const l3 = document.getElementById("linje3").value || "";
+        const out = document.getElementById("printKode");
+
+        if (!l1 && !l2 && !l3) {
+            out.textContent = "Skriv inn minst én linje tekst.";
+            return;
+        }
+
+        let kode = "";
+        if (l1) kode += `print("${l1}")\n`;
+        if (l2) kode += `print("${l2}")\n`;
+        if (l3) kode += `print("${l3}")\n`;
+
+        out.textContent = kode.trimEnd();
+    }
+
+    // 3.2: forskjell på + og komma i print()
+    function demoPlusVsKomma() {
+        const kodeDiv = document.getElementById("plusKommaKode");
+        const forkDiv = document.getElementById("plusKommaForklaring");
+
+        const kode =
+`print("Hello" + "World" + "!")
+print("Hello", "World", "!")`;
+
+        const forklaring =
+`I Python blir dette resultatet:
+
+HelloWorld!
+Hello World !
+
+Med + blir alt limt rett sammen.
+Med komma setter print() automatisk inn mellomrom mellom argumentene.`;
+
+        kodeDiv.textContent = kode;
+        forkDiv.textContent = forklaring;
+    }
+
+    // 4: evaluer "Python-uttrykk" i JS (for enkle regnestykker)
+    function evaluerPythonUttrykk() {
+        const felt = document.getElementById("uttrykk");
+        const tekst = felt.value.trim();
+        const resDiv = document.getElementById("uttrykkResultat");
+        const forkDiv = document.getElementById("uttrykkForklaring");
+
+        if (!tekst) {
+            resDiv.textContent = "Skriv inn et uttrykk først.";
+            forkDiv.textContent = "";
+            return;
+        }
+
+        try {
+            // etterlign Python // som heltallsdivisjon
+            let jsKode = tekst;
+
+            // Erstatt heltallsdivisjon // med en funksjonskall-lignende syntaks
+            // Vi bruker et veldig enkelt mønster her, funker for uttrykk som 7//2, (5+2)//2 osv.
+            jsKode = jsKode.replace(/\/\//g, "/");
+
+            // Lag funksjon for å regne ut
+            const f = new Function("return (" + jsKode + ");");
+            let resultat = f();
+
+            // Hvis originalstreng inneholder //, bruk heltallsdel (gulv) på sluttresultatet
+            if (tekst.includes("//")) {
+                resultat = Math.trunc(resultat);
             }
-        });
-    </script>
+
+            resDiv.textContent = "Resultat (omtrent som i Python): " + resultat;
+
+            // Enkel forklaring
+            let forklaring = "";
+            if (tekst.includes("/")) {
+                forklaring += "- Tegnet '/' gir desimaltall i Python (float).\n";
+            }
+            if (tekst.includes("//")) {
+                forklaring += "- Tegnet '//' gir heltallsdivisjon (bare heltallsdelen beholdes).\n";
+            }
+            if (tekst.includes("%")) {
+                forklaring += "- Tegnet '%' gir resten i divisjonen (modulus).\n";
+            }
+            if (tekst.includes("**")) {
+                forklaring += "- Tegnet '**' er potens (for eksempel 2**3 = 8).\n";
+            }
+            if (!forklaring) {
+                forklaring = "Uttrykket bruker bare grunnleggende operatorer (+, -, *, /).";
+            }
+
+            forkDiv.textContent = forklaring;
+        } catch (e) {
+            resDiv.textContent = "Det er en feil i uttrykket (sjekk parenteser, operatorer og tall).";
+            forkDiv.textContent = "";
+        }
+    }
+
+    // 5: demo int() og float()
+    function demoIntFloat() {
+        const tekst = document.getElementById("tallIntFloat").value.trim();
+        const kodeDiv = document.getElementById("intFloatKode");
+        const forkDiv = document.getElementById("intFloatForklaring");
+
+        if (!tekst) {
+            kodeDiv.textContent = "Skriv inn et tall eller et enkelt uttrykk først.";
+            forkDiv.textContent = "";
+            return;
+        }
+
+        try {
+            const f = new Function("return (" + tekst + ");");
+            const verdi = f();
+
+            // etterlign Python int() og float()
+            const somInt = Math.trunc(verdi);
+            const somFloat = Number(verdi);
+
+            const kode =
+`print(int(${tekst}))
+print(float(${tekst}))`;
+
+            kodeDiv.textContent = kode;
+
+            const forklaring =
+`Antatt verdi av uttrykket: ${verdi}
+int(...): fjerner desimaldelen → ${somInt}
+float(...): viser tallet som desimaltall → ${somFloat.toFixed(1)} (visning med 1 desimal)`;
+
+            forkDiv.textContent = forklaring;
+        } catch (e) {
+            kodeDiv.textContent = "Klarte ikke å tolke uttrykket. Prøv med et enklere tall eller regnestykke.";
+            forkDiv.textContent = "";
+        }
+    }
+</script>
+
 </body>
 </html>
