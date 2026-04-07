@@ -27,7 +27,7 @@
       z-index: 10;
     }
     .logo-container img {
-      max-width: 100px;
+      max-width: 200px;
       height: auto;
       display: block;
     }
@@ -302,6 +302,7 @@
       </div>
 
       <button class="btn" id="next-btn" onclick="nextQuestion()" disabled>Neste</button>
+      <button class="btn" id="back-btn" onclick="prevQuestion()" style="margin-top:10px;background:#e0e0e0;color:#333;">Tilbake</button>
     </div>
 
     <div id="result-screen" class="hidden result-container">
@@ -431,6 +432,7 @@
         opts: [
           { text: 'Praktiske guider, "how-to"', p: { practical: 1 } },
           { text: 'Vitenskapelige artikler, dokumentarer', p: { investigative: 2 } },
+          { text: 'Krim / spenningsromaner', p: { investigative: 1, artistic: 1 } },
           { text: 'Romaner, filmer, kunst', p: { artistic: 2 } },
           { text: 'Biografi, psykologi, sosiale tema', p: { social: 1 } },
           { text: 'Business-bøker, nyheter, podkast', p: { enterprising: 1 } },
@@ -781,17 +783,25 @@
 
     let currentQ = 0;
     let scores = { practical: 0, investigative: 0, artistic: 0, social: 0, enterprising: 0, conventional: 0 };
-    let selectedOption = null;
+    let selectedIndices = [];
     let regionPreference = 'any';
+    let answers = []; // lagrer svar per spørsmål
 
-    function loadQuestion() {
+    function isRegionQuestion() {
+      const q = questions[currentQ];
+      return q.opts.length && q.opts[0].region;
+    }
+
+    function loadQuestion(restore = false) {
       const q = questions[currentQ];
       document.getElementById('question-number').textContent = `Spørsmål ${currentQ + 1} av ${questions.length}`;
       document.getElementById('question-text').textContent = q.q;
-      
+
       const optionsDiv = document.getElementById('options');
       optionsDiv.innerHTML = '';
-      
+
+      const regionQ = isRegionQuestion();
+
       q.opts.forEach((opt, i) => {
         const div = document.createElement('div');
         div.className = 'option';
@@ -799,42 +809,134 @@
         div.onclick = () => selectOption(i);
         optionsDiv.appendChild(div);
       });
-      
-      selectedOption = null;
+
+      if (!regionQ) {
+        const unsureIndex = q.opts.length;
+        const unsureDiv = document.createElement('div');
+        unsureDiv.className = 'option';
+        unsureDiv.innerHTML = `<div class="option-checkbox"></div><span>Usikker / ingen passer helt</span>`;
+        unsureDiv.onclick = () => selectOption(unsureIndex);
+        optionsDiv.appendChild(unsureDiv);
+      }
+
+      selectedIndices = [];
       document.getElementById('next-btn').disabled = true;
+
+      if (restore && answers[currentQ] && answers[currentQ].length) {
+        const prevSel = answers[currentQ];
+        const opts = document.querySelectorAll('.option');
+        opts.forEach((o, i) => {
+          if (prevSel.includes(i)) {
+            o.classList.add('selected');
+          }
+        });
+        selectedIndices = prevSel.slice();
+        document.getElementById('next-btn').disabled = false;
+      }
+
+      document.getElementById('back-btn').disabled = currentQ === 0;
+
       updateProgress();
     }
 
     function selectOption(index) {
-      document.querySelectorAll('.option').forEach((o, i) => {
-        o.classList.toggle('selected', i === index);
-      });
-      selectedOption = index;
-      document.getElementById('next-btn').disabled = false;
+      const q = questions[currentQ];
+      const regionQ = isRegionQuestion();
+      const options = document.querySelectorAll('.option');
+
+      if (regionQ) {
+        selectedIndices = [index];
+        options.forEach((o, i) => {
+          o.classList.toggle('selected', i === index);
+        });
+      } else {
+        const unsureIndex = q.opts.length;
+        const alreadySelected = selectedIndices.includes(index);
+
+        if (index === unsureIndex) {
+          if (alreadySelected) {
+            selectedIndices = [];
+            options.forEach(o => o.classList.remove('selected'));
+          } else {
+            selectedIndices = [unsureIndex];
+            options.forEach((o, i) => {
+              o.classList.toggle('selected', i === unsureIndex);
+            });
+          }
+        } else {
+          const unsurePos = selectedIndices.indexOf(unsureIndex);
+          if (unsurePos !== -1) {
+            selectedIndices.splice(unsurePos, 1);
+            options[unsureIndex].classList.remove('selected');
+          }
+
+          if (alreadySelected) {
+            selectedIndices = selectedIndices.filter(i => i !== index);
+            options[index].classList.remove('selected');
+          } else {
+            selectedIndices.push(index);
+            options[index].classList.add('selected');
+          }
+        }
+      }
+
+      document.getElementById('next-btn').disabled = selectedIndices.length === 0;
+    }
+
+    function recomputeScores() {
+      scores = { practical: 0, investigative: 0, artistic: 0, social: 0, enterprising: 0, conventional: 0 };
+      regionPreference = 'any';
+
+      for (let qIndex = 0; qIndex < answers.length; qIndex++) {
+        const sel = answers[qIndex];
+        if (!sel || !sel.length) continue;
+
+        const q = questions[qIndex];
+        const regionQ = q.opts.length && q.opts[0].region;
+
+        if (regionQ) {
+          const opt = q.opts[sel[0]];
+          if (opt.region) {
+            regionPreference = opt.region;
+          }
+        } else {
+          const unsureIndex = q.opts.length;
+          const chosen = sel.filter(i => i !== unsureIndex);
+          if (chosen.length > 0) {
+            const weightFactor = 1 / chosen.length;
+            chosen.forEach(i => {
+              const opt = q.opts[i];
+              for (let key in opt.p) {
+                scores[key] += opt.p[key] * weightFactor;
+              }
+            });
+          }
+        }
+      }
     }
 
     function nextQuestion() {
-      if (selectedOption === null) return;
-      
-      const opt = questions[currentQ].opts[selectedOption];
+      if (!selectedIndices.length) return;
 
-      // Oppdater interesse-scorer
-      for (let key in opt.p) {
-        scores[key] += opt.p[key];
-      }
+      answers[currentQ] = selectedIndices.slice();
+      recomputeScores();
 
-      // Lagre region dersom dette er regionsspørsmålet
-      if (opt.region) {
-        regionPreference = opt.region;
-      }
-      
       currentQ++;
       if (currentQ < questions.length) {
-        loadQuestion();
+        loadQuestion(true);
       } else {
         document.getElementById('progress').style.width = '100%';
         showResults();
       }
+    }
+
+    function prevQuestion() {
+      if (currentQ === 0) return;
+
+      answers[currentQ] = selectedIndices.slice();
+
+      currentQ--;
+      loadQuestion(true);
     }
 
     function updateProgress() {
@@ -842,7 +944,6 @@
       document.getElementById('progress').style.width = percent + '%';
     }
 
-    // Genererer mange konkrete studieprogrammer basert på fagområder
     function generateStudySuggestions(profileKey, limit = 220) {
       const profile = profiles[profileKey];
       const degreePrefixes = [
@@ -906,11 +1007,11 @@
     function showResults() {
       document.getElementById('quiz-screen').classList.add('hidden');
       document.getElementById('result-screen').classList.remove('hidden');
-      
+
       const sorted = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
       const topKey = sorted[0];
       const topProfile = profiles[topKey];
-      
+
       document.getElementById('top-profile').textContent = topProfile.name;
 
       const secondKey = sorted[1];
@@ -925,7 +1026,7 @@
       document.getElementById('top-subtitle').textContent = subtitle;
 
       const topStudies = generateStudySuggestions(topKey, 220);
-      
+
       let detailsHTML = `
         <div class="profile-description">
           <h3>Din interesseprofil</h3>
@@ -952,7 +1053,7 @@
           </p>
         </div>
       `;
-      
+
       if (secondKey) {
         const secondProfile = profiles[secondKey];
         const secondStudies = generateStudySuggestions(secondKey, 80);
@@ -967,7 +1068,20 @@
         `;
       }
 
-      // Region-blokk
+      if (thirdKey) {
+        const thirdProfile = profiles[thirdKey];
+        const thirdStudies = generateStudySuggestions(thirdKey, 40);
+        detailsHTML += `
+          <div class="profile-description" style="background: #e3f2fd; border-left: 4px solid #2196f3;">
+            <h3>Flere mulige veier (${thirdProfile.name}):</h3>
+            <p>${thirdProfile.desc}</p>
+            <ul>
+              ${thirdStudies.map(s => `<li>${s}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }
+
       detailsHTML += `
         <div class="profile-description">
           ${getRegionText(regionPreference)}
@@ -989,7 +1103,7 @@
       let chartHTML = '<div class="chart-container"><h3 style="text-align:center;margin-bottom:10px;">Din interesseprofil (fordeling)</h3>';
       
       for (let key of sorted) {
-        const percent = Math.round((scores[key] / totalScore) * 100);
+        const percent = totalScore > 0 ? Math.round((scores[key] / totalScore) * 100) : 0;
         chartHTML += `
           <div class="chart-bar">
             <div class="chart-label">${profiles[key].name}</div>
