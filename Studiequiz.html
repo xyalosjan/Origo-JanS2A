@@ -1,0 +1,718 @@
+korr<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stor studie- og karrierequiz</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .logo-container {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+    }
+    .logo-container img {
+      max-width: 100px;
+      height: auto;
+      display: block;
+    }
+    .quiz-container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 700px;
+      width: 100%;
+      padding: 40px;
+      margin-top: 140px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+    .progress-bar {
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+    .question-container {
+      margin-bottom: 30px;
+    }
+    .question-number {
+      color: #667eea;
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    .question-text {
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .option {
+      background: #f8f9fa;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .option:hover {
+      background: #f0f0f0;
+      border-color: #667eea;
+      transform: translateX(4px);
+    }
+    .option.selected {
+      background: #e8eaff;
+      border-color: #667eea;
+      font-weight: 500;
+    }
+    .option-checkbox {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .option.selected .option-checkbox {
+      background: #667eea;
+      border-color: #667eea;
+    }
+    .option.selected .option-checkbox::after {
+      content: '✓';
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+      width: 100%;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .hidden {
+      display: none;
+    }
+    .result-container {
+      text-align: center;
+    }
+    .result-title {
+      font-size: 32px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .result-profile {
+      font-size: 24px;
+      color: #667eea;
+      font-weight: 600;
+      margin-bottom: 30px;
+    }
+    .profile-description {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+    .profile-description h3 {
+      color: #667eea;
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+    .profile-description p {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .profile-description ul {
+      margin-left: 20px;
+      color: #555;
+      line-height: 1.8;
+    }
+    .profile-keywords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+    .keyword {
+      background: #e8eaff;
+      color: #667eea;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .chart-container {
+      margin: 30px 0;
+    }
+    .chart-bar {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 12px;
+    }
+    .chart-label {
+      flex: 0 0 150px;
+      text-align: right;
+      font-size: 14px;
+      color: #555;
+      font-weight: 500;
+    }
+    .chart-bar-bg {
+      flex: 1;
+      background: #e0e0e0;
+      height: 24px;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+    .chart-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      transition: width 0.6s ease;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 8px;
+    }
+    .chart-percent {
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    @media (max-width: 600px) {
+      .quiz-container {
+        padding: 24px;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      .question-text {
+        font-size: 18px;
+      }
+      .chart-label {
+        flex: 0 0 100px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-container">
+    <img src="logo.svg" alt="Logo">
+  </div>
+
+  <div class="quiz-container">
+    <div id="quiz-screen">
+      <h1>Stor studie- og karrierequiz</h1>
+      <p class="subtitle">Finn ut hvilken utdanningsretning som passer deg</p>
+      
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress"></div>
+      </div>
+
+      <div class="question-container">
+        <div class="question-number" id="question-number">Spørsmål 1 av 18</div>
+        <div class="question-text" id="question-text"></div>
+        <div class="options" id="options"></div>
+      </div>
+
+      <button class="btn" id="next-btn" onclick="nextQuestion()" disabled>Neste</button>
+    </div>
+
+    <div id="result-screen" class="hidden result-container">
+      <div class="result-title">Dine resultater</div>
+      <div class="result-profile" id="top-profile"></div>
+      <div id="profile-details"></div>
+      <div id="chart"></div>
+      <button class="btn" onclick="location.reload()">Ta quizen på nytt</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: 'Hva liker du best å gjøre på fritiden?',
+        opts: [
+          { text: 'Bygge, fikse eller lage ting med hendene', p: { practical: 3 } },
+          { text: 'Lese, forske eller lære nye ting', p: { investigative: 3 } },
+          { text: 'Tegne, skrive, designe eller spille musikk', p: { artistic: 3 } },
+          { text: 'Være med venner, hjelpe andre', p: { social: 3 } },
+          { text: 'Organisere arrangement eller lede prosjekter', p: { enterprising: 3 } },
+          { text: 'Planlegge, sortere eller holde orden', p: { conventional: 3 } }
+        ]
+      },
+      {
+        q: 'Hvilket skolefag likte du best?',
+        opts: [
+          { text: 'Kroppsøving, forming eller praktiske fag', p: { practical: 3 } },
+          { text: 'Matte, naturfag eller fysikk', p: { investigative: 3 } },
+          { text: 'Norsk, kunst eller musikk', p: { artistic: 3 } },
+          { text: 'Samfunnsfag eller religion/etikk', p: { social: 3 } },
+          { text: 'Økonomi eller salg/service', p: { enterprising: 3 } },
+          { text: 'Programmering eller regnskapsfag', p: { conventional: 3 } }
+        ]
+      },
+      {
+        q: 'Hvordan vil du helst jobbe?',
+        opts: [
+          { text: 'Fysisk, med verktøy eller maskiner', p: { practical: 3 } },
+          { text: 'Analysere data, tenke logisk, løse problemer', p: { investigative: 3 } },
+          { text: 'Kreativt, fritt, med rom for egne ideer', p: { artistic: 3 } },
+          { text: 'Med mennesker, hjelpe, undervise', p: { social: 3 } },
+          { text: 'Selge, forhandle, lede team', p: { enterprising: 3 } },
+          { text: 'Strukturert, med faste rutiner og prosedyrer', p: { conventional: 3 } }
+        ]
+      },
+      {
+        q: 'Hvilket arbeidsmiljø passer deg best?',
+        opts: [
+          { text: 'Ute i naturen eller på verksted', p: { practical: 2 } },
+          { text: 'På lab, kontor med PC, bibliotek', p: { investigative: 2 } },
+          { text: 'Atelier, studio, hjemmekontor', p: { artistic: 2 } },
+          { text: 'Skole, sykehus, sosiale arenaer', p: { social: 2 } },
+          { text: 'Kontorbygning, møter, kundemøter', p: { enterprising: 2 } },
+          { text: 'Kontorlandskap med faste plasser', p: { conventional: 2 } }
+        ]
+      },
+      {
+        q: 'Hvilken type oppgaver tiltrekker deg mest?',
+        opts: [
+          { text: 'Praktisk arbeid med konkrete resultater', p: { practical: 3 } },
+          { text: 'Forskning, analyse, eksperimentering', p: { investigative: 3 } },
+          { text: 'Kunstnerisk uttrykk, innovasjon', p: { artistic: 3 } },
+          { text: 'Hjelpe, veilede, kommunisere', p: { social: 3 } },
+          { text: 'Forhandle, overtalelse, ledelse', p: { enterprising: 3 } },
+          { text: 'Administrasjon, dokumentasjon, struktur', p: { conventional: 3 } }
+        ]
+      },
+      {
+        q: 'Hva motiverer deg mest i en jobb?',
+        opts: [
+          { text: 'Se noe konkret jeg har laget', p: { practical: 2 } },
+          { text: 'Finne løsninger på vanskelige problemer', p: { investigative: 2 } },
+          { text: 'Skape noe unikt og originalt', p: { artistic: 2 } },
+          { text: 'Gjøre en positiv forskjell for andre', p: { social: 2 } },
+          { text: 'Nå mål, tjene penger, vokse i karrieren', p: { enterprising: 2 } },
+          { text: 'Stabilitet, forutsigbarhet, trygghet', p: { conventional: 2 } }
+        ]
+      },
+      {
+        q: 'Hvordan løser du problemer?',
+        opts: [
+          { text: 'Prøve og feile, lage prototype', p: { practical: 2 } },
+          { text: 'Tenke logisk, analysere systematisk', p: { investigative: 3 } },
+          { text: 'Brainstorme kreative løsninger', p: { artistic: 2 } },
+          { text: 'Diskutere med andre, høre flere meninger', p: { social: 2 } },
+          { text: 'Handle raskt, være pragmatisk', p: { enterprising: 2 } },
+          { text: 'Følge fremgangsmåter og standarder', p: { conventional: 2 } }
+        ]
+      },
+      {
+        q: 'Hva er du best til?',
+        opts: [
+          { text: 'Finmekanikk, håndverk, sport', p: { practical: 2 } },
+          { text: 'Matematikk, logikk, kritisk tenkning', p: { investigative: 2 } },
+          { text: 'Kunstneriske ferdigheter, kommunikasjon', p: { artistic: 2 } },
+          { text: 'Empatisk lytting, samarbeid', p: { social: 2 } },
+          { text: 'Overtale, organisere, lede', p: { enterprising: 2 } },
+          { text: 'Nøyaktighet, organisering, detaljer', p: { conventional: 2 } }
+        ]
+      },
+      {
+        q: 'Hvilken type utdanning høres mest interessant ut?',
+        opts: [
+          { text: 'Fagskole / Håndverksfag', p: { practical: 3 } },
+          { text: 'Universitet / forskerutdanning', p: { investigative: 3 } },
+          { text: 'Kunstskole / designutdanning', p: { artistic: 3 } },
+          { text: 'Lærer- eller helsefagutdanning', p: { social: 3 } },
+          { text: 'Økonomi- eller ledelsesstudier', p: { enterprising: 3 } },
+          { text: 'Administrasjon eller IT-drift', p: { conventional: 3 } }
+        ]
+      },
+      {
+        q: 'Hva er viktigst for deg i en jobb?',
+        opts: [
+          { text: 'Jobbe med hendene, se resultater', p: { practical: 2 } },
+          { text: 'Utvikle ny kunnskap eller teknologi', p: { investigative: 2 } },
+          { text: 'Uttrykke meg kreativt', p: { artistic: 2 } },
+          { text: 'Hjelpe og støtte mennesker', p: { social: 2 } },
+          { text: 'Lykkes, påvirke, lede', p: { enterprising: 2 } },
+          { text: 'Sikkerhet, forutsigbarhet', p: { conventional: 2 } }
+        ]
+      },
+      {
+        q: 'Hva slags bok / medium foretrekker du?',
+        opts: [
+          { text: 'Praktiske guider, "how-to"', p: { practical: 1 } },
+          { text: 'Vitenskapelige artikler, dokumentarer', p: { investigative: 2 } },
+          { text: 'Romaner, filmer, kunst', p: { artistic: 2 } },
+          { text: 'Biografi, psykologi, sosiale tema', p: { social: 1 } },
+          { text: 'Business-bøker, nyheter, podkast', p: { enterprising: 1 } },
+          { text: 'Strukturerte oppslagsverk, håndbøker', p: { conventional: 1 } }
+        ]
+      },
+      {
+        q: 'Hvordan vil du helst bruke tiden din?',
+        opts: [
+          { text: 'Gjøre, bygge, være fysisk aktiv', p: { practical: 2 } },
+          { text: 'Tenke, analysere, lære', p: { investigative: 2 } },
+          { text: 'Skape, designe, utforske', p: { artistic: 2 } },
+          { text: 'Sammen med andre, sosialt', p: { social: 2 } },
+          { text: 'Planlegge, organisere, utføre', p: { enterprising: 2 } },
+          { text: 'Holde orden, føre kontroll', p: { conventional: 2 } }
+        ]
+      },
+      {
+        q: 'Hva tiltrekker deg mest ved en arbeidsplass?',
+        opts: [
+          { text: 'Mulighet til å jobbe med hendene og verktøy', p: { practical: 2 } },
+          { text: 'Intellektuelt stimulerende miljø', p: { investigative: 2 } },
+          { text: 'Kreativt og inspirerende', p: { artistic: 2 } },
+          { text: 'Varmt og støttende', p: { social: 2 } },
+          { text: 'Dynamisk og ambisiøst', p: { enterprising: 2 } },
+          { text: 'Organisert og forutsigbart', p: { conventional: 2 } }
+        ]
+      },
+      {
+        q: 'Hvilken type prosjekt appellerer mest?',
+        opts: [
+          { text: 'Bygge noe fysisk', p: { practical: 2 } },
+          { text: 'Forske på noe nytt', p: { investigative: 2 } },
+          { text: 'Lage kunst eller innhold', p: { artistic: 2 } },
+          { text: 'Hjelpe en gruppe mennesker', p: { social: 2 } },
+          { text: 'Starte en bedrift eller kampanje', p: { enterprising: 2 } },
+          { text: 'Organisere et system eller database', p: { conventional: 2 } }
+        ]
+      },
+      {
+        q: 'Hvis du kunne velge fritt, hva ville du gjort?',
+        opts: [
+          { text: 'Jobbe som håndverker, tekniker eller idrettsutøver', p: { practical: 2 } },
+          { text: 'Bli forsker, ingeniør eller analyst', p: { investigative: 2 } },
+          { text: 'Kunstner, designer eller forfatter', p: { artistic: 2 } },
+          { text: 'Lærer, sykepleier eller sosionom', p: { social: 2 } },
+          { text: 'Leder, selger eller entreprønør', p: { enterprising: 2 } },
+          { text: 'Økonom, jurist eller administrator', p: { conventional: 2 } }
+        ]
+      },
+      {
+        q: 'Hva er din ideelle jobbsituasjon?',
+        opts: [
+          { text: 'Fysisk arbeid med synlige resultater', p: { practical: 2 } },
+          { text: 'Mulighet til fordypning og forskning', p: { investigative: 2 } },
+          { text: 'Kunstnerisk frihet og fleksibilitet', p: { artistic: 2 } },
+          { text: 'Jobbe tært med mennesker', p: { social: 2 } },
+          { text: 'Ansvar, innflytelse og karrierevekst', p: { enterprising: 2 } },
+          { text: 'Stabil jobb med klare oppgaver', p: { conventional: 2 } }
+        ]
+      }
+    ];
+
+    const profiles = {
+      practical: {
+        name: 'Praktisk / Teknisk',
+        desc: 'Du liker å jobbe med hendene, fikse ting og se konkrete resultater. Du trives med fysisk arbeid, verktøy og maskiner.',
+        traits: ['Håndverker-type', 'Praktisk anlagt', 'Liker å bygge og fikse', 'Fysisk aktiv'],
+        keywords: ['Ingeniør', 'Elektriker', 'Tømrer', 'Bil/motor', 'Bygg', 'IT-hardware'],
+        studies: [
+          'Ingeniørfag (bygg, maskinteknikk, elektro)',
+          'Elektrikerfag',
+          'Tømrerfag',
+          'Rørleggerfag',
+          'Bil- og dieselmekanikerfag',
+          'Industriteknologi',
+          'Anleggsmaskinfag',
+          'CNC-operatør',
+          'Sveisefag',
+          'VVS-fag',
+          'Automatiseringstekniker',
+          'Dataingeniør (hardware)'
+        ]
+      },
+      investigative: {
+        name: 'Analytisk / Forskende',
+        desc: 'Du liker å tenke logisk, analysere og løse komplekse problemer. Du er nysgjerrig, systematisk og teoretisk orientert.',
+        traits: ['Logisk tenker', 'Nysgjerrig', 'Systematisk', 'Liker å forske'],
+        keywords: ['Forsker', 'Ingeniør', 'Programmering', 'Matte', 'Vitenskap', 'Analyse'],
+        studies: [
+          'Datateknologi / Informatikk',
+          'Ingeniørfag (data, elektronikk, kjemi)',
+          'Biologi / Bioteknologi',
+          'Fysikk / Matematikk',
+          'Kjemi',
+          'Statistikk / Data science',
+          'Medisin / Tannlege',
+          'Farmasi',
+          'Geologi / Geofag',
+          'Informatikk (sikkerhet, AI)',
+          'Psykologi (forskningsorientert)',
+          'Samfunnsøkonomi (kvantitativt)'
+        ]
+      },
+      artistic: {
+        name: 'Kreativ / Kommunikativ',
+        desc: 'Du liker å skape, designe og uttrykke deg kunstnerisk. Du tenker originalt, setter pris på estetikk og har en kreativ tilnærming til problemer.',
+        traits: ['Kreativ', 'Originaltenkende', 'Kunstnerisk', 'Kommunikasjonssterk'],
+        keywords: ['Design', 'Kunst', 'Media', 'Skrive', 'Musikk', 'Markedsføring'],
+        studies: [
+          'Grafisk design / Visuell kommunikasjon',
+          'Mediedesign / Multimedieproduksjon',
+          'Film og TV-produksjon',
+          'Journalistikk',
+          'Markedsføring / Reklame',
+          'Kreativ skriving / Litteratur',
+          'Musikk (komposisjon, produksjon)',
+          'Mote- og tekstildesign',
+          'Arkitektur',
+          'Interiør- og møbeldesign',
+          'Fotografi',
+          'Teater / Skuespill',
+          'UX/UI-design',
+          'Animasjon / 3D-design'
+        ]
+      },
+      social: {
+        name: 'Menneske- og relasjonsorientert',
+        desc: 'Du liker å jobbe med og hjelpe andre mennesker. Du er empatisk, kommunikativ og trives i sosiale miljøer.',
+        traits: ['Empatisk', 'Hjelper gjerne', 'God lytter', 'Sosialt engasjert'],
+        keywords: ['Lærer', 'Sykepleier', 'Sosionom', 'Terapeut', 'Veileder', 'HR'],
+        studies: [
+          'Grunnskolelærerutdanning',
+          'Barnehagelærerutdanning',
+          'Sykepleie',
+          'Vernepleie',
+          'Sosionom',
+          'Ergoterapi / Fysioterapi',
+          'Psykologi (klinisk)',
+          'Sosialantropologi',
+          'Sosiologi',
+          'Helse- og sosialfag',
+          'Pedagogikk',
+          'Spesialpedagogikk',
+          'Veiledning og karriereveiledning',
+          'HR / Organisasjonspsykologi'
+        ]
+      },
+      enterprising: {
+        name: 'Pådriver / Ledertype',
+        desc: 'Du liker å lede, organisere og påvirke. Du er ambisiøs, overbevisende og trives med ansvar og utfordringer.',
+        traits: ['Ambisiøs', 'Overbevisende', 'Leder', 'Målorientert'],
+        keywords: ['Økonomi', 'Ledelse', 'Salg', 'Entreprenørskap', 'Forretning', 'Jus'],
+        studies: [
+          'Økonomi og administrasjon',
+          'Markedsføringsledelse',
+          'Ledelses- og organisasjonsfag',
+          'Samfunnsøkonomi',
+          'Jus',
+          'Eiendomsmegling',
+          'Reiseliv / Hotellledelse',
+          'Offentlig administrasjon / Statsvitenskap',
+          'Innovasjon og entreprenørskap',
+          'Finans / Investment banking',
+          'HR og organisasjonsutvikling',
+          'Event management / Prosjektledelse'
+        ]
+      },
+      conventional: {
+        name: 'Struktur- og systemorientert',
+        desc: 'Du liker rutiner, orden og system. Du er nøyaktig, pålitelig og trives med oppgaver som krever struktur og organisering.',
+        traits: ['Strukturert', 'Nøyaktig', 'Pålitelig', 'Detaljorientert'],
+        keywords: ['Økonomi', 'Administrasjon', 'Regnskap', 'IT-drift', 'Jus', 'Data'],
+        studies: [
+          'Regnskap og revisjon',
+          'Økonomi- og administrasjonsfag',
+          'IT-drift / Systemadministrasjon',
+          'Informatikk (databaser, sikkerhet)',
+          'Juridisk rådgiver',
+          'Bibliotek- og informasjonsvitenskap',
+          'Offentlig forvaltning',
+          'Skatt og toll',
+          'Forsikring / Aktuarf ag',
+          'Kvalitetssikring / Prosjektadministrasjon',
+          'Logistikk og forsyningskjede',
+          'Kontorledelse / Sekretærfag'
+        ]
+      }
+    };
+
+    let currentQ = 0;
+    let scores = { practical: 0, investigative: 0, artistic: 0, social: 0, enterprising: 0, conventional: 0 };
+    let selectedOption = null;
+
+    function loadQuestion() {
+      const q = questions[currentQ];
+      document.getElementById('question-number').textContent = `Spørsmål ${currentQ + 1} av ${questions.length}`;
+      document.getElementById('question-text').textContent = q.q;
+      
+      const optionsDiv = document.getElementById('options');
+      optionsDiv.innerHTML = '';
+      
+      q.opts.forEach((opt, i) => {
+        const div = document.createElement('div');
+        div.className = 'option';
+        div.innerHTML = `<div class="option-checkbox"></div><span>${opt.text}</span>`;
+        div.onclick = () => selectOption(i);
+        optionsDiv.appendChild(div);
+      });
+      
+      selectedOption = null;
+      document.getElementById('next-btn').disabled = true;
+      updateProgress();
+    }
+
+    function selectOption(index) {
+      document.querySelectorAll('.option').forEach((o, i) => {
+        o.classList.toggle('selected', i === index);
+      });
+      selectedOption = index;
+      document.getElementById('next-btn').disabled = false;
+    }
+
+    function nextQuestion() {
+      if (selectedOption === null) return;
+      
+      const opt = questions[currentQ].opts[selectedOption];
+      for (let key in opt.p) {
+        scores[key] += opt.p[key];
+      }
+      
+      currentQ++;
+      if (currentQ < questions.length) {
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function updateProgress() {
+      const percent = (currentQ / questions.length) * 100;
+      document.getElementById('progress').style.width = percent + '%';
+    }
+
+    function showResults() {
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.remove('hidden');
+      
+      const sorted = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
+      const topProfile = profiles[sorted[0]];
+      
+      document.getElementById('top-profile').textContent = topProfile.name;
+      
+      let detailsHTML = `
+        <div class="profile-description">
+          <h3>Din profil</h3>
+          <p>${topProfile.desc}</p>
+          <h3 style="margin-top: 16px;">Typisk deg:</h3>
+          <ul>
+            ${topProfile.traits.map(t => `<li>${t}</li>`).join('')}
+          </ul>
+        </div>
+        
+        <div class="profile-keywords">
+          ${topProfile.keywords.map(k => `<span class="keyword">${k}</span>`).join('')}
+        </div>
+        
+        <div class="profile-description">
+          <h3>Studieretninger som passer deg:</h3>
+          <ul>
+            ${topProfile.studies.map(s => `<li>${s}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+      
+      if (sorted.length > 1) {
+        detailsHTML += `
+          <div class="profile-description" style="background: #fff3e0; border-left: 4px solid #ff9800;">
+            <h3>Andre retninger som også passer:</h3>
+            <p><strong>${profiles[sorted[1]].name}</strong>: ${profiles[sorted[1]].desc}</p>
+          </div>
+        `;
+      }
+      
+      document.getElementById('profile-details').innerHTML = detailsHTML;
+      
+      const totalScore = Object.values(scores).reduce((a, b) => a + b, 0);
+      let chartHTML = '<div class="chart-container"><h3 style="text-align:center;margin-bottom:20px;">Din interesseprofil</h3>';
+      
+      for (let key of sorted) {
+        const percent = Math.round((scores[key] / totalScore) * 100);
+        chartHTML += `
+          <div class="chart-bar">
+            <div class="chart-label">${profiles[key].name}</div>
+            <div class="chart-bar-bg">
+              <div class="chart-bar-fill" style="width: ${percent}%">
+                <span class="chart-percent">${percent}%</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      chartHTML += '</div>';
+      document.getElementById('chart').innerHTML = chartHTML;
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
