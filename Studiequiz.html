@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>karrierequiz</title>
+  <title>Karrierequiz</title>
   <style>
     * {
       margin: 0;
@@ -163,13 +163,18 @@
       font-size: 24px;
       color: #667eea;
       font-weight: 600;
-      margin-bottom: 30px;
+      margin-bottom: 10px;
+    }
+    .result-subtitle {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 20px;
     }
     .profile-description {
       background: #f8f9fa;
       padding: 20px;
       border-radius: 12px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       text-align: left;
     }
     .profile-description h3 {
@@ -192,7 +197,7 @@
       flex-wrap: wrap;
       gap: 8px;
       justify-content: center;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
     .keyword {
       background: #e8eaff;
@@ -203,12 +208,12 @@
       font-weight: 500;
     }
     .chart-container {
-      margin: 30px 0;
+      margin: 20px 0 10px 0;
     }
     .chart-bar {
       display: flex;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       gap: 12px;
     }
     .chart-label {
@@ -240,6 +245,25 @@
       font-size: 12px;
       font-weight: 600;
     }
+    .studies-note {
+      font-size: 12px;
+      color: #888;
+      margin-top: 6px;
+    }
+    .studies-list {
+      max-height: 260px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .next-steps {
+      margin-top: 16px;
+      font-size: 14px;
+      color: #555;
+    }
+    .next-steps ul {
+      margin-left: 20px;
+      line-height: 1.7;
+    }
     @media (max-width: 600px) {
       .quiz-container {
         padding: 24px;
@@ -265,14 +289,14 @@
   <div class="quiz-container">
     <div id="quiz-screen">
       <h1>Stor studie- og karrierequiz</h1>
-      <p class="subtitle">Finn ut hvilken utdanningsretning som passer deg</p>
+      <p class="subtitle">Finn ut hvilken utdanningsretning og type studier som passer deg best</p>
       
       <div class="progress-bar">
         <div class="progress-fill" id="progress"></div>
       </div>
 
       <div class="question-container">
-        <div class="question-number" id="question-number">Spørsmål 1 av 18</div>
+        <div class="question-number" id="question-number">Spørsmål</div>
         <div class="question-text" id="question-text"></div>
         <div class="options" id="options"></div>
       </div>
@@ -283,6 +307,7 @@
     <div id="result-screen" class="hidden result-container">
       <div class="result-title">Dine resultater</div>
       <div class="result-profile" id="top-profile"></div>
+      <div class="result-subtitle" id="top-subtitle"></div>
       <div id="profile-details"></div>
       <div id="chart"></div>
       <button class="btn" onclick="location.reload()">Ta quizen på nytt</button>
@@ -382,7 +407,7 @@
       {
         q: 'Hvilken type utdanning høres mest interessant ut?',
         opts: [
-          { text: 'Fagskole / Håndverksfag', p: { practical: 3 } },
+          { text: 'Fagskole / håndverksfag', p: { practical: 3 } },
           { text: 'Universitet / forskerutdanning', p: { investigative: 3 } },
           { text: 'Kunstskole / designutdanning', p: { artistic: 3 } },
           { text: 'Lærer- eller helsefagutdanning', p: { social: 3 } },
@@ -452,7 +477,7 @@
           { text: 'Bli forsker, ingeniør eller analyst', p: { investigative: 2 } },
           { text: 'Kunstner, designer eller forfatter', p: { artistic: 2 } },
           { text: 'Lærer, sykepleier eller sosionom', p: { social: 2 } },
-          { text: 'Leder, selger eller entreprønør', p: { enterprising: 2 } },
+          { text: 'Leder, selger eller entreprenør', p: { enterprising: 2 } },
           { text: 'Økonom, jurist eller administrator', p: { conventional: 2 } }
         ]
       },
@@ -462,9 +487,19 @@
           { text: 'Fysisk arbeid med synlige resultater', p: { practical: 2 } },
           { text: 'Mulighet til fordypning og forskning', p: { investigative: 2 } },
           { text: 'Kunstnerisk frihet og fleksibilitet', p: { artistic: 2 } },
-          { text: 'Jobbe tært med mennesker', p: { social: 2 } },
+          { text: 'Jobbe nært med mennesker', p: { social: 2 } },
           { text: 'Ansvar, innflytelse og karrierevekst', p: { enterprising: 2 } },
           { text: 'Stabil jobb med klare oppgaver', p: { conventional: 2 } }
+        ]
+      },
+      {
+        q: 'Hvor vil du helst studere (geografisk)?',
+        opts: [
+          { text: 'Oslo / Oslo-området', p: {}, region: 'oslo' },
+          { text: 'Sørøstlandet (Telemark, Vestfold, Buskerud osv.)', p: {}, region: 'southeast' },
+          { text: 'Vestlandet / Trøndelag', p: {}, region: 'west_trondelag' },
+          { text: 'Nord-Norge', p: {}, region: 'north' },
+          { text: 'Spiller ingen rolle, jeg er fleksibel', p: {}, region: 'any' }
         ]
       }
     ];
@@ -474,124 +509,272 @@
         name: 'Praktisk / Teknisk',
         desc: 'Du liker å jobbe med hendene, fikse ting og se konkrete resultater. Du trives med fysisk arbeid, verktøy og maskiner.',
         traits: ['Håndverker-type', 'Praktisk anlagt', 'Liker å bygge og fikse', 'Fysisk aktiv'],
-        keywords: ['Ingeniør', 'Elektriker', 'Tømrer', 'Bil/motor', 'Bygg', 'IT-hardware'],
-        studies: [
-          'Ingeniørfag (bygg, maskinteknikk, elektro)',
-          'Elektrikerfag',
-          'Tømrerfag',
-          'Rørleggerfag',
-          'Bil- og dieselmekanikerfag',
-          'Industriteknologi',
-          'Anleggsmaskinfag',
-          'CNC-operatør',
-          'Sveisefag',
-          'VVS-fag',
-          'Automatiseringstekniker',
-          'Dataingeniør (hardware)'
+        keywords: ['Ingeniør', 'Elektriker', 'Tømrer', 'Bil/motor', 'Bygg', 'IT-hardware', 'Industri', 'Fagskole'],
+        favorites: [
+          'Fagskole: Automatiseringsteknikk',
+          'Fagskole: Elkraft og installasjon',
+          'Fagskole: Bygg og anlegg',
+          'Fagskole: Mekatronikk',
+          'Fagskole: Kulde- og varmepumpeteknikk',
+          'Bachelor i byggingeniørfag',
+          'Bachelor i maskinteknikk',
+          'Bachelor i elektroingeniørfag',
+          'Bachelor i fornybar energi',
+          'Bachelor i nautikk',
+          'Bachelor i maskin, prosessteknologi og energi',
+          'Bachelor i ingeniørfag – automatisering',
+          'Bachelor i robotikk og mekatronikk',
+          'Bachelor i landbruksteknikk',
+          'Bachelor i byggdrift og eiendomsforvaltning',
+          'Bachelor i IT og informasjonssystemer (hardware-orientert)',
+          'Bachelor i driftsteknikk og logistikk'
+        ],
+        baseFields: [
+          'byggingeniørfag',
+          'maskinteknikk',
+          'elektroingeniørfag',
+          'automatiseringsteknikk',
+          'fornybar energi',
+          'produksjonsteknikk',
+          'industriell design (teknisk)',
+          'drifts- og vedlikeholdsteknikk',
+          'anleggsteknikk',
+          'marinteknikk',
+          'flyteknikk',
+          'datateknologi (hardware)',
+          'robotikk og mekatronikk',
+          'prosessteknologi',
+          'offshoreteknologi',
+          'branningeniørfag',
+          'jernbaneteknikk',
+          'byggdrift',
+          'landbruksteknikk',
+          'byggeteknikk'
         ]
       },
       investigative: {
         name: 'Analytisk / Forskende',
         desc: 'Du liker å tenke logisk, analysere og løse komplekse problemer. Du er nysgjerrig, systematisk og teoretisk orientert.',
         traits: ['Logisk tenker', 'Nysgjerrig', 'Systematisk', 'Liker å forske'],
-        keywords: ['Forsker', 'Ingeniør', 'Programmering', 'Matte', 'Vitenskap', 'Analyse'],
-        studies: [
-          'Datateknologi / Informatikk',
-          'Ingeniørfag (data, elektronikk, kjemi)',
-          'Biologi / Bioteknologi',
-          'Fysikk / Matematikk',
-          'Kjemi',
-          'Statistikk / Data science',
-          'Medisin / Tannlege',
-          'Farmasi',
-          'Geologi / Geofag',
-          'Informatikk (sikkerhet, AI)',
-          'Psykologi (forskningsorientert)',
-          'Samfunnsøkonomi (kvantitativt)'
+        keywords: ['Forsker', 'Ingeniør', 'Programmering', 'Matte', 'Vitenskap', 'Analyse', 'Data science'],
+        favorites: [
+          'Bachelor i informatikk',
+          'Bachelor i datateknologi',
+          'Bachelor i anvendt datateknologi',
+          'Bachelor i kybernetikk og robotikk',
+          'Bachelor i bioteknologi',
+          'Bachelor i fysikk og matematikk',
+          'Bachelor i kjemi',
+          'Bachelor i geofysikk',
+          'Bachelor i miljø- og ressursfag',
+          'Bachelor i data science',
+          'Integrert master i teknologi (sivilingeniør)',
+          'Profesjonsstudium i medisin',
+          'Profesjonsstudium i odontologi (tannlege)',
+          'Master i informatikk – kunstig intelligens',
+          'Master i statistikk og dataanalyse'
+        ],
+        baseFields: [
+          'informatikk',
+          'programmering',
+          'data science',
+          'kybernetikk og robotikk',
+          'fysikk',
+          'matematikk',
+          'statistikk',
+          'kjemi',
+          'biologi',
+          'bioteknologi',
+          'geologi',
+          'geofysikk',
+          'miljøvitenskap',
+          'medisinsk teknologi',
+          'psykologi (forskningsrettet)',
+          'samfunnsøkonomi',
+          'aktuarkunnskap',
+          'kognitiv vitenskap',
+          'kriminologi',
+          'klimatologi'
         ]
       },
       artistic: {
         name: 'Kreativ / Kommunikativ',
         desc: 'Du liker å skape, designe og uttrykke deg kunstnerisk. Du tenker originalt, setter pris på estetikk og har en kreativ tilnærming til problemer.',
         traits: ['Kreativ', 'Originaltenkende', 'Kunstnerisk', 'Kommunikasjonssterk'],
-        keywords: ['Design', 'Kunst', 'Media', 'Skrive', 'Musikk', 'Markedsføring'],
-        studies: [
-          'Grafisk design / Visuell kommunikasjon',
-          'Mediedesign / Multimedieproduksjon',
-          'Film og TV-produksjon',
-          'Journalistikk',
-          'Markedsføring / Reklame',
-          'Kreativ skriving / Litteratur',
-          'Musikk (komposisjon, produksjon)',
-          'Mote- og tekstildesign',
-          'Arkitektur',
-          'Interiør- og møbeldesign',
-          'Fotografi',
-          'Teater / Skuespill',
-          'UX/UI-design',
-          'Animasjon / 3D-design'
+        keywords: ['Design', 'Kunst', 'Media', 'Skriving', 'Musikk', 'Markedsføring', 'Innhold', 'Spill'],
+        favorites: [
+          'Bachelor i grafisk design',
+          'Bachelor i visuell kommunikasjon',
+          'Bachelor i interaksjonsdesign / UX-design',
+          'Bachelor i spilldesign',
+          'Bachelor i illustrasjon',
+          'Bachelor i animasjon og 3D-design',
+          'Bachelor i film- og TV-produksjon',
+          'Bachelor i journalistikk',
+          'Bachelor i kreativ skriving og litteratur',
+          'Bachelor i populærmusikk / musikkproduksjon',
+          'Bachelor i arkitektur',
+          'Bachelor i interiørarkitektur',
+          'Bachelor i kunst- og håndverk',
+          'Bachelor i digital medieproduksjon',
+          'Bachelor i markedsføring og merkevareledelse (kreativ profil)'
+        ],
+        baseFields: [
+          'grafisk design',
+          'visuell kommunikasjon',
+          'interaksjonsdesign',
+          'spilldesign',
+          'illustrasjon',
+          'animasjon',
+          '3D-design',
+          'film- og TV-produksjon',
+          'manus og kreativ skriving',
+          'journalistikk',
+          'musikkproduksjon',
+          'komposisjon',
+          'scenekunst',
+          'kostyme- og maskedesign',
+          'interiørarkitektur',
+          'arkitektur',
+          'fotografi',
+          'digitale medier',
+          'kunst- og håndverk',
+          'musikkteater'
         ]
       },
       social: {
         name: 'Menneske- og relasjonsorientert',
         desc: 'Du liker å jobbe med og hjelpe andre mennesker. Du er empatisk, kommunikativ og trives i sosiale miljøer.',
         traits: ['Empatisk', 'Hjelper gjerne', 'God lytter', 'Sosialt engasjert'],
-        keywords: ['Lærer', 'Sykepleier', 'Sosionom', 'Terapeut', 'Veileder', 'HR'],
-        studies: [
-          'Grunnskolelærerutdanning',
+        keywords: ['Lærer', 'Sykepleier', 'Sosionom', 'Terapeut', 'Veileder', 'HR', 'Pedagogikk'],
+        favorites: [
+          'Grunnskolelærerutdanning (1–7 / 5–10)',
           'Barnehagelærerutdanning',
-          'Sykepleie',
-          'Vernepleie',
-          'Sosionom',
-          'Ergoterapi / Fysioterapi',
-          'Psykologi (klinisk)',
-          'Sosialantropologi',
-          'Sosiologi',
-          'Helse- og sosialfag',
-          'Pedagogikk',
-          'Spesialpedagogikk',
-          'Veiledning og karriereveiledning',
-          'HR / Organisasjonspsykologi'
+          'Bachelor i sykepleie',
+          'Bachelor i vernepleie',
+          'Bachelor i ergoterapi',
+          'Bachelor i fysioterapi',
+          'Bachelor i sosialt arbeid (sosionom)',
+          'Bachelor i barnevern',
+          'Bachelor i psykologi (klinisk / helse)',
+          'Bachelor i idrettsvitenskap',
+          'Bachelor i folkehelsearbeid',
+          'Bachelor i spesialpedagogikk',
+          'Master i pedagogikk',
+          'Master i familie- og nettverksterapi',
+          'Master i rus- og avhengighetsarbeid'
+        ],
+        baseFields: [
+          'grunnskolelærerutdanning',
+          'barnehagelærerutdanning',
+          'spesialpedagogikk',
+          'sykepleie',
+          'vernepleie',
+          'ergoterapi',
+          'fysioterapi',
+          'sosialt arbeid',
+          'barnevern',
+          'psykologi (klinisk)',
+          'familieterapi',
+          'kriminologi',
+          'sosiologi',
+          'sosialantropologi',
+          'pedagogikk',
+          'logopedi',
+          'idrettsvitenskap',
+          'folkehelse',
+          'rus- og avhengighetsarbeid',
+          'karriereveiledning'
         ]
       },
       enterprising: {
         name: 'Pådriver / Ledertype',
         desc: 'Du liker å lede, organisere og påvirke. Du er ambisiøs, overbevisende og trives med ansvar og utfordringer.',
         traits: ['Ambisiøs', 'Overbevisende', 'Leder', 'Målorientert'],
-        keywords: ['Økonomi', 'Ledelse', 'Salg', 'Entreprenørskap', 'Forretning', 'Jus'],
-        studies: [
-          'Økonomi og administrasjon',
-          'Markedsføringsledelse',
-          'Ledelses- og organisasjonsfag',
-          'Samfunnsøkonomi',
-          'Jus',
-          'Eiendomsmegling',
-          'Reiseliv / Hotellledelse',
-          'Offentlig administrasjon / Statsvitenskap',
-          'Innovasjon og entreprenørskap',
-          'Finans / Investment banking',
+        keywords: ['Økonomi', 'Ledelse', 'Salg', 'Entreprenørskap', 'Forretning', 'Jus', 'Politikk'],
+        favorites: [
+          'Bachelor i økonomi og administrasjon',
+          'Bachelor i markedsføring og salgsledelse',
+          'Bachelor i innovasjon og entreprenørskap',
+          'Bachelor i internasjonal business',
+          'Bachelor i finans',
+          'Bachelor i eiendomsmegling',
+          'Bachelor i hotelledelse og reiseliv',
+          'Bachelor i sport management',
+          'Bachelor i HR og personalledelse',
+          'Bachelor i prosjektledelse (bygg / IT / event)',
+          'Master i økonomi og administrasjon (siviløkonom)',
+          'Master i strategisk ledelse',
+          'Master i entreprenørskap og innovasjon',
+          'Profesjonsstudium i rettsvitenskap (jus)',
+          'Master i offentlig administrasjon og ledelse'
+        ],
+        baseFields: [
+          'økonomi og administrasjon',
+          'markedsføring',
+          'strategi og ledelse',
+          'entreprenørskap og innovasjon',
+          'internasjonal business',
+          'finans',
+          'regnskap og revisjon',
+          'eiendomsmegling',
+          'hotell- og reiselivsledelse',
+          'sports management',
           'HR og organisasjonsutvikling',
-          'Event management / Prosjektledelse'
+          'prosjektledelse',
+          'salg og relasjonsledelse',
+          'offentlig administrasjon',
+          'logistikk og supply chain',
+          'sikkerhetsledelse',
+          'politikk og forvaltning',
+          'økonomisk analyse',
+          'forretningsjus',
+          'bærekraftig business'
         ]
       },
       conventional: {
         name: 'Struktur- og systemorientert',
         desc: 'Du liker rutiner, orden og system. Du er nøyaktig, pålitelig og trives med oppgaver som krever struktur og organisering.',
         traits: ['Strukturert', 'Nøyaktig', 'Pålitelig', 'Detaljorientert'],
-        keywords: ['Økonomi', 'Administrasjon', 'Regnskap', 'IT-drift', 'Jus', 'Data'],
-        studies: [
-          'Regnskap og revisjon',
-          'Økonomi- og administrasjonsfag',
-          'IT-drift / Systemadministrasjon',
-          'Informatikk (databaser, sikkerhet)',
-          'Juridisk rådgiver',
-          'Bibliotek- og informasjonsvitenskap',
-          'Offentlig forvaltning',
-          'Skatt og toll',
-          'Forsikring / Aktuarf ag',
-          'Kvalitetssikring / Prosjektadministrasjon',
-          'Logistikk og forsyningskjede',
-          'Kontorledelse / Sekretærfag'
+        keywords: ['Regnskap', 'Administrasjon', 'IT-drift', 'Jus', 'Data', 'Logistikk'],
+        favorites: [
+          'Bachelor i regnskap og revisjon',
+          'Bachelor i økonomi og administrasjon (controller / regnskap)',
+          'Bachelor i offentlig administrasjon og ledelse',
+          'Bachelor i arkiv- og dokumentforvaltning',
+          'Bachelor i bibliotek- og informasjonsvitenskap',
+          'Bachelor i HR-administrasjon',
+          'Bachelor i IT-drift og infrastruktur',
+          'Bachelor i informasjonssikkerhet',
+          'Bachelor i logistikk og supply chain management',
+          'Bachelor i innkjøpsledelse',
+          'Bachelor i skatt og avgift',
+          'Bachelor i forsikringsfag',
+          'Master i kvalitetsledelse',
+          'Master i økonomistyring og controlling',
+          'Master i informasjonssikkerhet'
+        ],
+        baseFields: [
+          'regnskap',
+          'revisjon',
+          'økonomi og administrasjon',
+          'offentlig administrasjon og ledelse',
+          'arkiv- og dokumentforvaltning',
+          'bibliotek- og informasjonsvitenskap',
+          'HR-administrasjon',
+          'kontor- og administrasjonsfag',
+          'informatikk (databaser)',
+          'IT-drift og nettverk',
+          'cybersikkerhet',
+          'skatte- og avgiftsrett',
+          'forsikringsfag',
+          'statistikk og dataanalyse',
+          'kvalitetsledelse',
+          'logistikk og innkjøp',
+          'kontroll og compliance',
+          'trafikkledelse',
+          'planlegging og arealforvaltning',
+          'helseadministrasjon'
         ]
       }
     };
@@ -599,6 +782,7 @@
     let currentQ = 0;
     let scores = { practical: 0, investigative: 0, artistic: 0, social: 0, enterprising: 0, conventional: 0 };
     let selectedOption = null;
+    let regionPreference = 'any';
 
     function loadQuestion() {
       const q = questions[currentQ];
@@ -633,14 +817,22 @@
       if (selectedOption === null) return;
       
       const opt = questions[currentQ].opts[selectedOption];
+
+      // Oppdater interesse-scorer
       for (let key in opt.p) {
         scores[key] += opt.p[key];
+      }
+
+      // Lagre region dersom dette er regionsspørsmålet
+      if (opt.region) {
+        regionPreference = opt.region;
       }
       
       currentQ++;
       if (currentQ < questions.length) {
         loadQuestion();
       } else {
+        document.getElementById('progress').style.width = '100%';
         showResults();
       }
     }
@@ -650,18 +842,93 @@
       document.getElementById('progress').style.width = percent + '%';
     }
 
+    // Genererer mange konkrete studieprogrammer basert på fagområder
+    function generateStudySuggestions(profileKey, limit = 220) {
+      const profile = profiles[profileKey];
+      const degreePrefixes = [
+        'Årsstudium i ',
+        'Bachelor i ',
+        'Master i '
+      ];
+      const suggestions = [];
+
+      if (profile.favorites && profile.favorites.length) {
+        profile.favorites.forEach(s => suggestions.push(s));
+      }
+
+      if (profile.baseFields && profile.baseFields.length) {
+        profile.baseFields.forEach(field => {
+          degreePrefixes.forEach(pref => {
+            suggestions.push(pref + field);
+          });
+        });
+      }
+
+      const unique = Array.from(new Set(suggestions));
+      return unique.slice(0, limit);
+    }
+
+    function getRegionText(regionKey) {
+      switch (regionKey) {
+        case 'oslo':
+          return `
+            <h3>Områdevalg: Oslo / Oslo-området</h3>
+            <p>Du har valgt Oslo-området. Det finnes mange universiteter og høyskoler her, for eksempel Universitetet i Oslo, OsloMet, BI, Høyskolen Kristiania, Norges idrettshøgskole, Kunsthøgskolen i Oslo, MF og flere andre.</p>
+            <p>Fordeler: stort fagtilbud, mange jobber og praksismuligheter, aktivt studentmiljø. Ulemper: høyere bokostnader og mer konkurranse om boliger.</p>
+          `;
+        case 'southeast':
+          return `
+            <h3>Områdevalg: Sørøstlandet (Telemark, Vestfold, Buskerud osv.)</h3>
+            <p>Du har valgt Sørøstlandet. Universitetet i Sørøst-Norge (USN) har campuser blant annet i Bø, Porsgrunn, Notodden, Rauland, Drammen, Hønefoss, Kongsberg og Vestfold, i tillegg til flere mindre studiesteder i regionen.</p>
+            <p>Fordeler: litt lavere bokostnader enn Oslo, fortsatt bra fagtilbud og gode pendlermuligheter for mange. Passer godt hvis du vil kombinere studier med litt roligere omgivelser.</p>
+          `;
+        case 'west_trondelag':
+          return `
+            <h3>Områdevalg: Vestlandet / Trøndelag</h3>
+            <p>Du har valgt Vestlandet/Trøndelag. Typiske studiesteder her er Universitetet i Bergen (UiB), Høgskulen på Vestlandet (HVL), NTNU i Trondheim, samt flere høyskoler og nisjeuniversiteter.</p>
+            <p>Fordeler: sterke miljø innen teknologi, realfag, økonomi, media og lærerutdanning, og veldig aktive studentbyer (særlig Bergen og Trondheim).</p>
+          `;
+        case 'north':
+          return `
+            <h3>Områdevalg: Nord-Norge</h3>
+            <p>Du har valgt Nord-Norge. Aktuelle læresteder er UiT – Norges arktiske universitet (campus Tromsø, Harstad, Alta, Narvik m.fl.) og Nord universitet (bl.a. i Bodø og flere andre steder i nord).</p>
+            <p>Fordeler: nærhet til natur, mindre campusmiljøer med tett oppfølging og særskilte fag innen helse, lærer, beredskap, arktiske fag m.m.</p>
+          `;
+        default:
+          return `
+            <h3>Områdevalg: Fleksibel / hele Norge</h3>
+            <p>Du har valgt at sted ikke er så viktig. Det gir deg maksimal frihet til å lete etter studier over hele landet – fra Oslo, via Sørøstlandet og Vestlandet, til Trøndelag og Nord‑Norge.</p>
+            <p>Bruk fagfeltene under som søkeord på utdanning.no og Samordna opptak, og filtrer etter by/region når du vet mer om hvor du vil bo.</p>
+          `;
+      }
+    }
+
     function showResults() {
       document.getElementById('quiz-screen').classList.add('hidden');
       document.getElementById('result-screen').classList.remove('hidden');
       
       const sorted = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
-      const topProfile = profiles[sorted[0]];
+      const topKey = sorted[0];
+      const topProfile = profiles[topKey];
       
       document.getElementById('top-profile').textContent = topProfile.name;
+
+      const secondKey = sorted[1];
+      const thirdKey = sorted[2];
+      let subtitle = `Sterkest profil: ${topProfile.name}`;
+      if (secondKey) {
+        subtitle += ` · Nest sterk: ${profiles[secondKey].name}`;
+      }
+      if (thirdKey) {
+        subtitle += ` · Også tydelig: ${profiles[thirdKey].name}`;
+      }
+      document.getElementById('top-subtitle').textContent = subtitle;
+
+      const topStudies = generateStudySuggestions(topKey, 220);
       
       let detailsHTML = `
         <div class="profile-description">
-          <h3>Din profil</h3>
+          <h3>Din interesseprofil</h3>
           <p>${topProfile.desc}</p>
           <h3 style="margin-top: 16px;">Typisk deg:</h3>
           <ul>
@@ -674,26 +941,52 @@
         </div>
         
         <div class="profile-description">
-          <h3>Studieretninger som passer deg:</h3>
-          <ul>
-            ${topProfile.studies.map(s => `<li>${s}</li>`).join('')}
-          </ul>
+          <h3>Studieretninger som passer deg (universitet / høyskole / fagskole):</h3>
+          <div class="studies-list">
+            <ul>
+              ${topStudies.map(s => `<li>${s}</li>`).join('')}
+            </ul>
+          </div>
+          <p class="studies-note">
+            Listen viser et utvalg av mange mulige studier basert på interesseprofilen din. Sjekk Samordna opptak og aktuelle høyskoler/universiteter for detaljerte tilbud.
+          </p>
         </div>
       `;
       
-      if (sorted.length > 1) {
+      if (secondKey) {
+        const secondProfile = profiles[secondKey];
+        const secondStudies = generateStudySuggestions(secondKey, 80);
         detailsHTML += `
           <div class="profile-description" style="background: #fff3e0; border-left: 4px solid #ff9800;">
-            <h3>Andre retninger som også passer:</h3>
-            <p><strong>${profiles[sorted[1]].name}</strong>: ${profiles[sorted[1]].desc}</p>
+            <h3>Andre retninger som også passer deg (${secondProfile.name}):</h3>
+            <p>${secondProfile.desc}</p>
+            <ul>
+              ${secondStudies.map(s => `<li>${s}</li>`).join('')}
+            </ul>
           </div>
         `;
       }
+
+      // Region-blokk
+      detailsHTML += `
+        <div class="profile-description">
+          ${getRegionText(regionPreference)}
+          <div class="next-steps">
+            <h3>Neste steg for deg</h3>
+            <ul>
+              <li>Bruk 3–5 av studie-forslagene over som søkeord på utdanning.no og Samordna opptak.</li>
+              <li>Sjekk nettsidene til aktuelle universiteter/høyskoler i området du har valgt.</li>
+              <li>Sammenlign opptakskrav (karakterer, realfag osv.) og noter hva du allerede oppfyller.</li>
+              <li>Snakk med rådgiver på skolen eller oppsøk digital veiledning for å spisse valgene dine.</li>
+            </ul>
+          </div>
+        </div>
+      `;
       
       document.getElementById('profile-details').innerHTML = detailsHTML;
       
       const totalScore = Object.values(scores).reduce((a, b) => a + b, 0);
-      let chartHTML = '<div class="chart-container"><h3 style="text-align:center;margin-bottom:20px;">Din interesseprofil</h3>';
+      let chartHTML = '<div class="chart-container"><h3 style="text-align:center;margin-bottom:10px;">Din interesseprofil (fordeling)</h3>';
       
       for (let key of sorted) {
         const percent = Math.round((scores[key] / totalScore) * 100);
