@@ -589,8 +589,8 @@
   <div class="app">
     <header>
       <div class="logo">
-        <!-- BYTT URL-ene til raw GitHub-URL for Logo.svg / Logo2.svg -->
-        <img id="logo-img" src="DIN_GITHUB_URL_TIL_Logo.svg" alt="Logo" />
+        <!-- Bruk samme måten som Studiequiz: relativ sti -->
+        <img id="logo-img" src="logo.svg" alt="Logo" />
         <div class="logo-text">
           <span>Karakterkalkulator</span>
           <span>Snitt & konkurransepoeng</span>
@@ -769,9 +769,9 @@
       const logoImg = document.getElementById("logo-img");
       const themeToggle = document.getElementById("theme-toggle");
 
-      // BYTT disse til dine faktiske raw-URL-er
-      const logoLight = "DIN_GITHUB_URL_TIL_Logo.svg";
-      const logoDark  = "DIN_GITHUB_URL_TIL_Logo2.svg";
+      // Bruk samme filnavn som i repoet / Studiequiz
+      const logoLight = "logo.svg";
+      const logoDark  = "Logo2.svg";
 
       function getPreferredTheme() {
         const prefersDark = window.matchMedia &&
