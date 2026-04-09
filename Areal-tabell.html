@@ -1,785 +1,791 @@
 <!DOCTYPE html>
 <html lang="no">
 <head>
-    <meta charset="UTF-8">
-    <title>Cosinus Python- og mattehjelp (VG4)</title>
-    <style>
-        body {
-            font-family: system-ui, sans-serif;
-            max-width: 1100px;
-            margin: 1.5rem auto;
-            padding: 1rem 1.5rem 3rem;
-            background: #f5f5f5;
-        }
-        header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        header img {
-            height: 60px;
-        }
-        h1 {
-            margin: 0;
-        }
-        nav {
-            margin-bottom: 1.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-        }
-        nav button {
-            padding: 0.35rem 0.7rem;
-            border-radius: 4px;
-            border: 1px solid #444;
-            background: #222;
-            color: #fff;
-            cursor: pointer;
-            font-size: 0.85rem;
-        }
-        nav button:hover {
-            background: #444;
-        }
-        section {
-            margin-bottom: 2rem;
-            padding: 1rem;
-            border-radius: 6px;
-            background: #ffffff;
-            border: 1px solid #ccc;
-        }
-        h2 {
-            margin-top: 0;
-        }
-        label {
-            font-weight: 600;
-        }
-        input[type="number"],
-        input[type="text"],
-        textarea,
-        select {
-            width: 100%;
-            max-width: 500px;
-            padding: 0.4rem;
-            margin: 0.2rem 0 0.7rem 0;
-            font-family: inherit;
-        }
-        textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        button.action {
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            border: 1px solid #444;
-            background: #0063b1;
-            color: #fff;
-            cursor: pointer;
-            margin-top: 0.3rem;
-        }
-        button.action:hover {
-            background: #004f8c;
-        }
-        .output {
-            margin-top: 0.6rem;
-            padding: 0.6rem;
-            border-radius: 4px;
-            background: #f7f7f7;
-            font-family: "Fira Code", "Consolas", monospace;
-            white-space: pre-wrap;
-        }
-        .tip {
-            font-size: 0.9rem;
-            color: #555;
-            margin-top: 0.4rem;
-        }
-        code {
-            background: #eee;
-            padding: 0 0.2rem;
-            border-radius: 3px;
-            font-family: "Fira Code", "Consolas", monospace;
-        }
-        ul.compact {
-            margin-top: 0.3rem;
-        }
-        ul.compact li {
-            margin-bottom: 0.15rem;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Karakterkalkulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f7f6f2;
+      --surface: #ffffff;
+      --surface-alt: #f0ede7;
+      --border: #d4d1ca;
+      --text: #28251d;
+      --text-muted: #7a7974;
+      --primary: #01696f;
+      --primary-hover: #0c4e54;
+      --error: #a12c7b;
+      --radius: 0.75rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #ece7dd 0, #f7f6f2 40%, #fdfcf9 100%);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: var(--space-6) var(--space-4);
+    }
+
+    .app {
+      width: 100%;
+      max-width: 960px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 1.25rem;
+      box-shadow: var(--shadow-md);
+      padding: var(--space-6);
+      position: relative;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .logo img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo-text span:first-child {
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .logo-text span:last-child {
+      font-weight: 650;
+      font-size: 1.3rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.6rem;
+    }
+
+    .subheader {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.5fr);
+      gap: var(--space-6);
+    }
+
+    @media (max-width: 800px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .app {
+        padding: var(--space-4);
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: var(--space-4);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-3);
+    }
+
+    .card-header h2 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .pill-switch {
+      display: inline-flex;
+      background: var(--surface-alt);
+      border-radius: 999px;
+      padding: 3px;
+      gap: 2px;
+    }
+
+    .pill-switch button {
+      border: none;
+      background: transparent;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background 140ms ease-out, color 140ms ease-out;
+      white-space: nowrap;
+    }
+
+    .pill-switch button.active {
+      background: var(--surface);
+      color: var(--primary);
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .pill-switch button:hover {
+      background: rgba(255,255,255,0.7);
+    }
+
+    .section-description {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: var(--space-3);
+    }
+
+    .grades-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .grades-group {
+      border-radius: calc(var(--radius) - 0.25rem);
+      border: 1px solid var(--border);
+      padding: var(--space-3);
+      background: #faf8f4;
+    }
+
+    .grades-group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-2);
+    }
+
+    .grades-group-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .grades-group-badge {
+      font-size: 0.75rem;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      background: rgba(1,105,111,0.06);
+      color: var(--primary);
+    }
+
+    .grade-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: var(--space-2);
+    }
+
+    .grade-row {
+      display: grid;
+      grid-template-columns: minmax(0, 2.3fr) minmax(0, 0.8fr) 32px;
+      gap: 0.4rem;
+      align-items: center;
+    }
+
+    @media (max-width: 600px) {
+      .grade-row {
+        grid-template-columns: minmax(0, 1.7fr) minmax(0, 0.7fr) 28px;
+      }
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 0.45rem 0.6rem;
+      border-radius: 0.55rem;
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+      background: #fdfbf7;
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    input::placeholder {
+      color: #b3afa8;
+    }
+
+    .remove-btn {
+      border-radius: 999px;
+      border: none;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      background: transparent;
+    }
+
+    .remove-btn:hover {
+      background: rgba(0,0,0,0.04);
+      color: var(--error);
+    }
+
+    .add-row-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      border-radius: 999px;
+      border: 1px dashed var(--border);
+      padding: 0.25rem 0.7rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: rgba(255,255,255,0.7);
+      color: var(--text-muted);
+    }
+
+    .add-row-btn:hover {
+      border-style: solid;
+      color: var(--primary);
+      border-color: rgba(1,105,111,0.4);
+      background: #fdfbf7;
+    }
+
+    .add-row-btn span {
+      font-size: 1rem;
+      margin-bottom: 1px;
+    }
+
+    .totals {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      border-top: 1px dashed rgba(0,0,0,0.06);
+      padding-top: 0.4rem;
+    }
+
+    .totals strong {
+      color: var(--text);
+    }
+
+    /* Sidebar / Result */
+    .sidebar-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .field-row label {
+      font-size: 0.9rem;
+    }
+
+    .field-row small {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: var(--space-3);
+    }
+
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      border-radius: 999px;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(1,105,111,0.23);
+      margin-top: var(--space-2);
+    }
+
+    .primary-btn:hover {
+      background: var(--primary-hover);
+    }
+
+    .primary-btn span.icon {
+      font-size: 1.1rem;
+    }
+
+    .result-card {
+      background: linear-gradient(135deg, rgba(1,105,111,0.1), rgba(1,105,111,0.02));
+      border-radius: var(--radius);
+      padding: var(--space-4);
+      border: 1px solid rgba(1,105,111,0.25);
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-3);
+      gap: var(--space-2);
+    }
+
+    .result-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .result-pill {
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      background: rgba(1,105,111,0.16);
+      color: var(--primary);
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1.1fr;
+      gap: var(--space-3);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .result-item-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.15rem;
+    }
+
+    .result-item-value {
+      font-weight: 650;
+      font-size: 1.1rem;
+    }
+
+    .breakdown {
+      margin-top: var(--space-3);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .badge-info {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.06);
+      background: rgba(255,255,255,0.7);
+      margin-top: 0.4rem;
+    }
+
+    .error-hint {
+      font-size: 0.8rem;
+      color: var(--error);
+      margin-top: 0.25rem;
+      display: none;
+    }
+
+    .error-visible {
+      display: block;
+    }
+  </style>
 </head>
 <body>
-
-<header>
-    <!-- valgfri logo: legg logo.svg i samme mappe, skjules automatisk hvis den ikke finnes -->
-    <img src="logo.svg" alt="Logo" onerror="this.style.display='none'">
-    <div>
-        <h1>Cosinus Python- og mattehjelp</h1>
-        <div>Hjelpemiddel til kapittel 1–4: tall, variabler, funksjoner, logikk, løkker og numeriske metoder.</div>
-    </div>
-</header>
-
-<nav>
-    <button onclick="scrollToSection('tall')">1. Tall & operatorer</button>
-    <button onclick="scrollToSection('variabler')">2. Variabler</button>
-    <button onclick="scrollToSection('tekst')">3. Tekst & print()</button>
-    <button onclick="scrollToSection('funksjoner')">4. Funksjoner</button>
-    <button onclick="scrollToSection('logikk')">5. Logiske sammenlikninger</button>
-    <button onclick="scrollToSection('if')">6. If-tester</button>
-    <button onclick="scrollToSection('for')">7. For-løkker</button>
-    <button onclick="scrollToSection('while')">8. While-løkker</button>
-    <button onclick="scrollToSection('rekursjon')">9. Rekursive algoritmer</button>
-    <button onclick="scrollToSection('halvering')">10. Halveringsmetoden</button>
-    <button onclick="scrollToSection('newton')">11. Newton-Raphson</button>
-</nav>
-
-<!-- 1: Tall & operatorer -->
-<section id="tall">
-    <h2>1. Tall & operatorer (1.2 Tall i Python)</h2>
-    <p>
-        Python har standard regne‑operatorer de>+ - * / ** % //</code>, og følger vanlig regnerekkefølge med
-        parenteser.[web:36][web:39]
-    </p>
-
-    <ul class="compactct">
-        >de>+</code> : addisjon (pluss)</li>
-        >de>-</code> : subtraksjon (minus)</l/li>
-        >de>*</code> : multiplikasjon (gange)</l/li>
-        >de>/</code> : divisjon (gir desimaltall)</l/li>
-        >de>**</code> : potens (2**3 = 8)</li>
-        >de>%</code> : rest (modulus), 7 % 2 = 1</l/li>
-        >de>//</code> : heltallsdivisjon, 7 // 2 = 3</li>
-    </ul>
-
-    abel for="uttrykk">Skriv et Python-regnestykke (f.eks. de>3 - 4/2</code>, de>7%2</code>, de>(5+2)/2</code>):</label>
-    <input type="text" id="uttrykk" placeholder="f.eks. 2 + 4*6">
-
-    <button class="action" onclick="evaluerPythonUttrykk()">Regn ut og forklar</button>
-
-    <div id="uttrykkResultat" class="output"></div>
-    <div id="uttrykkForklaring" class="output"></div>
-</section>
-
-<!-- 2: Variabler -->
-<section id="variabler">
-    <h2>2. Variabler (1.3 Variabler)</h2>
-    <p>
-        En variabel er et navn som peker på en verdi, f.eks. de>speed = 60</code> eller de>name = "Jan"</code>.
-        Du kan endre verdien senere i programmet.[web:39][web:44]
-    </p>
-
-    abel for="varNavn">Navn på variabel 1:</label>
-    <input type="text" id="varNavn" placeholder="f.eks. speed">
-
-    abel for="varVerdi">Verdi til variabel 1 (skriv som Python: 60, 3.14, 'Jan'):</label>
-    <input type="text" id="varVerdi" placeholder="f.eks. 60">
-
-    abel for="varNavn2">Navn på variabel 2 (valgfritt):</label>
-    <input type="text" id="varNavn2" placeholder="f.eks. name">
-
-    abel for="varVerdi2">Verdi til variabel 2:</label>
-    <input type="text" id="varVerdi2" placeholder="f.eks. 'Jan'">
-
-    <button class="action" onclick="lagVariabelKode()">Lag kode med variabler</button>
-
-    <div id="variabelKode" class="output"></div>
-</section>
-
-<!-- 3: Tekst og print() -->
-<section id="tekst">
-    <h2>3. Tekst & print() (1.1 og 1.4 Skrive ut tall og tekst)</h2>
-    <p>
-        de>print()</code> skriver tekst (strenger) og tall til skjermen, f.eks. de>print("Hei")</code> eller
-        de>print(2 + 2)</code>.[web:41][web:43]
-    </p>
-
-    <h3>3.1 Flere tekstlinjer (Eple, Pære, Banan ...)</h3>
-
-    abel for="linje1">Linje 1:</label>
-    <input type="text" id="linje1" placeholder="Eple">
-    abel for="linje2">Linje 2:</label>
-    <input type="text" id="linje2" placeholder="Pære">
-    abel for="linje3">Linje 3:</label>
-    <input type="text" id="linje3" placeholder="Banan">
-
-    <button class="action" onclick="lagPrintKode()">Lag print()-kode</button>
-    <div id="printKode" class="output"></div>
-
-    <h3>3.2 Tekst + tall i print()</h3>
-    <p>
-        I Python brukes ofte komma for å skrive ut tekst og tall sammen:
-        de>print("Farten er", speed)</code> gir automatisk mellomrom.[web:41][web:48]
-    </p>
-
-    abel for="tekstTallNavn">Variabelnavn for tall (f.eks. speed):</label>
-    <input type="text" id="tekstTallNavn" placeholder="speed">
-
-    <button class="action" onclick="lagTekstTallKode()">Lag eksempel med tekst og tall</button>
-    <div id="tekstTallKode" class="output"></div>
-
-    <h3>3.3 Forskjell på de>+</code> og komma</h3>
-    <button class="action" onclick="demoPlusVsKomma()">Vis forskjellen</button>
-    <div id="plusKommaKode" class="output"></div>
-    <div id="plusKommaForklaring" class="output"></div>
-</section>
-
-<!-- 4: Funksjoner -->
-<section id="funksjoner">
-    <h2>4. Funksjoner (1.5 Funksjoner)</h2>
-    <p>
-        En funksjon samler kode som kan brukes flere ganger, f.eks. de>def f(x): return 2*x</code> og
-        de>print(f(5))</code>.[web:44]
-    </p>
-
-    abel for="funksjonsNavn">Funksjonsnavn:</label>
-    <input type="text" id="funksjonsNavn" placeholder="f">
-
-    abel for="paramNavn">Parameter-navn:</label>
-    <input type="text" id="paramNavn" placeholder="x">
-
-    abel for="funksjonsUttrykk">Uttrykk (skriv med parameteren, f.eks. 2*x + 3):</label>
-    <input type="text" id="funksjonsUttrykk" placeholder="2*x + 3">
-
-    abel for="testVerdi">Testverdi til funksjonen (f.eks. 5):</label>
-    <input type="text" id="testVerdi" placeholder="5">
-
-    <button class="action" onclick="lagFunksjonsKode()">Lag funksjon og test</button>
-    <div id="funksjonsKode" class="output"></div>
-    <div id="funksjonsOutput" class="output"></div>
-</section>
-
-<!-- 5: Logiske sammenlikninger -->
-<section id="logikk">
-    <h2>5. Logiske sammenlikninger (2.1 og 2.2)</h2>
-    <p>
-        Python bruker de>==</code>, de>!=</code>, de>&lt;</code>, de>&lt;=</code>, de>&gt;</code>,
-        de>&gt;=</code> og logiske operatorer de>and</code>, de>or</code>, de>not</code>.[web:39][web:44]
-    </p>
-
-    abel for="logikkA">Verdi A (f.eks. 5):</label>
-    <input type="text" id="logikkA" placeholder="5">
-
-    abel for="logikkOp">Operator:</label>
-    <select id="logikkOp">
-        <option value="==">== (lik)</option>
-        <option value="!=">!= (ulik)</option>
-        <option value="<">&lt; (mindre enn)</option>
-        <option value="<=">&lt;= (mindre eller lik)</option>
-        <option value=">">&gt; (større enn)</option>
-        <option value=">=">&gt;= (større eller lik)</option>
-    </select>
-
-    abel for="logikkB">Verdi B (f.eks. 10):</label>
-    <input type="text" id="logikkB" placeholder="10">
-
-    <button class="action" onclick="lagLogikkKode()">Test sammenlikning</button>
-    <div id="logikkKode" class="output"></div>
-    <div id="logikkResultat" class="output"></div>
-</section>
-
-<!-- 6: If-tester -->
-<section id="if">
-    <h2>6. If-tester (2.3 If-tester)</h2>
-    <p>
-        de>if</code>-setninger gjør noe bare hvis en betingelse er sann, ellers kan du bruke
-        de>else</code> eller de>elif</code>.[web:44]
-    </p>
-
-    abel for="ifBetingelse">Betingelse (f.eks. x &gt; 10):</label>
-    <input type="text" id="ifBetingelse" placeholder="x > 10">
-
-    abel for="ifTekstTrue">Tekst når betingelsen er sann:</label>
-    <input type="text" id="ifTekstTrue" placeholder="Tallet er stort">
-
-    abel for="ifTekstFalse">Tekst når betingelsen er usann:</label>
-    <input type="text" id="ifTekstFalse" placeholder="Tallet er lite eller lik 10">
-
-    <button class="action" onclick="lagIfKode()">Lag if-else-kode</button>
-    <div id="ifKode" class="output"></div>
-</section>
-
-<!-- 7: For-løkker -->
-<section id="for">
-    <h2>7. For-løkker (3.2 for-løkker)</h2>
-    <p>
-        En de>for</code>-løkke går gjennom en tallrekke eller en liste, f.eks.
-        de>for i in range(1, 6): print(i)</code>.[web:44]
-    </p>
-
-    abel for="forStart">Startverdi (inkludert):</label>
-    <input type="number" id="forStart" value="1">
-
-    abel for="forStop">Sluttverdi (eksklusiv, Python-style):</label>
-    <input type="number" id="forStop" value="6">
-
-    abel for="forSteg">Steg (standard 1):</label>
-    <input type="number" id="forSteg" value="1">
-
-    <button class="action" onclick="lagForKode()">Lag for-løkke og se tallene</button>
-    <div id="forKode" class="output"></div>
-    <div id="forOutput" class="output"></div>
-</section>
-
-<!-- 8: While-løkker -->
-<section id="while">
-    <h2>8. While-løkker (3.3–3.5)</h2>
-    <p>
-        En de>while</code>-løkke gjentar kode så lenge en betingelse er sann, f.eks.
-        de>while speed &gt; limit:</code>.[web:44]
-    </p>
-
-    abel for="startFart">Startfart (km/t):</label>
-    <input type="number" id="startFart" value="60">
-
-    abel for="grenseFart">Fartsgrense (km/t):</label>
-    <input type="number" id="grenseFart" value="50">
-
-    abel for="nedtrapp">Reduksjon per runde:</label>
-    <input type="number" id="nedtrapp" value="1">
-
-    <button class="action" onclick="simulerFart()">Lag while-kode og se utskrift</button>
-    <div id="whileKode" class="output"></div>
-    <div id="whileOutput" class="output"></div>
-</section>
-
-<!-- 9: Rekursive algoritmer -->
-<section id="rekursjon">
-    <h2>9. Rekursive algoritmer (2.4 Rekursive algoritmer)</h2>
-    <p>
-        En rekursiv funksjon kaller seg selv til problemet er enkelt nok, f.eks. fakultet
-        de>n! = n * (n-1)!</code> med stopp når de>n == 0</code>.[web:44]
-    </p>
-
-    abel for="rekursjonN">n for n! (f.eks. 5):</label>
-    <input type="number" id="rekursjonN" value="5">
-
-    <button class="action" onclick="lagRekursjonKode()">Beregn fakultet rekursivt</button>
-    <div id="rekursjonKode" class="output"></div>
-    <div id="rekursjonOutput" class="output"></div>
-</section>
-
-<!-- 10: Halveringsmetoden -->
-<section id="halvering">
-    <h2>10. Halveringsmetoden (4.1)</h2>
-    <p>
-        Halveringsmetoden finner en løsning på de>f(x) = 0</code> ved å halvere intervallet der fortegnet til
-        de>f</code> endrer seg.[web:38][web:44]
-    </p>
-
-    <p>Vi bruker standardfunksjonen de>f(x) = x**2 - 2</code> (løsningen er kvadratroten av 2).</p>
-
-    abel for="halvA">Start a:</label>
-    <input type="number" id="halvA" value="0">
-
-    abel for="halvB">Start b:</label>
-    <input type="number" id="halvB" value="2">
-
-    abel for="halvIter">Antall iterasjoner:</label>
-    <input type="number" id="halvIter" value="5">
-
-    <button class="action" onclick="lagHalveringKode()">Kjør halveringsmetoden</button>
-    <div id="halveringKode" class="output"></div>
-    <div id="halveringOutput" class="output"></div>
-</section>
-
-<!-- 11: Newton-Raphson -->
-<section id="newton">
-    <h2>11. Newton-Raphson-metoden (4.4)</h2>
-    <p>
-        Newton-Raphson bruker tangenter for å finne røtter, med formelen
-        de>x_{n+1} = x_n - f(x_n)/f'(x_n)</code>.[web:44]
-    </p>
-
-    <p>Vi bruker samme funksjon som over: de>f(x) = x**2 - 2</code> og de>f'(x) = 2*x</code>.</p>
-
-    abel for="newtonStart">Startverdi x0:</label>
-    <input type="number" id="newtonStart" value="1">
-
-    abel for="newtonIter">Antall iterasjoner:</label>
-    <input type="number" id="newtonIter" value="5">
-
-    <button class="action" onclick="lagNewtonKode()">Kjør Newton-Raphson</button>
-    <div id="newtonKode" class="output"></div>
-    <div id="newtonOutput" class="output"></div>
-</section>
-
-<script>
-    function scrollToSection(id) {
-        document.getElementById(id).scrollIntoView({ behavior: "smooth" });
-    }
-
-    // ---------- 1: Tall & operatorer ----------
-    function evaluerPythonUttrykk() {
-        const felt = document.getElementById("uttrykk");
-        const tekst = felt.value.trim();
-        const resDiv = document.getElementById("uttrykkResultat");
-        const forkDiv = document.getElementById("uttrykkForklaring");
-
-        if (!tekst) {
-            resDiv.textContent = "Skriv inn et uttrykk først.";
-            forkDiv.textContent = "";
-            return;
+  <div class="app">
+    <header>
+      <div class="logo">
+        <!-- Logo.svg må ligge i samme mappe -->
+        <img src="Logo.svg" alt="Logo" />
+        <div class="logo-text">
+          <span>Karakterkalkulator</span>
+          <span>Snitt & konkurransepoeng</span>
+        </div>
+      </div>
+      <div>
+        <h1>Regn ut poengene dine</h1>
+        <p class="subheader">
+          Legg inn karakterer fra både yrkesfag og påbygg, og juster alderspoeng og ekstrapoeng for å se konkurransepoeng.
+        </p>
+      </div>
+    </header>
+
+    <main>
+      <!-- VENSTRE: FAG & KARAKTERER -->
+      <section class="card">
+        <div class="card-header">
+          <h2>Fag og karakterer</h2>
+          <div class="pill-switch" id="track-switch">
+            <button type="button" data-track="studie" class="active">Studiespesialisering</button>
+            <button type="button" data-track="yrkes">Yrkesfag + påbygg/fagbrev</button>
+          </div>
+        </div>
+        <p class="section-description">
+          Alle karakterer du legger inn her brukes i snittet. Yrkesfag- og påbyggsfag kan blandes – snittet regnes samlet.
+        </p>
+
+        <div class="grades-section">
+          <!-- Studiespesialisering -->
+          <div class="grades-group" data-group="studie">
+            <div class="grades-group-header">
+              <div class="grades-group-title">Studiespesialisering</div>
+              <div class="grades-group-badge">VG1–VG3 studieforberedende</div>
+            </div>
+            <div class="grade-rows" id="rows-studie"></div>
+            <button class="add-row-btn" type="button" data-add="studie">
+              <span>＋</span> Legg til fag
+            </button>
+            <div class="totals" id="totals-studie">
+              <span><strong>Fag:</strong> 0</span>
+              <span><strong>Sum karakterer:</strong> 0</span>
+            </div>
+          </div>
+
+          <!-- Yrkesfag + påbygg -->
+          <div class="grades-group" data-group="yrkes">
+            <div class="grades-group-header">
+              <div class="grades-group-title">Yrkesfag + påbygg / fagbrev</div>
+              <div class="grades-group-badge">Programfag, fellesfag, påbygg</div>
+            </div>
+            <div class="grade-rows" id="rows-yrkes"></div>
+            <button class="add-row-btn" type="button" data-add="yrkes">
+              <span>＋</span> Legg til yrkesfag/påbygg-fag
+            </button>
+            <div class="totals" id="totals-yrkes">
+              <span><strong>Fag:</strong> 0</span>
+              <span><strong>Sum karakterer:</strong> 0</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="hint">
+          Tips: Du kan f.eks. bruke øverste gruppe til vanlige fellesfag og nederste til programfag, yrkesfag og påbygg.
+        </p>
+        <p id="error-msg" class="error-hint">Legg inn minst én gyldig karakter (1–6) før du beregner.</p>
+      </section>
+
+      <!-- HØYRE: POENG & RESULTAT -->
+      <section class="sidebar-section">
+        <section class="card">
+          <div class="card-header">
+            <h2>Tilleggspoeng</h2>
+          </div>
+          <p class="hint">
+            Fremgangsmåte (typisk): Snitt × 10 = karakterpoeng. Legg deretter til språk-/realfag, alderspoeng og andre tilleggspoeng
+            for å få konkurransepoeng.[web:1][web:6][web:18]
+          </p>
+
+          <div class="field-row">
+            <label for="age-points">
+              Alderspoeng
+              <small>Manuelt (0–8 poeng etter dagens regler, frem til de fjernes i nye opptaksregler).</small>[web:1][web:18][web:20]
+            </label>
+            <input id="age-points" type="number" step="0.5" min="0" max="20" value="0" />
+          </div>
+
+          <div class="field-row">
+            <label for="extra-points">
+              Ekstrapoeng
+              <small>Realfag, språk, folkehøyskole, militær, fagbrev m.m. – legg inn totalen din.</small>[web:1][web:6][web:18]
+            </label>
+            <input id="extra-points" type="number" step="0.5" min="0" max="20" value="0" />
+          </div>
+
+          <button class="primary-btn" type="button" id="calc-btn">
+            <span class="icon">🧮</span>
+            Beregn snitt & konkurransepoeng
+          </button>
+        </section>
+
+        <section class="result-card">
+          <div class="result-header">
+            <div>
+              <div class="result-title">Resultat</div>
+              <div class="badge-info">
+                <span>Snitt og poeng beregnes lokalt i nettleseren din.</span>
+              </div>
+            </div>
+            <div class="result-pill" id="total-subjects-pill">0 fag</div>
+          </div>
+
+          <div class="result-grid">
+            <div>
+              <div class="result-item-label">Snittkarakter</div>
+              <div class="result-item-value" id="avg-grade">–</div>
+            </div>
+            <div>
+              <div class="result-item-label">Karakterpoeng (snitt × 10)</div>
+              <div class="result-item-value" id="grade-points">–</div>
+            </div>
+            <div>
+              <div class="result-item-label">Tilleggspoeng (alder + ekstra)</div>
+              <div class="result-item-value" id="extra-total">–</div>
+            </div>
+            <div>
+              <div class="result-item-label">Konkurransepoeng</div>
+              <div class="result-item-value" id="competition-points">–</div>
+            </div>
+          </div>
+
+          <div class="breakdown" id="breakdown-text">
+            Legg inn karakterer for å se en detaljert utregning av snitt, karakterpoeng og konkurransepoeng.
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const studieContainer = document.getElementById("rows-studie");
+      const yrkesContainer = document.getElementById("rows-yrkes");
+      const totalsStudie = document.getElementById("totals-studie");
+      const totalsYrkes = document.getElementById("totals-yrkes");
+      const totalSubjectsPill = document.getElementById("total-subjects-pill");
+      const errorMsg = document.getElementById("error-msg");
+
+      const ageInput = document.getElementById("age-points");
+      const extraInput = document.getElementById("extra-points");
+
+      const avgGradeEl = document.getElementById("avg-grade");
+      const gradePointsEl = document.getElementById("grade-points");
+      const extraTotalEl = document.getElementById("extra-total");
+      const competitionPointsEl = document.getElementById("competition-points");
+      const breakdownTextEl = document.getElementById("breakdown-text");
+
+      const trackSwitch = document.getElementById("track-switch");
+      const calcBtn = document.getElementById("calc-btn");
+
+      function createRow(namePlaceholder = "Norsk, Matematikk, Programfag ...") {
+        const row = document.createElement("div");
+        row.className = "grade-row";
+        row.innerHTML = `
+          <input type="text" placeholder="${namePlaceholder}" />
+          <input type="number" min="1" max="6" step="0.1" placeholder="Karakter" />
+          <button type="button" class="remove-btn" title="Fjern rad">×</button>
+        `;
+        const removeBtn = row.querySelector(".remove-btn");
+        removeBtn.addEventListener("click", () => {
+          row.remove();
+          updateTotals();
+        });
+        const gradeInput = row.querySelector('input[type="number"]');
+        gradeInput.addEventListener("input", () => {
+          if (gradeInput.value && (gradeInput.value < 1 || gradeInput.value > 6)) {
+            gradeInput.value = "";
+          }
+          updateTotals();
+        });
+        return row;
+      }
+
+      function ensureInitialRows() {
+        if (!studieContainer.children.length) {
+          for (let i = 0; i < 4; i++) {
+            studieContainer.appendChild(createRow());
+          }
         }
+        if (!yrkesContainer.children.length) {
+          for (let i = 0; i < 3; i++) {
+            yrkesContainer.appendChild(createRow("Yrkesfag / påbygg-fag ..."));
+          }
+        }
+      }
 
-        try {
-            let jsKode = tekst;
-
-            // veldig enkel håndtering: // -> / og heltallsdel til slutt
-            jsKode = jsKode.replace(/\/\//g, "/");
-
-            const f = new Function("return (" + jsKode + ");");
-            let resultat = f();
-
-            if (tekst.includes("//")) {
-                resultat = Math.trunc(resultat);
+      function collectGrades() {
+        const allGrades = [];
+        function fromContainer(container) {
+          Array.from(container.querySelectorAll(".grade-row")).forEach((row) => {
+            const gradeInput = row.querySelector('input[type="number"]');
+            const value = parseFloat(gradeInput.value.replace(",", "."));
+            if (!isNaN(value) && value >= 1 && value <= 6) {
+              allGrades.push(value);
             }
+          });
+        }
+        fromContainer(studieContainer);
+        fromContainer(yrkesContainer);
+        return allGrades;
+      }
 
-            resDiv.textContent = "Resultat (som i Python): " + resultat;
-
-            let forklaring = "";
-            if (tekst.includes("/")) {
-                forklaring += "- '/' gir desimaltall (float) i Python.\n";
+      function updateTotals() {
+        const sumAndCount = (container) => {
+          let sum = 0;
+          let count = 0;
+          Array.from(container.querySelectorAll(".grade-row")).forEach((row) => {
+            const gradeInput = row.querySelector('input[type="number"]');
+            const value = parseFloat(gradeInput.value.replace(",", "."));
+            if (!isNaN(value) && value >= 1 && value <= 6) {
+              sum += value;
+              count++;
             }
-            if (tekst.includes("//")) {
-                forklaring += "- '//' gir heltallsdivisjon (bare heltallsdelen beholdes).\n";
-            }
-            if (tekst.includes("%")) {
-                forklaring += "- '%' gir resten i divisjonen (modulus).\n";
-            }
-            if (tekst.includes("**")) {
-                forklaring += "- '**' er potens (for eksempel 2**3 = 8).\n";
-            }
-            if (!forklaring) {
-                forklaring = "Uttrykket bruker grunnleggende operatorer (+, -, *).";
-            }
+          });
+          return { sum, count };
+        };
 
-            forkDiv.textContent = forklaring;
-        } catch (e) {
-            resDiv.textContent = "Det er en feil i uttrykket (sjekk parenteser, operatorer og tall).";
-            forkDiv.textContent = "";
+        const studie = sumAndCount(studieContainer);
+        const yrkes = sumAndCount(yrkesContainer);
+
+        totalsStudie.innerHTML = `
+          <span><strong>Fag:</strong> ${studie.count}</span>
+          <span><strong>Sum karakterer:</strong> ${studie.sum.toFixed(1)}</span>
+        `;
+        totalsYrkes.innerHTML = `
+          <span><strong>Fag:</strong> ${yrkes.count}</span>
+          <span><strong>Sum karakterer:</strong> ${yrkes.sum.toFixed(1)}</span>
+        `;
+
+        const totalCount = studie.count + yrkes.count;
+        totalSubjectsPill.textContent = totalCount + (totalCount === 1 ? " fag" : " fag");
+      }
+
+      function formatNumber(num, decimals = 2) {
+        return num.toFixed(decimals).replace(".", ",");
+      }
+
+      function calculate() {
+        const grades = collectGrades();
+        if (!grades.length) {
+          errorMsg.classList.add("error-visible");
+          avgGradeEl.textContent = "–";
+          gradePointsEl.textContent = "–";
+          extraTotalEl.textContent = "–";
+          competitionPointsEl.textContent = "–";
+          breakdownTextEl.textContent = "Legg inn minst én karakter mellom 1 og 6.";
+          return;
         }
-    }
+        errorMsg.classList.remove("error-visible");
 
-    // ---------- 2: Variabler ----------
-    function lagVariabelKode() {
-        const n1 = document.getElementById("varNavn").value.trim();
-        const v1 = document.getElementById("varVerdi").value.trim();
-        const n2 = document.getElementById("varNavn2").value.trim();
-        const v2 = document.getElementById("varVerdi2").value.trim();
-        const out = document.getElementById("variabelKode");
+        const sum = grades.reduce((a, b) => a + b, 0);
+        const avg = sum / grades.length;
+        const gradePoints = avg * 10;
 
-        if (!n1 || !v1) {
-            out.textContent = "Skriv minst navn og verdi for én variabel.";
-            return;
-        }
+        const agePoints = parseFloat((ageInput.value || "0").replace(",", ".")) || 0;
+        const extraPoints = parseFloat((extraInput.value || "0").replace(",", ".")) || 0;
+        const extraTotal = agePoints + extraPoints;
+        const competition = gradePoints + extraTotal;
 
-        let kode = `${n1} = ${v1}\n`;
-        if (n2 && v2) {
-            kode += `${n2} = ${v2}\n`;
-        }
-        kode += `\nprint(${n1})`;
-        if (n2 && v2) {
-            kode += `\nprint(${n2})`;
-        }
+        avgGradeEl.textContent = formatNumber(avg, 2);
+        gradePointsEl.textContent = formatNumber(gradePoints, 1);
+        extraTotalEl.textContent = formatNumber(extraTotal, 1);
+        competitionPointsEl.textContent = formatNumber(competition, 1);
 
-        out.textContent = kode;
-    }
+        breakdownTextEl.textContent =
+          `Utregning: snittkarakter ${formatNumber(avg, 2)} × 10 = ` +
+          `${formatNumber(gradePoints, 1)} karakterpoeng. ` +
+          `Alderspoeng ${formatNumber(agePoints, 1)} + ekstrapoeng ${formatNumber(extraPoints, 1)} ` +
+          `= ${formatNumber(extraTotal, 1)} tilleggspoeng. ` +
+          `Totalt konkurransepoeng: ${formatNumber(competition, 1)}.`;
+      }
 
-    // ---------- 3: Tekst & print() ----------
-    function lagPrintKode() {
-        const l1 = document.getElementById("linje1").value;
-        const l2 = document.getElementById("linje2").value;
-        const l3 = document.getElementById("linje3").value;
-        const out = document.getElementById("printKode");
+      // Event: legg til rad
+      document.querySelectorAll("[data-add]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const type = btn.getAttribute("data-add");
+          if (type === "studie") {
+            studieContainer.appendChild(createRow());
+          } else {
+            yrkesContainer.appendChild(createRow("Yrkesfag / påbygg-fag ..."));
+          }
+          updateTotals();
+        });
+      });
 
-        if (!l1 && !l2 && !l3) {
-            out.textContent = "Skriv inn minst én linje tekst.";
-            return;
-        }
-
-        let kode = "";
-        if (l1) kode += `print("${l1}")\n`;
-        if (l2) kode += `print("${l2}")\n`;
-        if (l3) kode += `print("${l3}")\n`;
-        out.textContent = kode.trimEnd();
-    }
-
-    function lagTekstTallKode() {
-        const navn = (document.getElementById("tekstTallNavn").value || "speed").trim();
-        const out = document.getElementById("tekstTallKode");
-
-        const kode =
-`# anta at ${navn} er definert over (for eksempel ${navn} = 60)
-print("Farten er", ${navn}, "km/t")`;
-
-        out.textContent = kode;
-    }
-
-    function demoPlusVsKomma() {
-        const kodeDiv = document.getElementById("plusKommaKode");
-        const forkDiv = document.getElementById("plusKommaForklaring");
-
-        const kode =
-`print("Hello" + "World" + "!")
-print("Hello", "World", "!")`;
-
-        const forklaring =
-`Resultat i Python:
-
-HelloWorld!
-Hello World !
-
-Med + limes strengene rett sammen uten mellomrom.
-Med komma legger print() automatisk inn mellomrom mellom argumentene.`;
-
-        kodeDiv.textContent = kode;
-        forkDiv.textContent = forklaring;
-    }
-
-    // ---------- 4: Funksjoner ----------
-    function lagFunksjonsKode() {
-        const navn = (document.getElementById("funksjonsNavn").value || "f").trim();
-        const param = (document.getElementById("paramNavn").value || "x").trim();
-        const expr = (document.getElementById("funksjonsUttrykk").value || "2*" + param).trim();
-        const testVerdi = (document.getElementById("testVerdi").value || "5").trim();
-
-        const kodeDiv = document.getElementById("funksjonsKode");
-        const outDiv = document.getElementById("funksjonsOutput");
-
-        const kode =
-`def ${navn}(${param}):
-    return ${expr}
-
-print(${navn}(${testVerdi}))`;
-
-        kodeDiv.textContent = kode;
-
-        // prøv å evaluere med JS (veldig enkel "simulator")
-        try {
-            const f = new Function(param, "return " + expr + ";");
-            const verdi = f(Number(testVerdi));
-            outDiv.textContent = `Simulert resultat: ${navn}(${testVerdi}) = ${verdi}`;
-        } catch (e) {
-            outDiv.textContent = "Kunne ikke simulere uttrykket (sjekk syntaksen).";
-        }
-    }
-
-    // ---------- 5: Logiske sammenlikninger ----------
-    function lagLogikkKode() {
-        const A = document.getElementById("logikkA").value.trim();
-        const op = document.getElementById("logikkOp").value;
-        const B = document.getElementById("logikkB").value.trim();
-        const kodeDiv = document.getElementById("logikkKode");
-        const resDiv = document.getElementById("logikkResultat");
-
-        if (!A || !B) {
-            kodeDiv.textContent = "Skriv inn både A og B.";
-            resDiv.textContent = "";
-            return;
-        }
-
-        const kode =
-`a = ${A}
-b = ${B}
-print(a ${op} b)`;
-
-        kodeDiv.textContent = kode;
-
-        try {
-            const f = new Function("a", "b", "return a " + op + " b;");
-            const resultat = f(Number(A), Number(B));
-            resDiv.textContent = "Resultat av sammenlikningen: " + resultat;
-        } catch (e) {
-            resDiv.textContent = "Kunne ikke teste uttrykket (sjekk verdier og operator).";
-        }
-    }
-
-    // ---------- 6: If-tester ----------
-    function lagIfKode() {
-        const bet = (document.getElementById("ifBetingelse").value || "x > 10").trim();
-        const tTrue = (document.getElementById("ifTekstTrue").value || "Betingelsen er sann").trim();
-        const tFalse = (document.getElementById("ifTekstFalse").value || "Betingelsen er usann").trim();
-        const out = document.getElementById("ifKode");
-
-        const kode =
-`if ${bet}:
-    print("${tTrue}")
-else:
-    print("${tFalse}")`;
-
-        out.textContent = kode;
-    }
-
-    // ---------- 7: For-løkker ----------
-    function lagForKode() {
-        const start = Number(document.getElementById("forStart").value);
-        const stop = Number(document.getElementById("forStop").value);
-        const steg = Number(document.getElementById("forSteg").value) || 1;
-
-        const kodeDiv = document.getElementById("forKode");
-        const outDiv = document.getElementById("forOutput");
-
-        const kode =
-`for i in range(${start}, ${stop}, ${steg}):
-    print(i)`;
-
-        kodeDiv.textContent = kode;
-
-        let tall = [];
-        for (let i = start; (steg > 0 ? i < stop : i > stop); i += steg) {
-            tall.push(i);
-            if (tall.length > 1000) break;
-        }
-        outDiv.textContent = tall.length ? tall.join("\n") : "(Ingen tall – sjekk start/stop/steg.)";
-    }
-
-    // ---------- 8: While-løkker ----------
-    function simulerFart() {
-        const start = Number(document.getElementById("startFart").value);
-        const limit = Number(document.getElementById("grenseFart").value);
-        const step = Number(document.getElementById("nedtrapp").value) || 1;
-
-        const kodeDiv = document.getElementById("whileKode");
-        const outDiv = document.getElementById("whileOutput");
-
-        if (isNaN(start) || isNaN(limit) || isNaN(step)) {
-            kodeDiv.textContent = "Sjekk at alle feltene er tall.";
-            outDiv.textContent = "";
-            return;
-        }
-
-        const kode =
-`speed = ${start}
-while speed > ${limit}:
-    speed -= ${step}
-    print(speed)`;
-
-        kodeDiv.textContent = kode;
-
-        let speed = start;
-        let lines = [];
-        let sikkerhet = 0;
-        while (speed > limit && sikkerhet < 10_000) {
-            speed -= step;
-            lines.push(String(speed));
-            sikkerhet++;
-        }
-        if (!lines.length) {
-            outDiv.textContent = "(Ingen utskrift – betingelsen var ikke sann.)";
-        } else if (sikkerhet >= 10_000) {
-            outDiv.textContent = "Løkka stoppet ikke (sannsynligvis feil fortegn på steg).";
-        } else {
-            outDiv.textContent = lines.join("\n");
-        }
-    }
-
-    // ---------- 9: Rekursjon ----------
-    function lagRekursjonKode() {
-        const n = Number(document.getElementById("rekursjonN").value);
-        const kodeDiv = document.getElementById("rekursjonKode");
-        const outDiv = document.getElementById("rekursjonOutput");
-
-        const kode =
-`def factorial(n):
-    if n == 0:
-        return 1
-    else:
-        return n * factorial(n-1)
-
-print(factorial(${n}))`;
-
-        kodeDiv.textContent = kode;
-
-        function fact(k) {
-            if (k === 0) return 1;
-            return k * fact(k - 1);
-        }
-
-        if (n < 0 || n > 20) {
-            outDiv.textContent = "Velg et n mellom 0 og 20.";
-        } else {
-            outDiv.textContent = `factorial(${n}) = ` + fact(n);
-        }
-    }
-
-    // ---------- 10: Halveringsmetoden ----------
-    function fHalv(x) {
-        return x * x - 2;
-    }
-
-    function lagHalveringKode() {
-        let a = Number(document.getElementById("halvA").value);
-        let b = Number(document.getElementById("halvB").value);
-        const n = Number(document.getElementById("halvIter").value);
-
-        const kodeDiv = document.getElementById("halveringKode");
-        const outDiv = document.getElementById("halveringOutput");
-
-        const kode =
-`def f(x):
-    return x**2 - 2
-
-a = ${a}
-b = ${b}
-for i in range(${n}):
-    m = (a + b)/2
-    if f(m) > 0:
-        b = m
-    else:
-        a = m
-print(m)`;
-
-        kodeDiv.textContent = kode;
-
-        let logg = [];
-        for (let i = 0; i < n; i++) {
-            const m = (a + b) / 2;
-            logg.push(`Iterasjon ${i+1}: a=${a.toFixed(5)}, b=${b.toFixed(5)}, m=${m.toFixed(5)}, f(m)=${fHalv(m).toFixed(5)}`);
-            if (fHalv(m) > 0) {
-                b = m;
+      // Track-switch: kun visuelt (begge grupper regnes alltid med)
+      trackSwitch.querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          trackSwitch.querySelectorAll("button").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          const track = btn.getAttribute("data-track");
+          document.querySelectorAll(".grades-group").forEach((grp) => {
+            const grpType = grp.getAttribute("data-group");
+            if (track === grpType) {
+              grp.style.borderColor = "rgba(1,105,111,0.6)";
+              grp.style.background = "#fdfbf7";
             } else {
-                a = m;
+              grp.style.borderColor = "var(--border)";
+              grp.style.background = "#faf8f4";
             }
-        }
-        outDiv.textContent = logg.join("\n");
-    }
+          });
+        });
+      });
 
-    // ---------- 11: Newton-Raphson ----------
-    function fNewton(x) {
-        return x * x - 2;
-    }
-    function fNewtonDeriv(x) {
-        return 2 * x;
-    }
+      calcBtn.addEventListener("click", calculate);
 
-    function lagNewtonKode() {
-        let x = Number(document.getElementById("newtonStart").value);
-        const n = Number(document.getElementById("newtonIter").value);
-
-        const kodeDiv = document.getElementById("newtonKode");
-        const outDiv = document.getElementById("newtonOutput");
-
-        const kode =
-`def f(x):
-    return x**2 - 2
-
-def f_deriv(x):
-    return 2*x
-
-x = ${x}
-for i in range(${n}):
-    x = x - f(x)/f_deriv(x)
-    print(x)`;
-
-        kodeDiv.textContent = kode;
-
-        let logg = [];
-        for (let i = 0; i < n; i++) {
-            x = x - fNewton(x) / fNewtonDeriv(x);
-            logg.push(`Iterasjon ${i+1}: x=${x.toFixed(10)}, f(x)=${fNewton(x).toExponential(3)}`);
-        }
-        outDiv.textContent = logg.join("\n");
-    }
-</script>
-
+      ensureInitialRows();
+      updateTotals();
+    })();
+  </script>
 </body>
 </html>
