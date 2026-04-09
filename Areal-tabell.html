@@ -213,28 +213,37 @@
       color: var(--primary);
     }
 
+    .grade-header-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.1fr) minmax(0, 1.1fr) 32px;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
     .grade-rows {
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      gap: 0.35rem;
       margin-bottom: var(--space-2);
     }
 
     .grade-row {
       display: grid;
-      grid-template-columns: minmax(0, 2.3fr) minmax(0, 0.8fr) 32px;
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.1fr) minmax(0, 1.1fr) 32px;
       gap: 0.4rem;
       align-items: center;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 700px) {
+      .grade-header-row,
       .grade-row {
-        grid-template-columns: minmax(0, 1.7fr) minmax(0, 0.7fr) 28px;
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) 28px;
       }
     }
 
-    input[type="text"],
-    input[type="number"] {
+    .subject-input {
       width: 100%;
       padding: 0.45rem 0.6rem;
       border-radius: 0.55rem;
@@ -243,23 +252,40 @@
       background: #fdfbf7;
     }
 
-    input[type="number"] {
-      -moz-appearance: textfield;
-    }
-
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    input:focus-visible {
-      outline: 2px solid var(--primary);
-      outline-offset: 2px;
-    }
-
-    input::placeholder {
+    .subject-input::placeholder {
       color: #b3afa8;
+    }
+
+    .grade-choices {
+      display: inline-flex;
+      gap: 0.25rem;
+      justify-content: flex-start;
+    }
+
+    .grade-btn {
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: #fdfbf7;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: background 120ms ease-out, color 120ms ease-out, border-color 120ms ease-out, box-shadow 120ms ease-out;
+    }
+
+    .grade-btn:hover {
+      border-color: rgba(1,105,111,0.4);
+    }
+
+    .grade-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.3);
     }
 
     .remove-btn {
@@ -321,7 +347,6 @@
       color: var(--text);
     }
 
-    /* Sidebar / Result */
     .sidebar-section {
       display: flex;
       flex-direction: column;
@@ -350,6 +375,28 @@
       font-size: 0.8rem;
       color: var(--text-muted);
       margin-bottom: var(--space-3);
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 0.45rem 0.6rem;
+      border-radius: 0.55rem;
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+      background: #fdfbf7;
+      -moz-appearance: textfield;
+    }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type="number"]:focus-visible,
+    .subject-input:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
     }
 
     .primary-btn {
@@ -466,7 +513,7 @@
   <div class="app">
     <header>
       <div class="logo">
-        <!-- Logo.svg må ligge i samme mappe -->
+        <!-- Endre src hvis Logo.svg ligger i en undermappe, f.eks. src="img/Logo.svg" -->
         <img src="Logo.svg" alt="Logo" />
         <div class="logo-text">
           <span>Karakterkalkulator</span>
@@ -476,7 +523,7 @@
       <div>
         <h1>Regn ut poengene dine</h1>
         <p class="subheader">
-          Legg inn karakterer fra både yrkesfag og påbygg, og juster alderspoeng og ekstrapoeng for å se konkurransepoeng.
+          Klikk rett på karakterene for standpunkt og eksamen. Yrkesfag + påbygg tas også med i snittet.
         </p>
       </div>
     </header>
@@ -492,7 +539,7 @@
           </div>
         </div>
         <p class="section-description">
-          Alle karakterer du legger inn her brukes i snittet. Yrkesfag- og påbyggsfag kan blandes – snittet regnes samlet.
+          Alle karakterer du legger inn her (standpunkt og eventuelle eksamener) brukes i snittet.
         </p>
 
         <div class="grades-section">
@@ -502,13 +549,22 @@
               <div class="grades-group-title">Studiespesialisering</div>
               <div class="grades-group-badge">VG1–VG3 studieforberedende</div>
             </div>
+
+            <div class="grade-header-row">
+              <div>Fag</div>
+              <div>Standpunkt</div>
+              <div>Eksamen</div>
+              <div></div>
+            </div>
+
             <div class="grade-rows" id="rows-studie"></div>
+
             <button class="add-row-btn" type="button" data-add="studie">
               <span>＋</span> Legg til fag
             </button>
             <div class="totals" id="totals-studie">
               <span><strong>Fag:</strong> 0</span>
-              <span><strong>Sum karakterer:</strong> 0</span>
+              <span><strong>Antall karakterer:</strong> 0</span>
             </div>
           </div>
 
@@ -518,21 +574,30 @@
               <div class="grades-group-title">Yrkesfag + påbygg / fagbrev</div>
               <div class="grades-group-badge">Programfag, fellesfag, påbygg</div>
             </div>
+
+            <div class="grade-header-row">
+              <div>Fag</div>
+              <div>Standpunkt</div>
+              <div>Eksamen</div>
+              <div></div>
+            </div>
+
             <div class="grade-rows" id="rows-yrkes"></div>
+
             <button class="add-row-btn" type="button" data-add="yrkes">
               <span>＋</span> Legg til yrkesfag/påbygg-fag
             </button>
             <div class="totals" id="totals-yrkes">
               <span><strong>Fag:</strong> 0</span>
-              <span><strong>Sum karakterer:</strong> 0</span>
+              <span><strong>Antall karakterer:</strong> 0</span>
             </div>
           </div>
         </div>
 
         <p class="hint">
-          Tips: Du kan f.eks. bruke øverste gruppe til vanlige fellesfag og nederste til programfag, yrkesfag og påbygg.
+          Standpunkt og eksamenskarakter for samme fag teller som to karakterer i snittet, akkurat som i de vanlige kalkulatorene.
         </p>
-        <p id="error-msg" class="error-hint">Legg inn minst én gyldig karakter (1–6) før du beregner.</p>
+        <p id="error-msg" class="error-hint">Legg inn minst én karakter (1–6) før du beregner.</p>
       </section>
 
       <!-- HØYRE: POENG & RESULTAT -->
@@ -542,22 +607,21 @@
             <h2>Tilleggspoeng</h2>
           </div>
           <p class="hint">
-            Fremgangsmåte (typisk): Snitt × 10 = karakterpoeng. Legg deretter til språk-/realfag, alderspoeng og andre tilleggspoeng
-            for å få konkurransepoeng.[web:1][web:6][web:18]
+            Standard: snitt × 10 = karakterpoeng. Legg så til alderspoeng og andre ekstrapoeng (realfag, språk, folkehøyskole, militær, fagbrev osv.) for å få konkurransepoeng.
           </p>
 
           <div class="field-row">
-            <label for="age-points">
+            abel for="age-points">
               Alderspoeng
-              <small>Manuelt (0–8 poeng etter dagens regler, frem til de fjernes i nye opptaksregler).</small>[web:1][web:18][web:20]
+              <small>Manuelt felt (f.eks. 0–8 poeng).</small>
             </label>
             <input id="age-points" type="number" step="0.5" min="0" max="20" value="0" />
           </div>
 
           <div class="field-row">
-            <label for="extra-points">
+            abel for="extra-points">
               Ekstrapoeng
-              <small>Realfag, språk, folkehøyskole, militær, fagbrev m.m. – legg inn totalen din.</small>[web:1][web:6][web:18]
+              <small>Realfag, språk, folkehøyskole, militær, fagbrev m.m. – legg inn totalen din.</small>
             </label>
             <input id="extra-points" type="number" step="0.5" min="0" max="20" value="0" />
           </div>
@@ -573,10 +637,10 @@
             <div>
               <div class="result-title">Resultat</div>
               <div class="badge-info">
-                <span>Snitt og poeng beregnes lokalt i nettleseren din.</span>
+                <span>Alt regnes lokalt i nettleseren din.</span>
               </div>
             </div>
-            <div class="result-pill" id="total-subjects-pill">0 fag</div>
+            <div class="result-pill" id="total-subjects-pill">0 karakterer</div>
           </div>
 
           <div class="result-grid">
@@ -599,7 +663,7 @@
           </div>
 
           <div class="breakdown" id="breakdown-text">
-            Legg inn karakterer for å se en detaljert utregning av snitt, karakterpoeng og konkurransepoeng.
+            Legg inn karakterer og tilleggspoeng for å se en detaljert utregning.
           </div>
         </section>
       </section>
@@ -627,87 +691,110 @@
       const trackSwitch = document.getElementById("track-switch");
       const calcBtn = document.getElementById("calc-btn");
 
+      function createGradeButtons() {
+        const wrapper = document.createElement("div");
+        wrapper.className = "grade-choices";
+        for (let i = 1; i <= 6; i++) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "grade-btn";
+          btn.dataset.value = String(i);
+          btn.textContent = String(i);
+          wrapper.appendChild(btn);
+        }
+        wrapper.addEventListener("click", (e) => {
+          const target = e.target;
+          if (target instanceof HTMLElement && target.classList.contains("grade-btn")) {
+            wrapper.querySelectorAll(".grade-btn").forEach((b) => b.classList.remove("active"));
+            target.classList.add("active");
+          }
+        });
+        return wrapper;
+      }
+
       function createRow(namePlaceholder = "Norsk, Matematikk, Programfag ...") {
         const row = document.createElement("div");
         row.className = "grade-row";
-        row.innerHTML = `
-          <input type="text" placeholder="${namePlaceholder}" />
-          <input type="number" min="1" max="6" step="0.1" placeholder="Karakter" />
-          <button type="button" class="remove-btn" title="Fjern rad">×</button>
-        `;
-        const removeBtn = row.querySelector(".remove-btn");
+
+        const subjInput = document.createElement("input");
+        subjInput.type = "text";
+        subjInput.className = "subject-input";
+        subjInput.placeholder = namePlaceholder;
+
+        const standChoices = createGradeButtons();
+        const examChoices = createGradeButtons();
+
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className = "remove-btn";
+        removeBtn.title = "Fjern fag";
+        removeBtn.textContent = "×";
         removeBtn.addEventListener("click", () => {
           row.remove();
           updateTotals();
         });
-        const gradeInput = row.querySelector('input[type="number"]');
-        gradeInput.addEventListener("input", () => {
-          if (gradeInput.value && (gradeInput.value < 1 || gradeInput.value > 6)) {
-            gradeInput.value = "";
-          }
-          updateTotals();
-        });
+
+        row.appendChild(subjInput);
+        row.appendChild(standChoices);
+        row.appendChild(examChoices);
+        row.appendChild(removeBtn);
+
         return row;
       }
 
       function ensureInitialRows() {
         if (!studieContainer.children.length) {
-          for (let i = 0; i < 4; i++) {
-            studieContainer.appendChild(createRow());
-          }
+          const standardFag = [
+            "Matematikk",
+            "Norsk muntlig",
+            "Norsk skriftlig",
+            "Engelsk",
+            "Naturfag",
+            "Samfunnsfag",
+            "Historie"
+          ];
+          standardFag.forEach((navn) => studieContainer.appendChild(createRow(navn)));
         }
         if (!yrkesContainer.children.length) {
-          for (let i = 0; i < 3; i++) {
-            yrkesContainer.appendChild(createRow("Yrkesfag / påbygg-fag ..."));
-          }
+          const yrkesFag = ["Programfag 1", "Programfag 2", "Yrkesfaglig fordypning"];
+          yrkesFag.forEach((navn) => yrkesContainer.appendChild(createRow(navn)));
         }
       }
 
-      function collectGrades() {
-        const allGrades = [];
-        function fromContainer(container) {
-          Array.from(container.querySelectorAll(".grade-row")).forEach((row) => {
-            const gradeInput = row.querySelector('input[type="number"]');
-            const value = parseFloat(gradeInput.value.replace(",", "."));
-            if (!isNaN(value) && value >= 1 && value <= 6) {
-              allGrades.push(value);
+      function collectGradesFromContainer(container) {
+        let sum = 0;
+        let count = 0;
+        Array.from(container.querySelectorAll(".grade-row")).forEach((row) => {
+          const choices = row.querySelectorAll(".grade-choices");
+          choices.forEach((ch) => {
+            const active = ch.querySelector(".grade-btn.active");
+            if (active && active.dataset.value) {
+              const value = parseFloat(active.dataset.value);
+              if (!isNaN(value) && value >= 1 && value <= 6) {
+                sum += value;
+                count++;
+              }
             }
           });
-        }
-        fromContainer(studieContainer);
-        fromContainer(yrkesContainer);
-        return allGrades;
+        });
+        return { sum, count };
       }
 
       function updateTotals() {
-        const sumAndCount = (container) => {
-          let sum = 0;
-          let count = 0;
-          Array.from(container.querySelectorAll(".grade-row")).forEach((row) => {
-            const gradeInput = row.querySelector('input[type="number"]');
-            const value = parseFloat(gradeInput.value.replace(",", "."));
-            if (!isNaN(value) && value >= 1 && value <= 6) {
-              sum += value;
-              count++;
-            }
-          });
-          return { sum, count };
-        };
-
-        const studie = sumAndCount(studieContainer);
-        const yrkes = sumAndCount(yrkesContainer);
+        const studie = collectGradesFromContainer(studieContainer);
+        const yrkes = collectGradesFromContainer(yrkesContainer);
 
         totalsStudie.innerHTML = `
-          <span><strong>Fag:</strong> ${studie.count}</span>
-          <span><strong>Sum karakterer:</strong> ${studie.sum.toFixed(1)}</span>
+          <span><strong>Fag:</strong> ${studieContainer.children.length}</span>
+          <span><strong>Antall karakterer:</strong> ${studie.count}</span>
         `;
         totalsYrkes.innerHTML = `
-          <span><strong>Fag:</strong> ${yrkes.count}</span>
-          <span><strong>Sum karakterer:</strong> ${yrkes.sum.toFixed(1)}</span>
+          <span><strong>Fag:</strong> ${yrkesContainer.children.length}</span>
+          <span><strong>Antall karakterer:</strong> ${yrkes.count}</span>
         `;
 
-        const totalCount = studie.count + yrkes.count;
-        totalSubjectsPill.textContent = totalCount + (totalCount === 1 ? " fag" : " fag");
+        const totalGrades = studie.count + yrkes.count;
+        totalSubjectsPill.textContent = totalGrades + (totalGrades === 1 ? " karakter" : " karakterer");
       }
 
       function formatNumber(num, decimals = 2) {
@@ -715,8 +802,13 @@
       }
 
       function calculate() {
-        const grades = collectGrades();
-        if (!grades.length) {
+        const studie = collectGradesFromContainer(studieContainer);
+        const yrkes = collectGradesFromContainer(yrkesContainer);
+
+        const totalSum = studie.sum + yrkes.sum;
+        const totalCount = studie.count + yrkes.count;
+
+        if (!totalCount) {
           errorMsg.classList.add("error-visible");
           avgGradeEl.textContent = "–";
           gradePointsEl.textContent = "–";
@@ -725,10 +817,10 @@
           breakdownTextEl.textContent = "Legg inn minst én karakter mellom 1 og 6.";
           return;
         }
+
         errorMsg.classList.remove("error-visible");
 
-        const sum = grades.reduce((a, b) => a + b, 0);
-        const avg = sum / grades.length;
+        const avg = totalSum / totalCount;
         const gradePoints = avg * 10;
 
         const agePoints = parseFloat((ageInput.value || "0").replace(",", ".")) || 0;
@@ -749,7 +841,6 @@
           `Totalt konkurransepoeng: ${formatNumber(competition, 1)}.`;
       }
 
-      // Event: legg til rad
       document.querySelectorAll("[data-add]").forEach((btn) => {
         btn.addEventListener("click", () => {
           const type = btn.getAttribute("data-add");
@@ -762,7 +853,6 @@
         });
       });
 
-      // Track-switch: kun visuelt (begge grupper regnes alltid med)
       trackSwitch.querySelectorAll("button").forEach((btn) => {
         btn.addEventListener("click", () => {
           trackSwitch.querySelectorAll("button").forEach((b) => b.classList.remove("active"));
