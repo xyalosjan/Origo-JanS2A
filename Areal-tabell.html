@@ -25,6 +25,19 @@
       --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
     }
 
+    /* Dark mode-variabler */
+    [data-theme="dark"] {
+      --bg: #11100f;
+      --surface: #181716;
+      --surface-alt: #22211f;
+      --border: #3a3835;
+      --text: #e4e2dd;
+      --text-muted: #9e9c95;
+      --primary: #4f98a3;
+      --primary-hover: #227f8b;
+      --error: #d163a7;
+    }
+
     * {
       box-sizing: border-box;
     }
@@ -33,7 +46,7 @@
       margin: 0;
       min-height: 100vh;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top left, #ece7dd 0, #f7f6f2 40%, #fdfcf9 100%);
+      background: var(--bg);
       color: var(--text);
       display: flex;
       justify-content: center;
@@ -49,6 +62,10 @@
       box-shadow: var(--shadow-md);
       padding: var(--space-6);
       position: relative;
+    }
+
+    [data-theme="dark"] .app {
+      background: rgba(24, 23, 22, 0.96);
     }
 
     header {
@@ -100,6 +117,24 @@
       margin-top: 0.25rem;
     }
 
+    .theme-toggle {
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: #fdfbf7;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    [data-theme="dark"] .theme-toggle {
+      background: #22211f;
+      border-color: #3a3835;
+    }
+
     main {
       display: grid;
       grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.5fr);
@@ -127,6 +162,10 @@
       padding: var(--space-4);
       box-shadow: var(--shadow-sm);
       border: 1px solid rgba(0,0,0,0.03);
+    }
+
+    [data-theme="dark"] .card {
+      border-color: rgba(255,255,255,0.04);
     }
 
     .card-header {
@@ -192,6 +231,10 @@
       background: #faf8f4;
     }
 
+    [data-theme="dark"] .grades-group {
+      background: #1c1b1a;
+    }
+
     .grades-group-header {
       display: flex;
       justify-content: space-between;
@@ -252,13 +295,19 @@
       background: #fdfbf7;
     }
 
+    [data-theme="dark"] .subject-input {
+      background: #211f1e;
+      border-color: #3a3835;
+      color: var(--text);
+    }
+
     .subject-input::placeholder {
       color: #b3afa8;
     }
 
     .grade-choices {
       display: inline-flex;
-      gap: 0;                 /* ingen mellomrom mellom knappene */
+      gap: 0;
     }
 
     .grade-btn {
@@ -274,7 +323,12 @@
       justify-content: center;
       color: var(--text-muted);
       transition: background 120ms ease-out, color 120ms ease-out, border-color 120ms ease-out, box-shadow 120ms ease-out;
-      margin-right: -1px;     /* gjør at kantene "treffer" hverandre */
+      margin-right: -1px;
+    }
+
+    [data-theme="dark"] .grade-btn {
+      background: #211f1e;
+      border-color: #3a3835;
     }
 
     .grade-btn:last-child {
@@ -324,11 +378,19 @@
       color: var(--text-muted);
     }
 
+    [data-theme="dark"] .add-row-btn {
+      background: #211f1e;
+    }
+
     .add-row-btn:hover {
       border-style: solid;
       color: var(--primary);
       border-color: rgba(1,105,111,0.4);
       background: #fdfbf7;
+    }
+
+    [data-theme="dark"] .add-row-btn:hover {
+      background: #262423;
     }
 
     .add-row-btn span {
@@ -385,6 +447,12 @@
       -moz-appearance: textfield;
     }
 
+    [data-theme="dark"] input[type="number"] {
+      background: #211f1e;
+      border-color: #3a3835;
+      color: var(--text);
+    }
+
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button {
       -webkit-appearance: none;
@@ -427,6 +495,11 @@
       border-radius: var(--radius);
       padding: var(--space-4);
       border: 1px solid rgba(1,105,111,0.25);
+    }
+
+    [data-theme="dark"] .result-card {
+      background: linear-gradient(135deg, rgba(79,152,163,0.16), rgba(79,152,163,0.02));
+      border-color: rgba(79,152,163,0.45);
     }
 
     .result-header {
@@ -495,6 +568,11 @@
       margin-top: 0.4rem;
     }
 
+    [data-theme="dark"] .badge-info {
+      background: rgba(24,23,22,0.9);
+      border-color: rgba(255,255,255,0.06);
+    }
+
     .error-hint {
       font-size: 0.8rem;
       color: var(--error);
@@ -511,19 +589,23 @@
   <div class="app">
     <header>
       <div class="logo">
-        <!-- BYTT UT URLEN UNDER med raw GitHub-URL til Logo.svg -->
-        <!-- Eksempel: https://raw.githubusercontent.com/bruker/repo/branch/path/Logo.svg -->
-        <img src="Logo.svg" alt="Logo" />
+        <!-- BYTT URL-ene til raw GitHub-URL for Logo.svg / Logo2.svg -->
+        <img id="logo-img" src="DIN_GITHUB_URL_TIL_Logo.svg" alt="Logo" />
         <div class="logo-text">
           <span>Karakterkalkulator</span>
           <span>Snitt & konkurransepoeng</span>
         </div>
       </div>
-      <div>
-        <h1>Regn ut poengene dine</h1>
-        <p class="subheader">
-          Klikk rett på karakterene for standpunkt og eksamen. Yrkesfag + påbygg tas også med i snittet.
-        </p>
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div>
+          <h1>Regn ut poengene dine</h1>
+          <p class="subheader">
+            Klikk rett på karakterene for standpunkt og eksamen. Yrkesfag + påbygg tas også med i snittet.
+          </p>
+        </div>
+        <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Bytt mellom lys og mørk modus">
+          🌙
+        </button>
       </div>
     </header>
 
@@ -610,12 +692,12 @@
           </p>
 
           <div class="field-row">
-            abel for="age-points">Alderspoeng</label>
+            <label for="age-points">Alderspoeng</label>
             <input id="age-points" type="number" step="0.5" min="0" max="20" value="0" />
           </div>
 
           <div class="field-row">
-            abel for="extra-points">Ekstrapoeng</label>
+            <label for="extra-points">Ekstrapoeng</label>
             <input id="extra-points" type="number" step="0.5" min="0" max="20" value="0" />
           </div>
 
@@ -683,6 +765,30 @@
 
       const trackSwitch = document.getElementById("track-switch");
       const calcBtn = document.getElementById("calc-btn");
+
+      const logoImg = document.getElementById("logo-img");
+      const themeToggle = document.getElementById("theme-toggle");
+
+      // BYTT disse til dine faktiske raw-URL-er
+      const logoLight = "DIN_GITHUB_URL_TIL_Logo.svg";
+      const logoDark  = "DIN_GITHUB_URL_TIL_Logo2.svg";
+
+      function getPreferredTheme() {
+        const prefersDark = window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches;
+        return prefersDark ? "dark" : "light";
+      }
+
+      function applyTheme(theme) {
+        const html = document.documentElement;
+        html.setAttribute("data-theme", theme);
+        if (logoImg) {
+          logoImg.src = theme === "dark" ? logoDark : logoLight;
+        }
+        if (themeToggle) {
+          themeToggle.textContent = theme === "dark" ? "☀️" : "🌙";
+        }
+      }
 
       function createGradeButtons() {
         const wrapper = document.createElement("div");
@@ -865,6 +971,17 @@
       });
 
       calcBtn.addEventListener("click", calculate);
+
+      // Init tema
+      let currentTheme = getPreferredTheme();
+      applyTheme(currentTheme);
+
+      if (themeToggle) {
+        themeToggle.addEventListener("click", () => {
+          currentTheme = currentTheme === "dark" ? "light" : "dark";
+          applyTheme(currentTheme);
+        });
+      }
 
       ensureInitialRows();
       updateTotals();
